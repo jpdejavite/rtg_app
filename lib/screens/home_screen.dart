@@ -5,6 +5,7 @@ import 'package:rtg_app/bloc/recipes/bloc.dart';
 import 'dart:developer';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Início'),
+        title: Text(AppLocalizations.of(context).home),
         actions: [
           IconButton(
             icon: Icon(Icons.settings),
@@ -67,18 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _body(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Início',
+            label: AppLocalizations.of(context).home,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),
-            label: 'Receitas',
+            label: AppLocalizations.of(context).recipes,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            label: 'Listas',
+            label: AppLocalizations.of(context).lists,
           ),
         ],
         currentIndex: _selectedIndex,

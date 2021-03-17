@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/api/services.dart';
 import 'package:rtg_app/bloc/recipes/bloc.dart';
-import 'dart:developer';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -59,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Open app settings',
             onPressed: () {
               // handle the press
-              log('go to setting');
+              print('go to setting');
             },
           ),
         ],

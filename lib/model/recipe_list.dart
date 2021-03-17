@@ -8,18 +8,22 @@ String recipesToJson(List<Recipe> data) =>
 
 class Recipe {
   Recipe({
+    this.id,
     this.createdAt,
     this.title,
   });
 
+  String id;
   String createdAt;
   String title;
 
   factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
+        id: json["id"],
         createdAt: json["createdAt"],
         title: json["title"],
       );
   Map<String, dynamic> toJson() => {
+        "id": id,
         "createdAt": createdAt,
         "title": title,
       };

@@ -1,5 +1,6 @@
 {
   "home": "Início",
   "recipes": "Receitas",
-  "lists": "Listas"
+  "lists": "Listas",
+  "empty_recipes_list": "Nenhuma receita encontrada"
 }

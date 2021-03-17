@@ -7,7 +7,9 @@ import 'package:rtg_app/model/recipe_list.dart';
 import 'package:rtg_app/widgets/error.dart';
 import 'package:rtg_app/widgets/list_row.dart';
 import 'package:rtg_app/widgets/loading.dart';
-import 'dart:developer';
+import 'package:rtg_app/widgets/loading_row.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecipesList extends StatefulWidget {
   static String id = 'recipe_list';
@@ -21,11 +23,10 @@ class _RecipesListState extends State<RecipesList> {
   void initState() {
     super.initState();
     _loadRecipes();
-    log('_loadRecipes');
   }
 
   _loadRecipes() async {
-    context.read<RecipesBloc>().add(RecipesEvents.fetchRecipes);
+    context.read<RecipesBloc>().add(FetchRecipesEvent(lastId: ""));
   }
 
   @override
@@ -40,7 +41,6 @@ class _RecipesListState extends State<RecipesList> {
       children: [
         BlocBuilder<RecipesBloc, RecipesState>(
             builder: (BuildContext context, RecipesState state) {
-          log('builder ' + state.toString());
           if (state is RecipesListError) {
             final error = state.error;
             String message = '${error.message}\nTap to Retry.';
@@ -49,12 +49,27 @@ class _RecipesListState extends State<RecipesList> {
               onTap: _loadRecipes,
             );
           }
+          List<Recipe> recipes;
           if (state is RecipesLoaded) {
-            log('builder ' + state.toString());
-            List<Recipe> recipes = state.recipes;
+            recipes = state.recipes;
+          }
+          if (state is RecipesLoadingMore) {
+            recipes = state.recipes;
+          }
+
+          if (recipes == null) {
+            return Loading();
+          }
+
+          if (recipes.length > 0) {
             return _list(recipes);
           }
-          return Loading();
+
+          return Expanded(
+            child: Center(
+              child: Text(AppLocalizations.of(context).empty_recipes_list),
+            ),
+          );
         }),
       ],
     );
@@ -63,8 +78,15 @@ class _RecipesListState extends State<RecipesList> {
   Widget _list(List<Recipe> recipes) {
     return Expanded(
       child: ListView.builder(
-        itemCount: recipes.length,
+        itemCount: recipes.length + 1,
         itemBuilder: (_, index) {
+          if (index == recipes.length) {
+            context
+                .read<RecipesBloc>()
+                .add(FetchRecipesEvent(lastId: recipes[recipes.length - 1].id));
+            return LoadingRow();
+          }
+
           Recipe recipe = recipes[index];
           return ListRow(recipe: recipe);
         },

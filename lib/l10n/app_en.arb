@@ -1,5 +1,6 @@
 {
   "home": "Home",
   "recipes": "Recipes",
-  "lists": "Lists"
+  "lists": "Lists",
+  "empty_recipes_list": "No receipes found"
 }

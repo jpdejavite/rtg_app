@@ -37,7 +37,7 @@ void main() {
       Recipe(title: "teste 2"),
     ];
 
-    when(recipesRepo.getRecipeList()).thenAnswer((_) => Future.value(recipes));
+    when(recipesRepo.getRecipeList("")).thenAnswer((_) => Future.value(recipes));
 
     expectLater(
       recipeBloc,
@@ -46,6 +46,6 @@ void main() {
       expect(recipeBloc.state, RecipesLoaded(recipes: recipes));
     });
 
-    recipeBloc.add(RecipesEvents.fetchRecipes);
+    recipeBloc.add(FetchRecipesEvent(lastId: ""));
   });
 }

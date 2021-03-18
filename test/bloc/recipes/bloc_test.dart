@@ -27,23 +27,68 @@ void main() {
   });
 
   test('fetch recipes', () {
-    final expectedResponse = [
-      RecipesLoading(),
-      RecipesLoaded(),
-    ];
-
     List<Recipe> recipes = [
       Recipe(title: "teste 1"),
       Recipe(title: "teste 2"),
     ];
 
-    when(recipesRepo.getRecipeList("")).thenAnswer((_) => Future.value(recipes));
+    final expectedResponse = [
+      RecipesLoading(),
+      RecipesLoaded(recipes: recipes),
+    ];
+    when(recipesRepo.getRecipeList(""))
+        .thenAnswer((_) => Future.value(recipes));
 
     expectLater(
       recipeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
       expect(recipeBloc.state, RecipesLoaded(recipes: recipes));
+    });
+
+    recipeBloc.add(FetchRecipesEvent(lastId: ""));
+  });
+
+  test('fetch more recipes', () {
+    List<Recipe> recipes = [
+      Recipe(title: "teste 1"),
+      Recipe(title: "teste 2"),
+    ];
+    List<Recipe> moreRecipes = [
+      Recipe(title: "teste 3"),
+      Recipe(title: "teste 4"),
+    ];
+    List<Recipe> totalRecipes = [];
+    totalRecipes.addAll(recipes);
+    totalRecipes.addAll(moreRecipes);
+
+    final expectedResponse = [
+      RecipesLoading(),
+      RecipesLoaded(recipes: recipes),
+    ];
+
+    final expectedMoreResponse = [
+      RecipesLoadingMore(recipes: recipes),
+      RecipesLoaded(recipes: totalRecipes),
+    ];
+    when(recipesRepo.getRecipeList(""))
+        .thenAnswer((_) => Future.value(recipes));
+    when(recipesRepo.getRecipeList("1"))
+        .thenAnswer((_) => Future.value(moreRecipes));
+
+    expectLater(
+      recipeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(recipeBloc.state, RecipesLoaded(recipes: recipes));
+      // load more recipes
+      recipeBloc.add(FetchRecipesEvent(lastId: "1"));
+      expectLater(
+        recipeBloc,
+        emitsInOrder(expectedMoreResponse),
+      ).then((_) {
+        expect(recipeBloc.state, RecipesLoaded(recipes: totalRecipes));
+      });
     });
 
     recipeBloc.add(FetchRecipesEvent(lastId: ""));

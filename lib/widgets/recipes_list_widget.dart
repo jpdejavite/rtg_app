@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/bloc/recipes/bloc.dart';
 import 'package:rtg_app/bloc/recipes/events.dart';
 import 'package:rtg_app/bloc/recipes/states.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe_list.dart';
 import 'package:rtg_app/widgets/error.dart';
 import 'package:rtg_app/widgets/list_row.dart';
@@ -77,6 +78,7 @@ class _RecipesListState extends State<RecipesList> {
 
   Widget _list(List<Recipe> recipes) {
     return Expanded(
+      key: Key(Keys.receipesList),
       child: ListView.builder(
         itemCount: recipes.length + 1,
         itemBuilder: (_, index) {

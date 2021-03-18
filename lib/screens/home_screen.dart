@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/api/services.dart';
 import 'package:rtg_app/bloc/recipes/bloc.dart';
+import 'package:rtg_app/keys/keys.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           'Index 0: Home',
           style: optionStyle,
+          key: Key(Keys.homeBottomBarHomeText),
         ),
       ),
     ),
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Text(
       'Index 2: School',
       style: optionStyle,
+      key: Key(Keys.homeBottomBarListsText),
     ),
   ];
 
@@ -69,15 +72,24 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              key: Key(Keys.homeBottomBarHomeIcon),
+            ),
             label: AppLocalizations.of(context).home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
+            icon: Icon(
+              Icons.library_books,
+              key: Key(Keys.homeBottomBarRecipesIcon),
+            ),
             label: AppLocalizations.of(context).recipes,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
+            icon: Icon(
+              Icons.list,
+              key: Key(Keys.homeBottomBarListsIcon),
+            ),
             label: AppLocalizations.of(context).lists,
           ),
         ],

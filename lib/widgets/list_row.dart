@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rtg_app/model/recipe_list.dart';
+import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/widgets/txt.dart';
 
 class ListRow extends StatelessWidget {
@@ -15,7 +15,7 @@ class ListRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Txt(text: recipe.title),
+          Txt(text: recipe.id + ": " +recipe.title),
           Divider(),
         ],
       ),

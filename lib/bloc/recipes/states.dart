@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:rtg_app/model/recipe_list.dart';
+import 'package:rtg_app/model/recipes_collection.dart';
 
 abstract class RecipesState extends Equatable {
   @override
@@ -11,17 +11,17 @@ class RecipesInitState extends RecipesState {}
 class RecipesLoading extends RecipesState {}
 
 class RecipesLoadingMore extends RecipesState {
-  final List<Recipe> recipes;
-  RecipesLoadingMore({this.recipes});
+  final RecipesCollection recipesCollection;
+  RecipesLoadingMore({this.recipesCollection});
   @override
-  List<Object> get props => [recipes];
+  List<Object> get props => [recipesCollection];
 }
 
-class RecipesLoaded extends RecipesState {
-  final List<Recipe> recipes;
-  RecipesLoaded({this.recipes});
+class RecipesLoaded extends RecipesLoadingMore {
+  final RecipesCollection recipesCollection;
+  RecipesLoaded({this.recipesCollection});
   @override
-  List<Object> get props => [recipes];
+  List<Object> get props => [recipesCollection];
 }
 
 class RecipesListError extends RecipesState {

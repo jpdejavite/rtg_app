@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rtg_app/api/services.dart';
-import 'package:rtg_app/bloc/recipes/bloc.dart';
+import 'package:rtg_app/bloc/recipes/recipes_bloc.dart';
 import 'package:rtg_app/keys/keys.dart';
+import 'package:rtg_app/repository/recipes_repository.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
     BlocProvider(
-      create: (context) => RecipesBloc(recipesRepo: RecipeServices()),
+      create: (context) => RecipesBloc(recipesRepo: RecipesRepository()),
       child: RecipesList(),
     ),
     Text(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rtg_app/bloc/recipes/bloc.dart';
+import 'package:rtg_app/bloc/recipes/recipes_bloc.dart';
 import 'package:rtg_app/bloc/recipes/events.dart';
 import 'package:rtg_app/bloc/recipes/states.dart';
 import 'package:rtg_app/keys/keys.dart';
-import 'package:rtg_app/model/recipe_list.dart';
+import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/widgets/error.dart';
 import 'package:rtg_app/widgets/list_row.dart';
 import 'package:rtg_app/widgets/loading.dart';
@@ -19,7 +21,7 @@ class RecipesList extends StatefulWidget {
 }
 
 class _RecipesListState extends State<RecipesList> {
-  //
+  String filter;
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,9 @@ class _RecipesListState extends State<RecipesList> {
   }
 
   _loadRecipes() async {
-    context.read<RecipesBloc>().add(FetchRecipesEvent(lastId: ""));
+    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
+          searchParams: SearchRecipesParams(filter: filter),
+        ));
   }
 
   @override
@@ -40,6 +44,35 @@ class _RecipesListState extends State<RecipesList> {
   _body() {
     return Column(
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Flexible(
+              // TODO: add icon to clear input
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText:
+                      AppLocalizations.of(context).type_in_to_filter_recipes,
+                ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    filter = newValue;
+                  });
+                  context.read<RecipesBloc>().add(StartFetchRecipesEvent(
+                        searchParams: SearchRecipesParams(filter: filter),
+                      ));
+                },
+              ),
+            ),
+            ElevatedButton(
+              // TODO: change to filter
+              child: Text('Refresh'),
+              onPressed: () {
+                context.read<RecipesBloc>().add(StartFetchRecipesEvent());
+              },
+            ),
+          ],
+        ),
         BlocBuilder<RecipesBloc, RecipesState>(
             builder: (BuildContext context, RecipesState state) {
           if (state is RecipesListError) {
@@ -50,20 +83,20 @@ class _RecipesListState extends State<RecipesList> {
               onTap: _loadRecipes,
             );
           }
-          List<Recipe> recipes;
+          RecipesCollection recipesCollection;
           if (state is RecipesLoaded) {
-            recipes = state.recipes;
+            recipesCollection = state.recipesCollection;
           }
           if (state is RecipesLoadingMore) {
-            recipes = state.recipes;
+            recipesCollection = state.recipesCollection;
           }
 
-          if (recipes == null) {
+          if (recipesCollection == null || recipesCollection.recipes == null) {
             return Loading();
           }
 
-          if (recipes.length > 0) {
-            return _list(recipes);
+          if (recipesCollection.recipes.length > 0) {
+            return _list(recipesCollection);
           }
 
           return Expanded(
@@ -76,20 +109,23 @@ class _RecipesListState extends State<RecipesList> {
     );
   }
 
-  Widget _list(List<Recipe> recipes) {
+  Widget _list(RecipesCollection recipesCollection) {
     return Expanded(
       key: Key(Keys.receipesList),
       child: ListView.builder(
-        itemCount: recipes.length + 1,
+        itemCount: recipesCollection.recipes.length +
+            ((recipesCollection.recipes.length == recipesCollection.total)
+                ? 0
+                : 1),
         itemBuilder: (_, index) {
-          if (index == recipes.length) {
-            context
-                .read<RecipesBloc>()
-                .add(FetchRecipesEvent(lastId: recipes[recipes.length - 1].id));
+          if (index == recipesCollection.recipes.length) {
+            context.read<RecipesBloc>().add(FetchRecipesEvent(
+                searchParams: SearchRecipesParams(
+                    filter: filter, offset: recipesCollection.recipes.length)));
             return LoadingRow();
           }
 
-          Recipe recipe = recipes[index];
+          Recipe recipe = recipesCollection.recipes[index];
           return ListRow(recipe: recipe);
         },
       ),

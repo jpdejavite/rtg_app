@@ -5,11 +5,12 @@ class Keys {
   static const String homeBottomBarHomeIcon = 'home-bottom-bar-home-icon-key';
   static const String homeBottomBarRecipesIcon =
       'home-bottom-bar-recipes-icon-key';
-      static const String homeBottomBarListsIcon =
+  static const String homeBottomBarListsIcon =
       'home-bottom-bar-recipes-lists-key';
 
   // recipes list
   static const String receipesList = 'receipes-list-key';
+  static const String receipesListEmptyText = 'receipes-list-empy-text';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

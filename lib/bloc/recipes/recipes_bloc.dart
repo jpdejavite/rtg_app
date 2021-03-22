@@ -6,7 +6,7 @@ import 'package:rtg_app/bloc/recipes/states.dart';
 
 class RecipesBloc extends Bloc<RecipesEvents, RecipesState> {
   final RecipesRepository recipesRepo;
-  RecipesCollection _recipesCollection = RecipesCollection();
+  RecipesCollection _recipesCollection = RecipesCollection(recipes: []);
   RecipesBloc({this.recipesRepo}) : super(RecipesInitState());
   @override
   Stream<RecipesState> mapEventToState(RecipesEvents event) async* {

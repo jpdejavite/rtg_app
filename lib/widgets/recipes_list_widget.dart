@@ -101,7 +101,10 @@ class _RecipesListState extends State<RecipesList> {
 
           return Expanded(
             child: Center(
-              child: Text(AppLocalizations.of(context).empty_recipes_list),
+              child: Text(
+                AppLocalizations.of(context).empty_recipes_list,
+                key: Key(Keys.receipesListEmptyText),
+              ),
             ),
           );
         }),

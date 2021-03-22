@@ -4,12 +4,10 @@ import 'package:sembast/sembast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-
 final todoTABLE = 'Todo';
 
 class SembastDatabaseProvider {
   static final SembastDatabaseProvider dbProvider = SembastDatabaseProvider();
-
 
   // File path to a file in the current directory
   String _dbKey = 'main_sembast.db';
@@ -24,7 +22,7 @@ class SembastDatabaseProvider {
   }
 
   createDatabase() async {
-final appDocDir = await getApplicationDocumentsDirectory();
+    final appDocDir = await getApplicationDocumentsDirectory();
     await appDocDir.create(recursive: true);
     final path = p.join(appDocDir.path, _dbKey);
 

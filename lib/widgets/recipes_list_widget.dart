@@ -113,13 +113,12 @@ class _RecipesListState extends State<RecipesList> {
   }
 
   Widget _list(RecipesCollection recipesCollection) {
+    bool hasLoadedAll =
+        (recipesCollection.recipes.length == recipesCollection.total);
     return Expanded(
       key: Key(Keys.receipesList),
       child: ListView.builder(
-        itemCount: recipesCollection.recipes.length +
-            ((recipesCollection.recipes.length == recipesCollection.total)
-                ? 0
-                : 1),
+        itemCount: recipesCollection.recipes.length + (hasLoadedAll ? 0 : 1),
         itemBuilder: (_, index) {
           if (index == recipesCollection.recipes.length) {
             context.read<RecipesBloc>().add(FetchRecipesEvent(
@@ -129,6 +128,12 @@ class _RecipesListState extends State<RecipesList> {
           }
 
           Recipe recipe = recipesCollection.recipes[index];
+          if (hasLoadedAll && index == recipesCollection.recipes.length - 1) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 50),
+              child: ListRow(recipe: recipe),
+            );
+          }
           return ListRow(recipe: recipe);
         },
       ),

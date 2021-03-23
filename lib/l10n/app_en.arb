@@ -1,6 +1,7 @@
 {
   "home": "Home",
   "recipes": "Recipes",
+  "new_recipe": "New Recipe",
   "lists": "Lists",
   "empty_recipes_list": "No receipes found",
   "type_in_to_filter_recipes": "Type in to filter your recipes"

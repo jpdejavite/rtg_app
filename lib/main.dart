@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/screens/edit_recipe_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(RtgApp());
@@ -20,14 +21,10 @@ class RtgApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
-        const Locale('en', ''), 
+        const Locale('en', ''),
         const Locale('pt', 'BR'),
       ],
-      // theme: ThemeData.light().copyWith(
-      //   textTheme: TextTheme(
-      //     bodyText1: TextStyle(color: Colors.red),
-      //   ),
-      // ),
+      theme: ThemeData.light(),
       initialRoute: HomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) {
@@ -35,7 +32,10 @@ class RtgApp extends StatelessWidget {
         },
         HomeScreen.id: (context) {
           return HomeScreen();
-        }
+        },
+        EditRecipeScreen.id: (context) {
+          return EditRecipeScreen();
+        },
       },
     );
   }

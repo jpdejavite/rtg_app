@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/keys/keys.dart';
 
 class TextFormListFields extends StatefulWidget {
   final int index;
@@ -45,6 +46,7 @@ class _TextFormListFieldsState extends State<TextFormListFields> {
       _nameController.text = widget.initValue;
     });
     return TextFormField(
+      key: Key(Keys.saveRecipeIngredientField + widget.index.toString()),
       controller: _nameController,
       textInputAction: TextInputAction.newline,
       maxLines: null,

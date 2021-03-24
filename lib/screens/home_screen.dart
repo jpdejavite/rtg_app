@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 
@@ -48,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       BottomBarNavigationOptions(
         floatingActionButton: FloatingActionButton(
+          key: Key(Keys.homeFloatingActionNewRecipeButton),
           onPressed: () async {
             final result =
                 await Navigator.pushNamed(context, SaveRecipeScreen.id);
@@ -82,6 +84,14 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Open app settings',
             onPressed: () {
               print('go to settings');
+            },
+          ),
+          IconButton(
+            key: Key(Keys.actionDeleteAllIcon),
+            icon: Icon(Icons.delete_forever),
+            tooltip: 'Delete all database',
+            onPressed: () {
+              RecipesDao().deleteAll();
             },
           ),
         ],

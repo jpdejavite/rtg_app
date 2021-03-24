@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
-import 'package:rtg_app/widgets/txt.dart';
 
-class ListRow extends StatelessWidget {
-  //
+class RecipeListRow extends StatelessWidget {
   final Recipe recipe;
-  ListRow({this.recipe});
+  final int index;
+  RecipeListRow({this.recipe, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,10 @@ class ListRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Txt(text: recipe.id + ": " +recipe.title),
+          Text(
+            recipe.title,
+            key: Key(Keys.recipeListRowTitleText + index.toString()),
+          ),
           Divider(),
         ],
       ),

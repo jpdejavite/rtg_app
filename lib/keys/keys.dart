@@ -1,5 +1,8 @@
 class Keys {
   // home screen
+  static const String actionDeleteAllIcon = 'home-action-delete-all-icon';
+  static const String homeFloatingActionNewRecipeButton =
+      'home-floating-action-new-recipe-button';
   static const String homeBottomBarHomeText = 'home-bottom-bar-home-text-key';
   static const String homeBottomBarListsText = 'home-bottom-bar-lists-text-key';
   static const String homeBottomBarHomeIcon = 'home-bottom-bar-home-icon-key';
@@ -9,8 +12,21 @@ class Keys {
       'home-bottom-bar-recipes-lists-key';
 
   // recipes list
-  static const String receipesList = 'receipes-list-key';
-  static const String receipesListEmptyText = 'receipes-list-empy-text';
+  static const String recipesList = 'recipes-list-key';
+  static const String recipesListEmptyText = 'recipes-list-empy-text';
+
+  // recipe list row
+  static const String recipeListRowTitleText = 'recipes-list-row-title-text';
+
+  // save recipe
+  static const String saveRecipeNameField = 'save-recipe-name-field';
+  static const String saveRecipePortionField = 'save-recipe-portion-field';
+  static const String saveRecipeIngredientField =
+      'save-recipe-ingredient-field';
+  static const String saveRecipeInstructionsField =
+      'save-recipe-instructions-field';
+  static const String saveRecipeFloatingActionSaveButton =
+      'save-recipe-floating-action-save-button';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

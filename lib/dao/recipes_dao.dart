@@ -89,9 +89,14 @@ class RecipesDao {
     // }
   }
 
+  Future deleteAll() async {
+    var store = intMapStoreFactory.store('recipes');
+    var db = await dbProvider.database;
+    await store.delete(db);
+  }
+
   Future<Error> save({Recipe recipe}) async {
     try {
-      await Future.delayed(Duration(seconds: 5));
       var store = intMapStoreFactory.store('recipes');
       var db = await dbProvider.database;
       await db.transaction((txn) async {

@@ -9,7 +9,7 @@ import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/error.dart';
-import 'package:rtg_app/widgets/list_row.dart';
+import 'package:rtg_app/widgets/recipe_list_row.dart';
 import 'package:rtg_app/widgets/loading.dart';
 import 'package:rtg_app/widgets/loading_row.dart';
 
@@ -119,7 +119,7 @@ class RecipesListState extends State<RecipesList> {
             child: Center(
               child: Text(
                 AppLocalizations.of(context).empty_recipes_list,
-                key: Key(Keys.receipesListEmptyText),
+                key: Key(Keys.recipesListEmptyText),
               ),
             ),
           );
@@ -132,7 +132,7 @@ class RecipesListState extends State<RecipesList> {
     bool hasLoadedAll =
         (recipesCollection.recipes.length == recipesCollection.total);
     return Expanded(
-      key: Key(Keys.receipesList),
+      key: Key(Keys.recipesList),
       child: ListView.builder(
         itemCount: recipesCollection.recipes.length + (hasLoadedAll ? 0 : 1),
         itemBuilder: (_, index) {
@@ -147,10 +147,10 @@ class RecipesListState extends State<RecipesList> {
           if (hasLoadedAll && index == recipesCollection.recipes.length - 1) {
             return Padding(
               padding: EdgeInsets.only(bottom: 50),
-              child: ListRow(recipe: recipe),
+              child: RecipeListRow(recipe: recipe),
             );
           }
-          return ListRow(recipe: recipe);
+          return RecipeListRow(recipe: recipe);
         },
       ),
     );

@@ -1,13 +1,15 @@
+import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/database/sembast_database.dart';
 import 'package:sembast/sembast.dart';
 
 class DatbaseHelper {
   static final dbProvider = SembastDatabaseProvider.dbProvider;
 
+  static final RecipesDao recipesDao = RecipesDao();
+
   static initDB(String user) async {
-    var store = intMapStoreFactory.store('recipes');
-    var db = await dbProvider.database;
-    await store.delete(db);
+    recipesDao.deleteAll();
+    print('database deleted');
     // await db.transaction((txn) async {
     //   for (int i = 0; i < 200; i++) {
     //     await store.add(txn, {

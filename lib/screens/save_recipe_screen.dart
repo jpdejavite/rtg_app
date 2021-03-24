@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/bloc/save_recipe/events.dart';
 import 'package:rtg_app/bloc/save_recipe/save_recipe_bloc.dart';
 import 'package:rtg_app/bloc/save_recipe/states.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -72,6 +73,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         title: Text(AppLocalizations.of(context).new_recipe),
       ),
       floatingActionButton: FloatingActionButton(
+        key: Key(Keys.saveRecipeFloatingActionSaveButton),
         onPressed: () {
           if (_formKey.currentState.validate()) {
             context
@@ -112,6 +114,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     List<Widget> fields = [
       TextFormSectionLabelFields(AppLocalizations.of(context).general_data),
       TextFormField(
+        key: Key(Keys.saveRecipeNameField),
         controller: _nameController,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).recipe_name,
@@ -137,6 +140,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         ),
       ),
       TextFormField(
+        key: Key(Keys.saveRecipePortionField),
         controller: _portionsController,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).servers_how_many_people,
@@ -206,6 +210,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     fields.addAll([
       TextFormSectionLabelFields(AppLocalizations.of(context).how_to_do),
       TextFormField(
+        key: Key(Keys.saveRecipeInstructionsField),
         controller: _instructionsController,
         minLines: 6,
         keyboardType: TextInputType.multiline,
@@ -253,7 +258,8 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       updatedAt: DateTime.now().millisecondsSinceEpoch,
       instructions: _instructionsController.text,
       portions: int.parse(_portionsController.text),
-      totalPrepartionTime: int.parse(_preparationTimeController.text == null
+      totalPrepartionTime: int.parse((_preparationTimeController.text == null ||
+              _preparationTimeController.text == "")
           ? '0'
           : _preparationTimeController.text),
       source: _sourceController.text,

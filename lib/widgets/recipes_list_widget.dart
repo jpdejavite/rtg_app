@@ -7,6 +7,7 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/error.dart';
 import 'package:rtg_app/widgets/list_row.dart';
 import 'package:rtg_app/widgets/loading.dart';
@@ -16,22 +17,37 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecipesList extends StatefulWidget {
   static String id = 'recipe_list';
+
+  final Key key;
+
+  RecipesList({this.key});
+
+  static newRecipeListBloc({Key key}) {
+    return BlocProvider(
+      create: (context) => RecipesBloc(recipesRepo: RecipesRepository()),
+      child: RecipesList(key: key),
+    );
+  }
+
   @override
-  _RecipesListState createState() => _RecipesListState();
+  RecipesListState createState() => RecipesListState();
 }
 
-class _RecipesListState extends State<RecipesList> {
+class RecipesListState extends State<RecipesList> {
   String filter;
   @override
   void initState() {
     super.initState();
-    _loadRecipes();
+    loadRecipes();
+    setState(() {});
   }
 
-  _loadRecipes() async {
-    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
-          searchParams: SearchRecipesParams(filter: filter),
-        ));
+  loadRecipes() async {
+    context.read<RecipesBloc>().add(
+          StartFetchRecipesEvent(
+            searchParams: SearchRecipesParams(filter: filter),
+          ),
+        );
   }
 
   @override
@@ -80,7 +96,7 @@ class _RecipesListState extends State<RecipesList> {
             String message = '${error.message}\nTap to Retry.';
             return ErrorTxt(
               message: message,
-              onTap: _loadRecipes,
+              onTap: loadRecipes,
             );
           }
           RecipesCollection recipesCollection;

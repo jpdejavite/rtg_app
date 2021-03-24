@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TextFormListFields extends StatefulWidget {
   final int index;
   final String initValue;
+  final String hintText;
   final bool canBeRemoved;
   final void Function(int index, String value) onChanged;
   final void Function(int index) onAddNewField;
@@ -12,6 +14,7 @@ class TextFormListFields extends StatefulWidget {
   TextFormListFields({
     this.index,
     this.initValue,
+    this.hintText,
     this.canBeRemoved,
     this.onChanged,
     this.onAddNewField,
@@ -55,7 +58,7 @@ class _TextFormListFieldsState extends State<TextFormListFields> {
         widget.onChanged(widget.index, v);
       },
       decoration: InputDecoration(
-        hintText: 'Digite o nome do ingrediente',
+        hintText: widget.hintText,
         suffixIcon: widget.canBeRemoved
             ? null
             : IconButton(
@@ -67,7 +70,10 @@ class _TextFormListFieldsState extends State<TextFormListFields> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter some text';
+          return AppLocalizations.of(context).fill_this_required_field;
+        }
+        if (value.length < 3) {
+          return AppLocalizations.of(context).type_in_3_chars;
         }
         return null;
       },

@@ -30,4 +30,19 @@ class RecipeIngredient {
       name: record["name"],
     );
   }
+
+  static Object recipeIngredientsToRecord(List<RecipeIngredient> ingredients) {
+    if (ingredients == null || ingredients.length == 0) {
+      return null;
+    }
+
+    List<Object> objects = [];
+    ingredients.forEach((i) {
+      objects.add({
+        'name': i.name,
+      });
+    });
+
+    return objects;
+  }
 }

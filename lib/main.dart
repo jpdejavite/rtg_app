@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rtg_app/screens/edit_recipe_screen.dart';
+import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   runApp(RtgApp());
@@ -33,10 +35,11 @@ class RtgApp extends StatelessWidget {
         HomeScreen.id: (context) {
           return HomeScreen();
         },
-        EditRecipeScreen.id: (context) {
-          return EditRecipeScreen();
+        SaveRecipeScreen.id: (context) {
+          return SaveRecipeScreen.newSaveRecipeBloc();
         },
       },
+      builder: EasyLoading.init(),
     );
   }
 }

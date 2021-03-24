@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rtg_app/bloc/recipes/recipes_bloc.dart';
 import 'package:rtg_app/keys/keys.dart';
-import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/widgets/custom_toast.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'edit_recipe_screen.dart';
+import 'save_recipe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -26,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<BottomBarNavigationOptions> _widgetOptions;
+  GlobalKey<RecipesListState> _recipeKeyListkey = GlobalKey();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,15 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       BottomBarNavigationOptions(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, EditRecipeScreen.id);
+          onPressed: () async {
+            final result =
+                await Navigator.pushNamed(context, SaveRecipeScreen.id);
+            if (result != null && result as bool) {
+              CustomToast.showToast(
+                text: AppLocalizations.of(context).saved_recipe,
+                context: context,
+                time: CustomToast.timeShort,
+              );
+              _recipeKeyListkey.currentState.loadRecipes();
+            }
           },
           child: Icon(Icons.add),
         ),
-        body: BlocProvider(
-          create: (context) => RecipesBloc(recipesRepo: RecipesRepository()),
-          child: RecipesList(),
-        ),
+        body: RecipesList.newRecipeListBloc(key: _recipeKeyListkey),
       ),
       BottomBarNavigationOptions(
         body: Text(

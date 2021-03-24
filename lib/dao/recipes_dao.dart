@@ -57,35 +57,51 @@ class RecipesDao {
   }
 
   Future populateDB() async {
-    var store = intMapStoreFactory.store('recipes');
-    var db = await dbProvider.database;
-    var records = await store.find(db);
-    if (records.length != 200) {
-      await store.delete(db);
+    // var store = intMapStoreFactory.store('recipes');
+    // var db = await dbProvider.database;
+    // var records = await store.find(db);
+    // await store.delete(db);
+    // if (records.length != 200) {
+    //   await db.transaction((txn) async {
+    //     for (int i = 0; i < 200; i++) {
+    //       await store.add(txn, {
+    //         'title': 'Receita ' + i.toString().padLeft(3, '0'),
+    //         'createdAt': DateTime.now().millisecondsSinceEpoch,
+    //         'updatedAt': DateTime.now().millisecondsSinceEpoch,
+    //         'instructions': 'Instrucao' + i.toString().padLeft(3, '0'),
+    //         'ingredients': [
+    //           {
+    //             'quantity': 1,
+    //             'name': 'Ingrediente-1-' + i.toString().padLeft(3, '0')
+    //           },
+    //           {
+    //             'quantity': 2,
+    //             'name': 'Ingrediente-2-' + i.toString().padLeft(3, '0')
+    //           },
+    //           {
+    //             'quantity': 3,
+    //             'name': 'Ingrediente-3-' + i.toString().padLeft(3, '0')
+    //           }
+    //         ]
+    //       });
+    //     }
+    //   });
+    // }
+  }
+
+  Future<Error> save({Recipe recipe}) async {
+    try {
+      await Future.delayed(Duration(seconds: 5));
+      var store = intMapStoreFactory.store('recipes');
+      var db = await dbProvider.database;
       await db.transaction((txn) async {
-        for (int i = 0; i < 200; i++) {
-          await store.add(txn, {
-            'title': 'Receita ' + i.toString().padLeft(3, '0'),
-            'createdAt': DateTime.now().millisecondsSinceEpoch,
-            'updatedAt': DateTime.now().millisecondsSinceEpoch,
-            'instructions': 'Instrucao' + i.toString().padLeft(3, '0'),
-            'ingredients': [
-              {
-                'quantity': 1,
-                'name': 'Ingrediente-1-' + i.toString().padLeft(3, '0')
-              },
-              {
-                'quantity': 2,
-                'name': 'Ingrediente-2-' + i.toString().padLeft(3, '0')
-              },
-              {
-                'quantity': 3,
-                'name': 'Ingrediente-3-' + i.toString().padLeft(3, '0')
-              }
-            ]
-          });
+        if (!recipe.hasId()) {
+          await store.add(txn, recipe.toRecord());
         }
       });
+      return null;
+    } catch (e) {
+      return e;
     }
   }
 }

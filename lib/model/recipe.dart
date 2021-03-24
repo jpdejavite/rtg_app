@@ -11,6 +11,9 @@ class Recipe {
     this.createdAt,
     this.updatedAt,
     this.title,
+    this.source,
+    this.portions,
+    this.totalPrepartionTime,
     this.instructions,
     this.ingredients,
   });
@@ -19,8 +22,15 @@ class Recipe {
   int createdAt;
   int updatedAt;
   String title;
+  String source;
+  int portions;
+  int totalPrepartionTime;
   String instructions;
   List<RecipeIngredient> ingredients;
+
+  bool hasId() {
+    return this.id != null && this.id != "" && this.id != "0";
+  }
 
   factory Recipe.fromRecord(int id, Map<String, Object> record) {
     return Recipe(
@@ -28,9 +38,26 @@ class Recipe {
       createdAt: record["createdAt"],
       updatedAt: record["updatedAt"],
       title: record["title"],
+      source: record["source"],
+      portions: record["portions"],
+      totalPrepartionTime: record["totalPrepartionTime"],
       instructions: record["instructions"],
       ingredients:
           RecipeIngredient.recipeIngredientsFromObject(record["ingredients"]),
     );
+  }
+
+  Object toRecord() {
+    return {
+      'title': this.title,
+      'createdAt': this.createdAt,
+      'updatedAt': this.updatedAt,
+      'source': this.source == "" ? null : this.source,
+      'portions': this.portions,
+      'totalPrepartionTime': this.totalPrepartionTime,
+      'instructions': this.instructions,
+      'ingredients':
+          RecipeIngredient.recipeIngredientsToRecord(this.ingredients),
+    };
   }
 }

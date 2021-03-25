@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
+import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -37,6 +38,9 @@ class RtgApp extends StatelessWidget {
         },
         SaveRecipeScreen.id: (context) {
           return SaveRecipeScreen.newSaveRecipeBloc();
+        },
+        ViewRecipeScreen.id: (context) {
+          return ViewRecipeScreen();
         },
       },
       builder: EasyLoading.init(),

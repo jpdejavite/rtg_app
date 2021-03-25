@@ -18,6 +18,9 @@ class Keys {
   // recipe list row
   static const String recipeListRowTitleText = 'recipes-list-row-title-text';
 
+  // view recipe label text
+  static const String viewRecipeLabelText = 'view-recipe-label-text';
+
   // save recipe
   static const String saveRecipeNameField = 'save-recipe-name-field';
   static const String saveRecipePortionField = 'save-recipe-portion-field';

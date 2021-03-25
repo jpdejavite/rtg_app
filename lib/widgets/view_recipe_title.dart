@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TextFormSectionLabelFields extends StatelessWidget {
+class ViewRecipeTitle extends StatelessWidget {
   final String text;
 
-  TextFormSectionLabelFields(this.text);
+  ViewRecipeTitle(this.text);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: 20, bottom: 20),
       child: Text(
         text,
+        textAlign: TextAlign.center,
         style: TextStyle(
+          fontSize: 20,
           fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Theme.of(context).textTheme.caption.color,
         ),
       ),
     );

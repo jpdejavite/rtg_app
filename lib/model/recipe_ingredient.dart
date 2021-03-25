@@ -7,6 +7,11 @@ class RecipeIngredient {
   int quantity;
   String name;
 
+  @override
+  String toString() {
+    return name.toString();
+  }
+
   static List<RecipeIngredient> recipeIngredientsFromObject(Object object) {
     if (object == null || !(object is List<Object>)) {
       return [];

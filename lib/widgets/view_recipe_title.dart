@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/keys/keys.dart';
 
 class ViewRecipeTitle extends StatelessWidget {
   final String text;
@@ -11,6 +12,7 @@ class ViewRecipeTitle extends StatelessWidget {
       padding: EdgeInsets.only(top: 20, bottom: 20),
       child: Text(
         text,
+        key: Key(Keys.viewRecipeTitle),
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 20,

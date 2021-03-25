@@ -147,10 +147,16 @@ class RecipesListState extends State<RecipesList> {
           if (hasLoadedAll && index == recipesCollection.recipes.length - 1) {
             return Padding(
               padding: EdgeInsets.only(bottom: 50),
-              child: RecipeListRow(recipe: recipe),
+              child: RecipeListRow(
+                recipe: recipe,
+                index: index,
+              ),
             );
           }
-          return RecipeListRow(recipe: recipe);
+          return RecipeListRow(
+            recipe: recipe,
+            index: index,
+          );
         },
       ),
     );

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:rtg_app/keys/keys.dart';
 
 class ViewRecipeLabelText extends StatelessWidget {
   final String label;
   final String text;
+  final String keyString;
 
-  ViewRecipeLabelText({this.label, this.text});
+  ViewRecipeLabelText({this.label, this.text, this.keyString});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 5, bottom: 5),
       child: RichText(
-        key: Key(Keys.viewRecipeLabelText),
+        key: Key(keyString),
         text: TextSpan(
           text: label + ": ",
           style: Theme.of(context)

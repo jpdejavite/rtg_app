@@ -31,6 +31,14 @@ class Keys {
   static const String saveRecipeFloatingActionSaveButton =
       'save-recipe-floating-action-save-button';
 
+  // view recipe
+  static const String viewRecipeTitle = 'view-recipe-title';
+  static const String viewRecipePortionsLabelText =
+      'view-recipe-portions-label-text';
+  static const String viewRecipeIngredientText = 'view-recipe-ingredient-text';
+  static const String viewRecipeInstructionText =
+      'view-recipe-instructions-text';
+
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';
 }

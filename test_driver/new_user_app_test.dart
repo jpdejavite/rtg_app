@@ -24,7 +24,21 @@ void main() {
         find.byValueKey(Keys.saveRecipeInstructionsField);
     final saveRecipeFloatingActionSaveButton =
         find.byValueKey(Keys.saveRecipeFloatingActionSaveButton);
-    final recipeListRowTitleText = find.byValueKey(Keys.recipeListRowTitleText);
+    final recipeListRowTitleText0 =
+        find.byValueKey(Keys.recipeListRowTitleText + "0");
+    final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
+    final viewRecipeIngredientText0 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "0");
+    final viewRecipeIngredientText1 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "1");
+    final viewRecipeInstructionText =
+        find.byValueKey(Keys.viewRecipeInstructionText);
+
+    final String recipeName = 'Minha primeira receita!';
+    final String portion = '1';
+    final String ingredient0 = '1 chuchu';
+    final String ingredient1 = '1 colher de chá de sal';
+    final String instructions = 'Vamos preparar minha primeira receita\n\\o/';
 
     FlutterDriver driver;
 
@@ -71,12 +85,6 @@ void main() {
     });
 
     test('new recipe', () async {
-      String recipeName = 'Minha primeira receita!';
-      String portion = '1';
-      String ingredient0 = '1 chuchu';
-      String ingredient1 = '1 colher de chá de sal';
-      String instructions = 'Vamos preparar minha primeira receita\n\\o/';
-
       await driver.tap(homeBottomBarRecipesIcon);
       await driver.tap(floatingActionNewRecipeButton);
 
@@ -98,7 +106,21 @@ void main() {
 
       await driver.tap(saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(recipeListRowTitleText), recipeName);
+      expect(await driver.getText(recipeListRowTitleText0), recipeName);
+    });
+
+    test('view recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText0);
+
+      expect(await driver.getText(viewRecipeTitle), recipeName);
+      expect(
+          await driver.getText(viewRecipeIngredientText0), "• " + ingredient0);
+      expect(
+          await driver.getText(viewRecipeIngredientText1), "• " + ingredient1);
+
+      expect(await driver.getText(viewRecipeInstructionText), instructions);
     });
   });
 }

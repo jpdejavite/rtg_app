@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_label.dart';
@@ -66,6 +67,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     }
 
     children.add(ViewRecipeLabelText(
+      keyString: Keys.viewRecipePortionsLabelText,
       label: AppLocalizations.of(context).serves,
       text: recipe.portions.toString() +
           " " +
@@ -85,8 +87,9 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
       copyText: recipe.ingredients.join("\n"),
     ));
 
-    recipe.ingredients.forEach((ingredient) {
+    recipe.ingredients.asMap().forEach((index, ingredient) {
       children.add(ViewRecipeText(
+        keyString: Keys.viewRecipeIngredientText + index.toString(),
         text: ingredient.name,
         hasBullet: true,
         hasPaddingTop: true,
@@ -98,6 +101,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
       copyText: recipe.instructions,
     ));
     children.add(ViewRecipeText(
+      keyString: Keys.viewRecipeInstructionText,
       text: recipe.instructions,
       hasBullet: false,
       hasPaddingTop: false,

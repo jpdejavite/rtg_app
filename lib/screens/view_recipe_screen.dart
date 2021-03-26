@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/screens/save_recipe_screen.dart';
+import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_label.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
@@ -18,9 +20,27 @@ class ViewRecipeScreen extends StatefulWidget {
 }
 
 class _ViewRecipeState extends State<ViewRecipeScreen> {
+  Recipe recipe;
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments;
+
+    if (args == null || !(args is Recipe)) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).recipe_details),
+        ),
+        body: Center(
+          child: Text(
+              AppLocalizations.of(context).not_possible_to_show_recipe_details),
+        ),
+      );
+    }
+
+    if (recipe == null) {
+      recipe = args as Recipe;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -29,34 +49,37 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
           IconButton(
             icon: Icon(Icons.copy),
             onPressed: () {
-              if (args != null && args is Recipe) {
-                Clipboard.setData(
-                    new ClipboardData(text: getRecipeAsData(args)));
-              }
+              Clipboard.setData(new ClipboardData(text: getRecipeAsData()));
             },
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('on pressed');
+        key: Key(Keys.viewRecipeFloatingActionEditButton),
+        onPressed: () async {
+          final result = await Navigator.pushNamed(
+            context,
+            SaveRecipeScreen.id,
+            arguments: recipe,
+          );
+          if (result != null && result is Recipe) {
+            CustomToast.showToast(
+              text: AppLocalizations.of(context).saved_recipe,
+              context: context,
+              time: CustomToast.timeShort,
+            );
+            setState(() {
+              recipe = result;
+            });
+          }
         },
         child: Icon(Icons.edit),
       ),
-      body: buildBody(args),
+      body: buildBody(),
     );
   }
 
-  Widget buildBody(var args) {
-    if (args == null || !(args is Recipe)) {
-      return Center(
-        child: Text(
-            AppLocalizations.of(context).not_possible_to_show_recipe_details),
-      );
-    }
-
-    Recipe recipe = args as Recipe;
-
+  Widget buildBody() {
     List<Widget> children = [ViewRecipeTitle(recipe.title)];
 
     if (recipe.source != null && recipe.source != "") {
@@ -117,8 +140,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     );
   }
 
-  String getRecipeAsData(var args) {
-    Recipe recipe = args as Recipe;
+  String getRecipeAsData() {
     List<String> data = [recipe.title + "\n"];
     if (recipe.source != null && recipe.source != "") {
       data.add(AppLocalizations.of(context).source + ": " + recipe.source);

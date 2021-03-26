@@ -19,13 +19,18 @@ class RecipesList extends StatefulWidget {
   static String id = 'recipe_list';
 
   final Key key;
+  final Function(Recipe recipe) onTapRecipe;
 
-  RecipesList({this.key});
+  RecipesList({this.key, this.onTapRecipe});
 
-  static newRecipeListBloc({Key key}) {
+  static newRecipeListBloc(
+      {Key key, final Function(Recipe recipe) onTapRecipe}) {
     return BlocProvider(
       create: (context) => RecipesBloc(recipesRepo: RecipesRepository()),
-      child: RecipesList(key: key),
+      child: RecipesList(
+        key: key,
+        onTapRecipe: onTapRecipe,
+      ),
     );
   }
 
@@ -150,12 +155,18 @@ class RecipesListState extends State<RecipesList> {
               child: RecipeListRow(
                 recipe: recipe,
                 index: index,
+                onTap: (int i) {
+                  widget.onTapRecipe(recipesCollection.recipes[i]);
+                },
               ),
             );
           }
           return RecipeListRow(
             recipe: recipe,
             index: index,
+            onTap: (int i) {
+              widget.onTapRecipe(recipesCollection.recipes[i]);
+            },
           );
         },
       ),

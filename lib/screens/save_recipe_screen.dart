@@ -17,11 +17,14 @@ import 'package:rtg_app/widgets/text_form_section_label.dart';
 
 class SaveRecipeScreen extends StatefulWidget {
   static String id = 'save_recipe_screen';
+  final Recipe editRecipe;
 
-  static newSaveRecipeBloc() {
+  SaveRecipeScreen(this.editRecipe);
+
+  static newSaveRecipeBloc(args) {
     return BlocProvider(
       create: (context) => SaveRecipeBloc(recipesRepo: RecipesRepository()),
-      child: SaveRecipeScreen(),
+      child: SaveRecipeScreen(args),
     );
   }
 
@@ -43,14 +46,35 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _instructionsController = TextEditingController();
-    _sourceController = TextEditingController();
-    _portionsController = TextEditingController();
-    _preparationTimeController = TextEditingController();
-    ingredients = [''];
+
+    _nameController = TextEditingController(
+        text: widget.editRecipe != null ? widget.editRecipe.title : '');
+    _instructionsController = TextEditingController(
+        text: widget.editRecipe != null ? widget.editRecipe.instructions : '');
+    _sourceController = TextEditingController(
+        text: widget.editRecipe != null ? widget.editRecipe.source : '');
+    _portionsController = TextEditingController(
+        text: widget.editRecipe != null
+            ? widget.editRecipe.portions == null
+                ? ''
+                : widget.editRecipe.portions.toString()
+            : '');
+    _preparationTimeController = TextEditingController(
+        text: widget.editRecipe != null
+            ? widget.editRecipe.totalPrepartionTime.toString()
+            : '');
+    if (widget.editRecipe == null) {
+      ingredients = [''];
+      focusNodes = [FocusNode()];
+    } else {
+      ingredients = [];
+      focusNodes = [];
+      widget.editRecipe.ingredients.forEach((ingredient) {
+        ingredients.add(ingredient.toString());
+        focusNodes.add(FocusNode());
+      });
+    }
     textFieldToFocus = -1;
-    focusNodes = [FocusNode()];
   }
 
   @override
@@ -96,13 +120,13 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         EasyLoading.dismiss();
       }
       if (state is RecipeSaved) {
-        if (state.error != null) {
+        if (state.response.error != null) {
           CustomToast.showToast(
             text: AppLocalizations.of(context).generic_error_save_recipe,
             context: context,
           );
         } else {
-          Navigator.pop(context, true);
+          Navigator.pop(context, state.response.recipe);
         }
       }
 
@@ -232,6 +256,9 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ),
     ]);
 
+    // if (recipe != null) {
+    //   _nameController.text = recipe.title;
+    // }
     return Form(
       key: _formKey,
       child: Container(
@@ -253,6 +280,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     });
 
     return Recipe(
+      id: widget.editRecipe != null ? widget.editRecipe.id : null,
       title: _nameController.text,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,

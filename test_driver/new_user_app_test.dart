@@ -1,4 +1,3 @@
-// Imports the Flutter Driver API.
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:test/test.dart';
@@ -33,6 +32,9 @@ void main() {
         find.byValueKey(Keys.viewRecipeIngredientText + "1");
     final viewRecipeInstructionText =
         find.byValueKey(Keys.viewRecipeInstructionText);
+    SerializableFinder backButtonFinder = find.byTooltip("Voltar");
+    final viewRecipeFloatingActionEditButton =
+        find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
 
     final String recipeName = 'Minha primeira receita!';
     final String portion = '1';
@@ -121,6 +123,27 @@ void main() {
           await driver.getText(viewRecipeIngredientText1), "• " + ingredient1);
 
       expect(await driver.getText(viewRecipeInstructionText), instructions);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText0);
+
+      await driver.tap(viewRecipeFloatingActionEditButton);
+
+      await driver.tap(saveRecipeNameField);
+      await driver.enterText(recipeName + " editado");
+
+      await driver.tap(saveRecipeFloatingActionSaveButton);
+
+      expect(await driver.getText(viewRecipeTitle), recipeName + " editado");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
     });
   });
 }

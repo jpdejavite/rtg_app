@@ -38,6 +38,8 @@ class Keys {
   static const String viewRecipeIngredientText = 'view-recipe-ingredient-text';
   static const String viewRecipeInstructionText =
       'view-recipe-instructions-text';
+  static const String viewRecipeFloatingActionEditButton =
+      'view-recipe-floating-action-edit-button';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

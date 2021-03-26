@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/save_recipe_response.dart';
 
 abstract class SaveRecipeState extends Equatable {
   @override
@@ -11,6 +11,6 @@ class SaveRecipeInitState extends SaveRecipeState {}
 class SavingRecipe extends SaveRecipeState {}
 
 class RecipeSaved extends SaveRecipeState {
-  final error;
-  RecipeSaved({this.error});
+  final SaveRecipeResponse response;
+  RecipeSaved({this.response});
 }

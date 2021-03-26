@@ -9,6 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import 'model/recipe.dart';
+
 void main() {
   runApp(RtgApp());
 }
@@ -37,7 +39,12 @@ class RtgApp extends StatelessWidget {
           return HomeScreen();
         },
         SaveRecipeScreen.id: (context) {
-          return SaveRecipeScreen.newSaveRecipeBloc();
+          var args = ModalRoute.of(context).settings.arguments;
+          Recipe editRecipe;
+          if (args != null && args is Recipe) {
+            editRecipe = args;
+          }
+          return SaveRecipeScreen.newSaveRecipeBloc(editRecipe);
         },
         ViewRecipeScreen.id: (context) {
           return ViewRecipeScreen();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/keys/keys.dart';
+import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
@@ -14,11 +16,17 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  //
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   int _selectedIndex = 0;
@@ -31,6 +39,21 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    print('didChangeAppLifecycleState');
+    if (state == AppLifecycleState.resumed) {
+      if (_recipeKeyListkey != null && _recipeKeyListkey.currentState != null) {
+        print('didChangeAppLifecycleState ');
+        _recipeKeyListkey.currentState.loadRecipes();
+      }
+    }
+  }
+
+  void refreshRecipeList() {
+    _recipeKeyListkey.currentState.loadRecipes();
   }
 
   @override
@@ -53,18 +76,27 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () async {
             final result =
                 await Navigator.pushNamed(context, SaveRecipeScreen.id);
-            if (result != null && result as bool) {
+            if (result != null && result is Recipe) {
               CustomToast.showToast(
                 text: AppLocalizations.of(context).saved_recipe,
                 context: context,
                 time: CustomToast.timeShort,
               );
-              _recipeKeyListkey.currentState.loadRecipes();
+              refreshRecipeList();
             }
           },
           child: Icon(Icons.add),
         ),
-        body: RecipesList.newRecipeListBloc(key: _recipeKeyListkey),
+        body: RecipesList.newRecipeListBloc(
+            key: _recipeKeyListkey,
+            onTapRecipe: (Recipe recipe) async {
+              await Navigator.pushNamed(
+                context,
+                ViewRecipeScreen.id,
+                arguments: recipe,
+              );
+              refreshRecipeList();
+            }),
       ),
       BottomBarNavigationOptions(
         body: Text(

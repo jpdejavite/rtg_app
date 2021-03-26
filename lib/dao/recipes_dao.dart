@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rtg_app/database/sembast_database.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/save_recipe_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:sembast/sembast.dart';
 
@@ -95,18 +96,23 @@ class RecipesDao {
     await store.delete(db);
   }
 
-  Future<Error> save({Recipe recipe}) async {
+  Future<SaveRecipeResponse> save({Recipe recipe}) async {
     try {
       var store = intMapStoreFactory.store('recipes');
       var db = await dbProvider.database;
-      await db.transaction((txn) async {
-        if (!recipe.hasId()) {
-          await store.add(txn, recipe.toRecord());
-        }
-      });
-      return null;
+      if (!recipe.hasId()) {
+        await db.transaction((txn) async {
+          int id = await store.add(txn, recipe.toRecord());
+          recipe.id = id.toString();
+        });
+      } else {
+        var record = store.record(int.parse(recipe.id));
+        await record.update(db, recipe.toRecord());
+      }
+
+      return SaveRecipeResponse(recipe: recipe);
     } catch (e) {
-      return e;
+      return SaveRecipeResponse(error: e);
     }
   }
 }

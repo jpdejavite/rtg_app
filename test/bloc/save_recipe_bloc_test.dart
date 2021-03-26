@@ -1,15 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mockito/mockito.dart';
-import 'package:rtg_app/bloc/recipes/recipes_bloc.dart';
-import 'package:rtg_app/bloc/recipes/events.dart';
-import 'package:rtg_app/bloc/recipes/states.dart';
 import 'package:rtg_app/bloc/save_recipe/events.dart';
 import 'package:rtg_app/bloc/save_recipe/save_recipe_bloc.dart';
 import 'package:rtg_app/bloc/save_recipe/states.dart';
 import 'package:rtg_app/model/recipe.dart';
-import 'package:rtg_app/model/recipes_collection.dart';
-import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/model/save_recipe_response.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 
 class MockRecipesRepo extends Mock implements RecipesRepository {}
@@ -33,19 +29,20 @@ void main() {
 
   test('save recipe without error', () {
     Recipe recipe = Recipe(title: "teste 1");
+    SaveRecipeResponse recipeResponse = SaveRecipeResponse(recipe: recipe);
 
     final expectedResponse = [
       SavingRecipe(),
       RecipeSaved(),
     ];
     when(recipesRepository.save(recipe: recipe))
-        .thenAnswer((_) => Future.value(null));
+        .thenAnswer((_) => Future.value(recipeResponse));
 
     expectLater(
       saveRecipeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
-      expect(saveRecipeBloc.state, RecipeSaved());
+      expect(saveRecipeBloc.state, RecipeSaved(response: recipeResponse));
     });
 
     saveRecipeBloc.add(SaveRecipeEvent(recipe: recipe));
@@ -55,18 +52,20 @@ void main() {
     Recipe recipe = Recipe(title: "teste 1");
     Error error = UnsupportedError('not supported');
 
+    SaveRecipeResponse recipeResponse = SaveRecipeResponse(error: error);
+
     final expectedResponse = [
       SavingRecipe(),
-      RecipeSaved(error: error),
+      RecipeSaved(response: recipeResponse),
     ];
     when(recipesRepository.save(recipe: recipe))
-        .thenAnswer((_) => Future.value(error));
+        .thenAnswer((_) => Future.value(recipeResponse));
 
     expectLater(
       saveRecipeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
-      expect(saveRecipeBloc.state, RecipeSaved(error: error));
+      expect(saveRecipeBloc.state, RecipeSaved(response: recipeResponse));
     });
 
     saveRecipeBloc.add(SaveRecipeEvent(recipe: recipe));

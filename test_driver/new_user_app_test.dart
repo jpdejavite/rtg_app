@@ -65,6 +65,14 @@ void main() {
           await Helper.isPresent(
               find.byValueKey(Keys.homeBottomBarHomeText), driver),
           true);
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeActionSettingsIcon), driver),
+          true);
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeActionSettingsNotification), driver),
+          true);
     });
 
     test('tap recipes', () async {

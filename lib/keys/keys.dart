@@ -1,5 +1,8 @@
 class Keys {
   // home screen
+  static const String homeActionSettingsIcon = 'home-action-settings-icon';
+  static const String homeActionSettingsNotification =
+      'home-action-settings-notification';
   static const String actionDeleteAllIcon = 'home-action-delete-all-icon';
   static const String homeFloatingActionNewRecipeButton =
       'home-floating-action-new-recipe-button';

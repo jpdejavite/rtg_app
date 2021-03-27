@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
+import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
 
@@ -36,7 +37,7 @@ class RtgApp extends StatelessWidget {
           return WelcomeScreen();
         },
         HomeScreen.id: (context) {
-          return HomeScreen();
+          return HomeScreen.newHomeBloc();
         },
         SaveRecipeScreen.id: (context) {
           var args = ModalRoute.of(context).settings.arguments;
@@ -48,6 +49,9 @@ class RtgApp extends StatelessWidget {
         },
         ViewRecipeScreen.id: (context) {
           return ViewRecipeScreen();
+        },
+        SettingsScreen.id: (context) {
+          return SettingsScreen();
         },
       },
       builder: EasyLoading.init(),

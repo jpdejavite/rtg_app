@@ -282,7 +282,9 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     return Recipe(
       id: widget.editRecipe != null ? widget.editRecipe.id : null,
       title: _nameController.text,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
+      createdAt: widget.editRecipe != null
+          ? widget.editRecipe.createdAt
+          : DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
       instructions: _instructionsController.text,
       portions: int.parse(_portionsController.text),

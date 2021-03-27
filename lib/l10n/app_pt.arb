@@ -43,5 +43,7 @@
   "weeks":"semanas",
   "month":"mês",
   "months":"meses",
+  "open_settings":"Abrir configurações",
+  "settings":"Configurações",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

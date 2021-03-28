@@ -1,90 +1,114 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import "package:http/http.dart" as http;
+import 'package:rtg_app/api/google_api.dart';
+import 'package:rtg_app/bloc/settings/events.dart';
+import 'package:rtg_app/bloc/settings/settings_bloc.dart';
+import 'package:rtg_app/bloc/settings/states.dart';
+import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'settings_screen';
+
+  static newSettingsBloc() {
+    return BlocProvider(
+      create: (context) => SettingsBloc(
+          backupRepository: BackupRepository(),
+          googleApi: GoogleApi.getGoogleApi()),
+      child: SettingsScreen(),
+    );
+  }
 
   @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<SettingsScreen> {
-  GoogleSignInAccount _currentUser;
-
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    // Optional clientId
-    // clientId:
-    //     '826451127529-aqcb4r7m1eu287iht0ugq86t1nmkuvo6.apps.googleusercontent.com',
-    scopes: <String>[
-      'email',
-      'https://www.googleapis.com/auth/drive',
-    ],
-  );
-
   @override
   void initState() {
     super.initState();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      setState(() {
-        _currentUser = account;
-      });
+    context.read<SettingsBloc>().add(GetBackupEvent());
+  }
 
-      if (_currentUser != null) {
-        _handleGetContact(_currentUser);
+  List<Widget> buildBackup(SettingsState state) {
+    List<Widget> children = [
+      Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Text(
+          AppLocalizations.of(context).backup,
+          style: Theme.of(context).textTheme.headline5,
+        ),
+      )
+    ];
+
+    Backup backup = state is BackupLoaded ? state.backup : null;
+    String accountName = state is BackupLoaded ? state.accountName : null;
+    if (backup != null && backup.type == BackupType.drive) {
+      children.addAll([
+        ViewRecipeLabelText(
+          label: AppLocalizations.of(context).configured_at,
+          text: AppLocalizations.of(context).google_drive,
+        ),
+        ViewRecipeLabelText(
+          label: AppLocalizations.of(context).account,
+          text: accountName,
+        ),
+      ]);
+
+      if (backup.lastestBackupStatus == BackupStatus.pending) {
+        children.addAll([
+          ViewRecipeLabelText(
+            label: AppLocalizations.of(context).status,
+            text: AppLocalizations.of(context).pending_click_below_to_retry,
+          ),
+          ElevatedButton(
+            child: Text(AppLocalizations.of(context).do_backup),
+            onPressed: () {
+              context.read<SettingsBloc>().add(DoDriveBackupEvent());
+            },
+          )
+        ]);
       }
-    });
-    _googleSignIn.signInSilently();
-  }
-
-  Future<void> _handleGetContact(GoogleSignInAccount user) async {
-    print("Loading drive files...");
-    final http.Response response = await http.get(
-      Uri.parse('https://www.googleapis.com/drive/v3/files'),
-      headers: await user.authHeaders,
-    );
-    if (response.statusCode != 200) {
-      print("People API gave a ${response.statusCode} "
-          "response. Check logs for details.");
-      print('People API ${response.statusCode} response: ${response.body}');
-      return;
+    } else {
+      children.addAll([
+        Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 5),
+          child: Text(
+            AppLocalizations.of(context).configure_backup,
+            style: Theme.of(context).textTheme.bodyText2,
+          ),
+        ),
+        ElevatedButton(
+          child: Text(AppLocalizations.of(context).google_drive),
+          onPressed: () {
+            context.read<SettingsBloc>().add(ConfigureDriveBackupEvent());
+          },
+        )
+      ]);
     }
-    print('People API ${response.statusCode} response: ${response.body}');
-    // final Map<String, dynamic> data = json.decode(response.body);
-    // final String? namedContact = _pickFirstNamedContact(data);
-    // setState(() {
-    //   if (namedContact != null) {
-    //     _contactText = "I see you know $namedContact!";
-    //   } else {
-    //     _contactText = "No contacts to display.";
-    //   }
-    // });
-  }
 
-  Future<void> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
-    }
+    return children;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).settings),
-      ),
-      body: Column(children: [
-        Text(
-            'configurações' + (_currentUser == null ? '' : _currentUser.email)),
-        ElevatedButton(
-          child: const Text('SIGN IN'),
-          onPressed: _handleSignIn,
+    return BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (BuildContext context, SettingsState state) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).settings),
         ),
-      ]),
-    );
+        body: ListView(
+          padding: EdgeInsets.all(20),
+          shrinkWrap: true,
+          children: [
+            ...buildBackup(state),
+          ],
+        ),
+      );
+    });
   }
 }

@@ -29,4 +29,10 @@ class SembastDatabaseProvider {
     // We use the database factory to open the database
     return await dbFactory.openDatabase(path);
   }
+
+  Future<String> getDatabaseFilePath() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    await appDocDir.create(recursive: true);
+    return p.join(appDocDir.path, _dbKey);
+  }
 }

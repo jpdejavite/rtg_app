@@ -8,6 +8,7 @@ import 'package:sembast/sembast.dart';
 
 class RecipesDao {
   final dbProvider = SembastDatabaseProvider.dbProvider;
+  final String storeName = 'recipes';
 
   Filter getFilterContainingProducts(RegExp filter) {
     return Filter.custom((record) {
@@ -24,7 +25,7 @@ class RecipesDao {
 
   Future<RecipesCollection> searchRecipes(
       {SearchRecipesParams searchParams}) async {
-    var store = intMapStoreFactory.store('recipes');
+    var store = intMapStoreFactory.store(storeName);
     var db = await dbProvider.database;
 
     Filter filter;
@@ -91,14 +92,14 @@ class RecipesDao {
   }
 
   Future deleteAll() async {
-    var store = intMapStoreFactory.store('recipes');
+    var store = intMapStoreFactory.store(storeName);
     var db = await dbProvider.database;
     await store.delete(db);
   }
 
   Future<SaveRecipeResponse> save({Recipe recipe}) async {
     try {
-      var store = intMapStoreFactory.store('recipes');
+      var store = intMapStoreFactory.store(storeName);
       var db = await dbProvider.database;
       if (!recipe.hasId()) {
         await db.transaction((txn) async {

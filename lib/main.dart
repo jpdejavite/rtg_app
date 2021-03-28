@@ -51,7 +51,7 @@ class RtgApp extends StatelessWidget {
           return ViewRecipeScreen();
         },
         SettingsScreen.id: (context) {
-          return SettingsScreen();
+          return SettingsScreen.newSettingsBloc();
         },
       },
       builder: EasyLoading.init(),

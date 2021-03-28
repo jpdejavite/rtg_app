@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
+import 'package:rtg_app/dao/backup_dao.dart';
 import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/keys/keys.dart';
-import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -104,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
         tooltip: 'Delete all database',
         onPressed: () async {
           await RecipesDao().deleteAll();
+          await BackupDao().deleteAll();
+          await GoogleApi.getGoogleApi().logout();
           refreshRecipeList();
         },
       ),

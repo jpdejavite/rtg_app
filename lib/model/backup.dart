@@ -1,5 +1,5 @@
 enum BackupType { drive, none }
-enum BackupStatus { error, pending, processing, done }
+enum BackupStatus { error, pending, done }
 
 class Backup {
   Backup({

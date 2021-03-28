@@ -6,9 +6,10 @@ import 'package:sembast/sembast.dart';
 
 class BackupDao {
   final dbProvider = SembastDatabaseProvider.dbProvider;
+  final String storeName = 'backups';
 
   Future<Backup> getBackup() async {
-    var store = intMapStoreFactory.store('backups');
+    var store = intMapStoreFactory.store(storeName);
     var db = await dbProvider.database;
 
     var records = await store.find(db);
@@ -31,9 +32,15 @@ class BackupDao {
     return backup;
   }
 
+  Future deleteAll() async {
+    var store = intMapStoreFactory.store(storeName);
+    var db = await dbProvider.database;
+    await store.delete(db);
+  }
+
   Future<SaveBackupResponse> save({Backup backup}) async {
     try {
-      var store = intMapStoreFactory.store('backups');
+      var store = intMapStoreFactory.store(storeName);
       var db = await dbProvider.database;
       var record = store.record(int.parse(backup.id));
       await record.update(db, backup.toRecord());

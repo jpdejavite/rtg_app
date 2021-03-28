@@ -8,16 +8,13 @@ abstract class HomeState extends Equatable {
 
 class HomeInitState extends HomeState {}
 
-class LoadingBackup extends HomeState {}
-
-class BackupLoaded extends HomeState {
+class BackupHasError extends HomeState {
   final Backup backup;
-  BackupLoaded({this.backup});
+  BackupHasError({this.backup});
   @override
   List<Object> get props => [backup];
 }
 
-class BackupLoadError extends HomeState {
-  final error;
-  BackupLoadError({this.error});
-}
+class BackupNotConfigured extends HomeState {}
+
+class BackupOk extends HomeState {}

@@ -72,7 +72,7 @@ void main() {
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsNotification), driver),
-          true);
+          false);
     });
 
     test('tap recipes', () async {
@@ -117,6 +117,11 @@ void main() {
       await driver.tap(saveRecipeFloatingActionSaveButton);
 
       expect(await driver.getText(recipeListRowTitleText0), recipeName);
+
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeActionSettingsNotification), driver),
+          true);
     });
 
     test('view recipe', () async {

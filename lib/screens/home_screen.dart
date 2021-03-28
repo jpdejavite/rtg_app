@@ -8,6 +8,7 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -23,7 +24,9 @@ class HomeScreen extends StatefulWidget {
 
   static newHomeBloc() {
     return BlocProvider(
-      create: (context) => HomeBloc(backupRepository: BackupRepository()),
+      create: (context) => HomeBloc(
+          backupRepository: BackupRepository(),
+          recipesRepository: RecipesRepository()),
       child: HomeScreen(),
     );
   }
@@ -33,11 +36,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Backup backup;
   @override
   void initState() {
     super.initState();
-    context.read<HomeBloc>().add(GetBackupEvent());
+    context.read<HomeBloc>().add(GetHomeDataEvent());
   }
 
   int _selectedIndex = 0;
@@ -53,36 +55,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void refreshRecipeList() {
-    _recipeKeyListkey.currentState.loadRecipes();
+    if (_recipeKeyListkey != null && _recipeKeyListkey.currentState != null) {
+      _recipeKeyListkey.currentState.loadRecipes();
+    }
+    context.read<HomeBloc>().add(GetHomeDataEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
-      if (state is BackupLoaded) {
-        backup = state.backup;
-        print('backup type' + state.backup.type.toString());
-        // if (state.backup.type == BackupType.none) {
-        //   final snackBar = SnackBar(
-        //     content: Text('Configure a backup'),
-        //     action: SnackBarAction(
-        //       label: 'configurar',
-        //       onPressed: () {
-        //         Navigator.pushNamed(context, SettingsScreen.id);
-        //       },
-        //     ),
-        //   );
-        //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        // CustomToast.showToast(text: 'confiugrar', context: context);
-        // }
-      }
-
       buildWidgetList();
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).home),
-          actions: getAppBarActions(),
+          actions: getAppBarActions(state),
         ),
         body: Container(
           child: Column(
@@ -98,24 +85,26 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<Widget> getAppBarActions() {
+  List<Widget> getAppBarActions(HomeState state) {
     return [
       NamedIcon(
         key: Key(Keys.homeActionSettingsIcon),
         tooltip: AppLocalizations.of(context).open_settings,
         iconData: Icons.settings,
-        showNotification: backup != null && backup.type == BackupType.none,
+        showNotification: state is BackupNotConfigured,
         notificationKey: Keys.homeActionSettingsNotification,
-        onPressed: () {
-          Navigator.pushNamed(context, SettingsScreen.id);
+        onPressed: () async {
+          await Navigator.pushNamed(context, SettingsScreen.id);
+          refreshRecipeList();
         },
       ),
       IconButton(
         key: Key(Keys.actionDeleteAllIcon),
         icon: Icon(Icons.delete_forever),
         tooltip: 'Delete all database',
-        onPressed: () {
-          RecipesDao().deleteAll();
+        onPressed: () async {
+          await RecipesDao().deleteAll();
+          refreshRecipeList();
         },
       ),
     ];
@@ -177,8 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 context: context,
                 time: CustomToast.timeShort,
               );
-              refreshRecipeList();
             }
+            refreshRecipeList();
           },
           child: Icon(Icons.add),
         ),

@@ -17,37 +17,60 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   }) : super(SettingsInitState());
   @override
   Stream<SettingsState> mapEventToState(SettingsEvents event) async* {
+    Backup backup = await backupRepository.getBackup();
     if (event is GetBackupEvent) {
-      Backup backup = await backupRepository.getBackup();
       if (backup.type == BackupType.drive) {
         String accountName = googleApi.getAccountName();
         yield BackupLoaded(backup: backup, accountName: accountName);
       } else {
         yield BackupLoaded(backup: backup);
       }
-    } else if (event is ConfigureDriveBackupEvent) {
+      return;
+    }
+
+    if (event is ConfigureDriveBackupEvent) {
       Error e = await googleApi.signIn();
       if (e == null) {
-        Backup backup = await backupRepository.getBackup();
         backup.type = BackupType.drive;
         backup.updatedAt = DateTime.now().millisecondsSinceEpoch;
-        String accountName = googleApi.getAccountName();
+        backup.error = null;
         await backupRepository.save(backup: backup);
-        yield BackupLoaded(backup: backup, accountName: accountName);
-        await doGoogleDriveBackup();
       } else {
-        print('error:$e');
+        String accountName = googleApi.getAccountName();
+        yield ConfigureDriveBackupError(
+            backup: backup, accountName: accountName, error: e);
+        return;
       }
-    } else if (event is DoDriveBackupEvent) {
-      await doGoogleDriveBackup();
     }
-  }
 
-  Future<void> doGoogleDriveBackup() async {
-    drive.File file = await googleApi.getBackupOnDrive();
-    if (file == null) {
-      await googleApi.doBackupOnDrive();
+    if (event is DoDriveBackupEvent || event is ConfigureDriveBackupEvent) {
+      String accountName = googleApi.getAccountName();
+      yield DoingDriveBackup(backup: backup, accountName: accountName);
+      try {
+        drive.File file = await googleApi.getBackupOnDrive();
+        if (file == null) {
+          file = await googleApi.doBackupOnDrive();
+        } else {
+          // TODO backup conflict
+          file = await googleApi.updateBackupOnDrive(file.id);
+        }
+
+        backup.updatedAt = DateTime.now().millisecondsSinceEpoch;
+        backup.lastestBackupAt = DateTime.now().millisecondsSinceEpoch;
+        backup.lastestBackupStatus = BackupStatus.done;
+        backup.fileId = file.id;
+        backup.error = null;
+        await backupRepository.save(backup: backup);
+
+        yield DriveBackupDone(backup: backup, accountName: accountName);
+      } catch (e) {
+        backup.updatedAt = DateTime.now().millisecondsSinceEpoch;
+        backup.lastestBackupStatus = BackupStatus.error;
+        backup.error = e.toString();
+        await backupRepository.save(backup: backup);
+
+        yield DriveBackupDone(backup: backup, accountName: accountName);
+      }
     }
-    print('file found ${file.name}');
   }
 }

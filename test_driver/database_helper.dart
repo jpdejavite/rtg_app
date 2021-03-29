@@ -1,6 +1,5 @@
 import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/database/sembast_database.dart';
-import 'package:sembast/sembast.dart';
 
 class DatbaseHelper {
   static final dbProvider = SembastDatabaseProvider.dbProvider;

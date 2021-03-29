@@ -6,44 +6,39 @@ import 'package:sembast/sembast.dart';
 
 class BackupDao {
   final dbProvider = SembastDatabaseProvider.dbProvider;
-  final String storeName = 'backups';
+  final String recordKey = 'backup';
 
   Future<Backup> getBackup() async {
-    var store = intMapStoreFactory.store(storeName);
+    var store = StoreRef.main();
     var db = await dbProvider.database;
 
-    var records = await store.find(db);
-    if (records.length < 1) {
+    var record = await store.record(recordKey).get(db);
+    if (record == null) {
       Backup backup = Backup(
         createdAt: DateTime.now().millisecondsSinceEpoch,
         updatedAt: DateTime.now().millisecondsSinceEpoch,
         lastestBackupStatus: BackupStatus.pending,
         type: BackupType.none,
       );
-      await db.transaction((txn) async {
-        int id = await store.add(txn, backup.toRecord());
-        backup.id = id.toString();
-      });
+      await store.record(recordKey).put(db, backup.toRecord());
       return backup;
     }
 
-    var record = records[0];
-    Backup backup = Backup.fromRecord(record.key, record.value);
+    Backup backup = Backup.fromRecord(record);
     return backup;
   }
 
   Future deleteAll() async {
-    var store = intMapStoreFactory.store(storeName);
     var db = await dbProvider.database;
-    await store.delete(db);
+    await StoreRef.main().record(recordKey).delete(db);
   }
 
   Future<SaveBackupResponse> save({Backup backup}) async {
     try {
-      var store = intMapStoreFactory.store(storeName);
+      var store = StoreRef.main();
       var db = await dbProvider.database;
-      var record = store.record(int.parse(backup.id));
-      await record.update(db, backup.toRecord());
+
+      await store.record(recordKey).put(db, backup.toRecord());
 
       return SaveBackupResponse(backup: backup);
     } catch (e) {

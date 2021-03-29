@@ -115,7 +115,10 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     return BlocBuilder<SaveRecipeBloc, SaveRecipeState>(
         builder: (BuildContext context, SaveRecipeState state) {
       if (state is SavingRecipe) {
-        EasyLoading.show(status: AppLocalizations.of(context).saving_recipe);
+        EasyLoading.show(
+          maskType: EasyLoadingMaskType.black,
+          status: AppLocalizations.of(context).saving_recipe,
+        );
       } else {
         EasyLoading.dismiss();
       }

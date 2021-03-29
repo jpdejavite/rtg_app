@@ -49,9 +49,14 @@
   "configure_backup": "Configure um backup para poder recuperar todos os seus dados quando precisar, escolha uma opção abaixo",
   "google_drive":"Google Drive",
   "configured_at":"Configurado em",
+  "done_at":"Feito em",
+  "backup_at_format":"dd/MM/yyyy HH:mm",
   "account":"Conta",
   "do_backup":"Fazer Backup",
   "status":"Status",
   "pending_click_below_to_retry":"pendente, clique abaixo para retentar o processo agora",
+  "backup_error_occurred":"erro, aconteceu um erro ao fazer o seu backup, mas detalhes abaixo.",
+  "doing_backup":"Fazendo backup...",
+  "google_user_not_authenticated":"Usuário não autenticado",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

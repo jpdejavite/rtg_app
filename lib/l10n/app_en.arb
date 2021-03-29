@@ -49,9 +49,14 @@
   "configure_backup": "Configure a backup to be able to recover all app data when you need it, choose a option below",
   "google_drive":"Google Drive",
   "configured_at":"Configured at",
+  "done_at":"Done at",
+  "backup_at_format":"MM/dd/yyyy HH:mm",
   "account":"Account",
   "do_backup":"Do Backup",
   "status":"Status",
   "pending_click_below_to_retry":"pending, click below to retry the proccess now",
+  "backup_error_occurred":"error, an error happened when doing your backup, more details below.",
+  "doing_backup":"Doing backup...",
+  "google_user_not_authenticated":"User not authenticated",
   "fill_this_required_field":"Fill this required field"
 }

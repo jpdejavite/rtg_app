@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/model/database_data_summary.dart';
 
 abstract class SettingsState extends Equatable {
   @override
@@ -32,4 +33,14 @@ class ConfigureDriveBackupError extends BackupLoaded {
 class DriveBackupDone extends BackupLoaded {
   DriveBackupDone({backup, accountName})
       : super(backup: backup, accountName: accountName);
+}
+
+class ChooseDriveBackup extends BackupLoaded {
+  final DatabaseSummary localSummary;
+  final DatabaseSummary remoteSummary;
+  ChooseDriveBackup(
+      {backup, accountName, this.localSummary, this.remoteSummary})
+      : super(backup: backup, accountName: accountName);
+  @override
+  List<Object> get props => [backup, accountName, localSummary, remoteSummary];
 }

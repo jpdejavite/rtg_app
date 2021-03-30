@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:rtg_app/database/sembast_database.dart';
+import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/save_backup_response.dart';
 import 'package:sembast/sembast.dart';
@@ -15,8 +16,8 @@ class BackupDao {
     var record = await store.record(recordKey).get(db);
     if (record == null) {
       Backup backup = Backup(
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        updatedAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: CustomDateTime.current.millisecondsSinceEpoch,
+        updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
         lastestBackupStatus: BackupStatus.pending,
         type: BackupType.none,
       );
@@ -44,5 +45,25 @@ class BackupDao {
     } catch (e) {
       return SaveBackupResponse(error: e);
     }
+  }
+
+  Future<Backup> getDatabaseDataSummary() async {
+    var store = StoreRef.main();
+    var db = await dbProvider.database;
+
+    var record = await store.record(recordKey).get(db);
+    if (record == null) {
+      Backup backup = Backup(
+        createdAt: CustomDateTime.current.millisecondsSinceEpoch,
+        updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
+        lastestBackupStatus: BackupStatus.pending,
+        type: BackupType.none,
+      );
+      await store.record(recordKey).put(db, backup.toRecord());
+      return backup;
+    }
+
+    Backup backup = Backup.fromRecord(record);
+    return backup;
   }
 }

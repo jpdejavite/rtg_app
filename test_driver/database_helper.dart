@@ -13,8 +13,8 @@ class DatbaseHelper {
     //   for (int i = 0; i < 200; i++) {
     //     await store.add(txn, {
     //       'title': 'Receita ' + i.toString().padLeft(3, '0'),
-    //       'createdAt': DateTime.now().millisecondsSinceEpoch,
-    //       'updatedAt': DateTime.now().millisecondsSinceEpoch,
+    //       'createdAt': CustomDateTime.current.millisecondsSinceEpoch,
+    //       'updatedAt': CustomDateTime.current.millisecondsSinceEpoch,
     //       'instructions': 'Instrucao' + i.toString().padLeft(3, '0'),
     //       'ingredients': [
     //         {

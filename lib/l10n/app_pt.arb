@@ -58,5 +58,18 @@
   "backup_error_occurred":"erro, aconteceu um erro ao fazer o seu backup, mas detalhes abaixo.",
   "doing_backup":"Fazendo backup...",
   "google_user_not_authenticated":"Usuário não autenticado",
+  "backup_conflict":"Conflito no backup",
+  "backup_conflict_explanation":"O arquivo de backup local tem uma versão diferente do remoto:",
+  "backup_conflict_details":"%d receita(s), última atualização: %s",
+  "backup_conflict_choose":"Escolha uma das opções abaixo:",
+  "use_local_version":"usar versão local",
+  "use_remote_version":"usar versão remota",
+  "confirm_local_version":"Deseja utilizar a versão local e apagar a versão remota?",
+  "confirm_remote_version":"Deseja utilizar a versão remota e apagar a versão local?",
+  "confirm_version_title":"Usar %s",
+  "local_version":"versão local",
+  "remote_version":"versão remota",
+  "confirm":"confirmar",
+  "cancel":"cancelar",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

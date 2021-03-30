@@ -9,10 +9,13 @@ import 'package:rtg_app/bloc/settings/events.dart';
 import 'package:rtg_app/bloc/settings/settings_bloc.dart';
 import 'package:rtg_app/bloc/settings/states.dart';
 import 'package:rtg_app/errors/errors.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
+import 'package:sprintf/sprintf.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'settings_screen';
@@ -20,8 +23,10 @@ class SettingsScreen extends StatefulWidget {
   static newSettingsBloc() {
     return BlocProvider(
       create: (context) => SettingsBloc(
-          backupRepository: BackupRepository(),
-          googleApi: GoogleApi.getGoogleApi()),
+        backupRepository: BackupRepository(),
+        googleApi: GoogleApi.getGoogleApi(),
+        recipesRepository: RecipesRepository(),
+      ),
       child: SettingsScreen(),
     );
   }
@@ -66,18 +71,139 @@ class _SettingsState extends State<SettingsScreen> {
     }
   }
 
+  Future<void> _showChooseDriveBackup(
+      BuildContext ctx, ChooseDriveBackup state) async {
+    String localRecipesLastUpdatedAt = "";
+    if (state.localSummary.recipes.lastUpdated > 0) {
+      final DateTime lastUpdated = DateTime.fromMillisecondsSinceEpoch(
+          state.localSummary.recipes.lastUpdated);
+      localRecipesLastUpdatedAt =
+          DateFormat(AppLocalizations.of(context).backup_at_format)
+              .format(lastUpdated);
+    }
+
+    String remoteRecipesLastUpdatedAt = "";
+    if (state.localSummary.recipes.lastUpdated > 0) {
+      final DateTime lastUpdated = DateTime.fromMillisecondsSinceEpoch(
+          state.remoteSummary.recipes.lastUpdated);
+      remoteRecipesLastUpdatedAt =
+          DateFormat(AppLocalizations.of(context).backup_at_format)
+              .format(lastUpdated);
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context).backup_conflict),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(AppLocalizations.of(context).backup_conflict_explanation),
+                ViewRecipeLabelText(
+                  label: AppLocalizations.of(context).local_version,
+                  text: sprintf(
+                      AppLocalizations.of(context).backup_conflict_details, [
+                    state.localSummary.recipes.total,
+                    localRecipesLastUpdatedAt
+                  ]),
+                ),
+                ViewRecipeLabelText(
+                  label: AppLocalizations.of(context).remote_version,
+                  text: sprintf(
+                      AppLocalizations.of(context).backup_conflict_details, [
+                    state.remoteSummary.recipes.total,
+                    remoteRecipesLastUpdatedAt
+                  ]),
+                ),
+                Text(AppLocalizations.of(context).backup_conflict_choose),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context).use_local_version),
+              onPressed: () {
+                Navigator.of(context).pop();
+                showChooseDriveBackupConfirmation(ctx, true);
+              },
+            ),
+            TextButton(
+              child: Text(AppLocalizations.of(context).use_remote_version),
+              onPressed: () {
+                Navigator.of(context).pop();
+                showChooseDriveBackupConfirmation(ctx, false);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showChooseDriveBackupConfirmation(BuildContext ctx, bool useLocal) {
+    showDialog<void>(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:
+              Text(sprintf(AppLocalizations.of(context).confirm_version_title, [
+            useLocal
+                ? AppLocalizations.of(context).local_version
+                : AppLocalizations.of(context).remote_version
+          ])),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(useLocal
+                    ? AppLocalizations.of(context).confirm_local_version
+                    : AppLocalizations.of(context).confirm_remote_version),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(AppLocalizations.of(context).confirm),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ctx.read<SettingsBloc>().add(DriveBackupChoosenEvent(useLocal));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showChooseDriveBackup(BuildContext context, SettingsState state) {
+    if (state is ChooseDriveBackup) {
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _showChooseDriveBackup(context, state));
+    }
+  }
+
   void showLoading(SettingsState state) {
     if (state is DoingDriveBackup) {
-      EasyLoading.show(
-        maskType: EasyLoadingMaskType.black,
-        status: AppLocalizations.of(context).doing_backup,
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        EasyLoading.show(
+          maskType: EasyLoadingMaskType.black,
+          status: AppLocalizations.of(context).doing_backup,
+        );
+      });
     } else {
       EasyLoading.dismiss();
     }
   }
 
-  List<Widget> buildBackupSection(SettingsState state) {
+  List<Widget> buildBackupSection(BuildContext context, SettingsState state) {
     List<Widget> children = [
       Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -88,9 +214,11 @@ class _SettingsState extends State<SettingsScreen> {
       )
     ];
 
+    showStateError(state);
+
     showLoading(state);
 
-    showStateError(state);
+    showChooseDriveBackup(context, state);
 
     Backup backup = getBackupFromEvent(state);
     String accountName = getAccountNameFromEvent(state);
@@ -113,6 +241,7 @@ class _SettingsState extends State<SettingsScreen> {
         ),
       ),
       ElevatedButton(
+        key: Key(Keys.settingsGoogleDriveButtton),
         child: Text(AppLocalizations.of(context).google_drive),
         onPressed: () {
           context.read<SettingsBloc>().add(ConfigureDriveBackupEvent());
@@ -182,7 +311,7 @@ class _SettingsState extends State<SettingsScreen> {
           padding: EdgeInsets.all(20),
           shrinkWrap: true,
           children: [
-            ...buildBackupSection(state),
+            ...buildBackupSection(context, state),
           ],
         ),
       );

@@ -4,3 +4,13 @@ class NotFoundError extends Error {
     return "not found";
   }
 }
+
+class GenericError extends Error {
+  final String message;
+  GenericError(this.message);
+
+  @override
+  String toString() {
+    return this.message;
+  }
+}

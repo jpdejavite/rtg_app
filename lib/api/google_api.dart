@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:path_provider/path_provider.dart';
 
 import 'package:rtg_app/database/sembast_database.dart';
 import 'package:rtg_app/errors/errors.dart';
@@ -72,6 +73,28 @@ class GoogleApi {
     final result = await driveApi.files
         .update(buildDriveFile(), fileId, uploadMedia: await buildDriveMedia());
     return result;
+  }
+
+  Future<File> downloadBackupFromDrive(String fileId) async {
+    final driveApi = await getDriveApi();
+    drive.Media driveFile = await driveApi.files
+        .get(fileId, downloadOptions: drive.DownloadOptions.fullMedia);
+
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final saveFile = File('${appDocDir.path}/drive_backup.bkp');
+    List<int> dataStore = [];
+
+    await for (List<int> data in driveFile.stream) {
+      dataStore.insertAll(dataStore.length, data);
+    }
+    saveFile.writeAsBytes(dataStore);
+
+    return saveFile;
+  }
+
+  Future deleteBackupFromDrive(String fileId) async {
+    final driveApi = await getDriveApi();
+    await driveApi.files.delete(fileId);
   }
 
   Future<drive.Media> buildDriveMedia() async {

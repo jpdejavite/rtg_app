@@ -17,17 +17,14 @@ class SembastDatabaseProvider {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    _database = await createDatabase();
+    _database = await createDatabase(null);
     return _database;
   }
 
-  createDatabase() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    await appDocDir.create(recursive: true);
-    final path = p.join(appDocDir.path, _dbKey);
-
+  createDatabase(String cutomPath) async {
+    final path = await getDatabaseFilePath();
     // We use the database factory to open the database
-    return await dbFactory.openDatabase(path);
+    return await dbFactory.openDatabase(cutomPath ?? path);
   }
 
   Future<String> getDatabaseFilePath() async {

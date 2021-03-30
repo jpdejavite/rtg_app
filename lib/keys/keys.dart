@@ -44,6 +44,10 @@ class Keys {
   static const String viewRecipeFloatingActionEditButton =
       'view-recipe-floating-action-edit-button';
 
+  // settings screen
+  static const String settingsGoogleDriveButtton =
+      'setting-google-drive-button';
+
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';
 }

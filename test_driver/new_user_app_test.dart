@@ -11,6 +11,7 @@ void main() {
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
     final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
+    final homeActionSettingsIcon = find.byValueKey(Keys.homeActionSettingsIcon);
     final floatingActionNewRecipeButton =
         find.byValueKey(Keys.homeFloatingActionNewRecipeButton);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
@@ -35,12 +36,16 @@ void main() {
     SerializableFinder backButtonFinder = find.byTooltip("Voltar");
     final viewRecipeFloatingActionEditButton =
         find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
+    final settingsGoogleDriveButtton =
+        find.byValueKey(Keys.settingsGoogleDriveButtton);
 
     final String recipeName = 'Minha primeira receita!';
     final String portion = '1';
     final String ingredient0 = '1 chuchu';
     final String ingredient1 = '1 colher de chá de sal';
     final String instructions = 'Vamos preparar minha primeira receita\n\\o/';
+
+    final String newUserGoogleAccountEmail = 'rtg.app.user@gmail.com';
 
     FlutterDriver driver;
 
@@ -157,6 +162,12 @@ void main() {
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);
+    });
+
+    test('do backup', () async {
+      await driver.tap(homeActionSettingsIcon);
+
+      await driver.tap(settingsGoogleDriveButtton);
     });
   });
 }

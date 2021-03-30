@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/bloc/save_recipe/events.dart';
 import 'package:rtg_app/bloc/save_recipe/save_recipe_bloc.dart';
 import 'package:rtg_app/bloc/save_recipe/states.dart';
+import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
@@ -287,8 +288,8 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       title: _nameController.text,
       createdAt: widget.editRecipe != null
           ? widget.editRecipe.createdAt
-          : DateTime.now().millisecondsSinceEpoch,
-      updatedAt: DateTime.now().millisecondsSinceEpoch,
+          : CustomDateTime.current.millisecondsSinceEpoch,
+      updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
       instructions: _instructionsController.text,
       portions: int.parse(_portionsController.text),
       totalPrepartionTime: int.parse((_preparationTimeController.text == null ||

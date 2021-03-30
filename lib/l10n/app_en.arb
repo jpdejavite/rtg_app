@@ -58,5 +58,18 @@
   "backup_error_occurred":"error, an error happened when doing your backup, more details below.",
   "doing_backup":"Doing backup...",
   "google_user_not_authenticated":"User not authenticated",
+  "backup_conflict":"Backup conflict",
+  "backup_conflict_explanation":"The local backup file has a different version from the remote:",
+  "backup_conflict_details":"%d recipe(s), last updated at: %s",
+  "backup_conflict_choose":"Choose a option below:",
+  "use_local_version":"use local version",
+  "use_remote_version":"use remote version",
+  "confirm_local_version":"Do you want to use the local version and erase the remote version?",
+  "confirm_remote_version":"Do you want to use the remote version and erase the local version",
+  "confirm_version_title":"Use %s",
+  "local_version":"local version",
+  "remote_version":"remota version",
+  "confirm":"confirm",
+  "cancel":"cancel",
   "fill_this_required_field":"Fill this required field"
 }

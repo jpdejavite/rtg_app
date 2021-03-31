@@ -11,7 +11,6 @@ void main() {
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
     final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
-    final homeActionSettingsIcon = find.byValueKey(Keys.homeActionSettingsIcon);
     final floatingActionNewRecipeButton =
         find.byValueKey(Keys.homeFloatingActionNewRecipeButton);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
@@ -164,10 +163,13 @@ void main() {
       await driver.tap(backButtonFinder);
     });
 
-    test('do backup', () async {
-      await driver.tap(homeActionSettingsIcon);
+    // TODO: implement backup
+    // test('do backup', () async {
+    //   await driver.tap(homeActionSettingsIcon);
 
-      await driver.tap(settingsGoogleDriveButtton);
-    });
+    //   await driver.tap(settingsGoogleDriveButtton);
+
+    //   await driver.tap(find.text(newUserGoogleAccountEmail));
+    // });
   });
 }

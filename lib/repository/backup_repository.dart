@@ -9,4 +9,6 @@ class BackupRepository {
 
   Future<SaveBackupResponse> save({Backup backup}) =>
       backupDao.save(backup: backup);
+
+  Future deleteAll() => backupDao.deleteAll();
 }

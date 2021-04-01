@@ -4,11 +4,10 @@ import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
-import 'package:rtg_app/dao/backup_dao.dart';
-import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
@@ -26,8 +25,11 @@ class HomeScreen extends StatefulWidget {
   static newHomeBloc() {
     return BlocProvider(
       create: (context) => HomeBloc(
-          backupRepository: BackupRepository(),
-          recipesRepository: RecipesRepository()),
+        backupRepository: BackupRepository(),
+        recipesRepository: RecipesRepository(),
+        googleApi: GoogleApi.getGoogleApi(),
+        groceryListsRepository: GroceryListsRepository(),
+      ),
       child: HomeScreen(),
     );
   }
@@ -66,6 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
+      if (state is AllDataDeleted) {
+        refreshRecipeList();
+      }
+
       buildWidgetList();
       return Scaffold(
         appBar: AppBar(
@@ -104,10 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.delete_forever),
         tooltip: 'Delete all database',
         onPressed: () async {
-          await RecipesDao().deleteAll();
-          await BackupDao().deleteAll();
-          await GoogleApi.getGoogleApi().logout();
-          refreshRecipeList();
+          context.read<HomeBloc>().add(DeleteAllDataEvent());
         },
       ),
     ];

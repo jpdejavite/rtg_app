@@ -9,9 +9,13 @@ abstract class RecipesEvents extends Equatable {
 class FetchRecipesEvent extends RecipesEvents {
   final SearchRecipesParams searchParams;
   FetchRecipesEvent({this.searchParams});
+  @override
+  List<Object> get props => [searchParams];
 }
 
 class StartFetchRecipesEvent extends FetchRecipesEvent {
   final SearchRecipesParams searchParams;
   StartFetchRecipesEvent({this.searchParams});
+  @override
+  List<Object> get props => [searchParams];
 }

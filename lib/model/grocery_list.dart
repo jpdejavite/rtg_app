@@ -34,6 +34,7 @@ class GroceryList {
     return this.id != null && this.id != "" && this.id != "0";
   }
 
+  // TODO: unit tests
   static newGroceryListWithRecipe(Recipe recipe) {
     return GroceryList(
       createdAt: CustomDateTime.current.millisecondsSinceEpoch,

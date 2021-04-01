@@ -75,4 +75,33 @@ class GroceryListItem {
 
     return items;
   }
+
+  @override
+  bool operator ==(other) {
+    if (other == null) {
+      return false;
+    }
+    if (!(other is GroceryListItem)) {
+      return false;
+    }
+
+    if (name != other.name) {
+      return false;
+    }
+
+    if (recipes.length != other.recipes.length) {
+      return false;
+    }
+
+    bool areEqual = true;
+    recipes.asMap().forEach((i, recipeId) {
+      if (recipeId != other.recipes[i]) {
+        areEqual = false;
+      }
+    });
+    return areEqual;
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }

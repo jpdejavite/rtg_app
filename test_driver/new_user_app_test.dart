@@ -11,20 +11,13 @@ void main() {
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
     final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
-    final floatingActionNewRecipeButton =
-        find.byValueKey(Keys.homeFloatingActionNewRecipeButton);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
-    final saveRecipePortionField = find.byValueKey(Keys.saveRecipePortionField);
-    final saveRecipeIngredientField0 =
-        find.byValueKey(Keys.saveRecipeIngredientField + "0");
-    final saveRecipeIngredientField1 =
-        find.byValueKey(Keys.saveRecipeIngredientField + "1");
-    final saveRecipeInstructionsField =
-        find.byValueKey(Keys.saveRecipeInstructionsField);
     final saveRecipeFloatingActionSaveButton =
         find.byValueKey(Keys.saveRecipeFloatingActionSaveButton);
     final recipeListRowTitleText0 =
         find.byValueKey(Keys.recipeListRowTitleText + "0");
+    final recipeListRowTitleText1 =
+        find.byValueKey(Keys.recipeListRowTitleText + "1");
     final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
     final viewRecipeIngredientText0 =
         find.byValueKey(Keys.viewRecipeIngredientText + "0");
@@ -35,12 +28,29 @@ void main() {
     SerializableFinder backButtonFinder = find.byTooltip("Voltar");
     final viewRecipeFloatingActionEditButton =
         find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
+    final viewRecipeAddToGroceryListAction =
+        find.byValueKey(Keys.viewRecipeAddToGroceryListAction);
+    final viewRecipeGroceryListToSelect0 =
+        find.byValueKey(Keys.viewRecipeGroceryListToSelect + '0');
+    final viewRecipeCreateNewGroceryListAction =
+        find.byValueKey(Keys.viewRecipeCreateNewGroceryListAction);
+    final addRecipeToGroceryListDialogPortionTextField =
+        find.byValueKey(Keys.addRecipeToGroceryListDialogPortionTextField);
+    final addRecipeToGroceryListDialogConfirmButton =
+        find.byValueKey(Keys.addRecipeToGroceryListDialogConfirmButton);
 
-    final String recipeName = 'Minha primeira receita!';
-    final String portion = '1';
-    final String ingredient0 = '1 chuchu';
-    final String ingredient1 = '1 colher de chá de sal';
-    final String instructions = 'Vamos preparar minha primeira receita\n\\o/';
+    final String recipeName1 = 'Minha primeira receita!';
+    final String portion1 = '1';
+    final String ingredient10 = '1 chuchu';
+    final String ingredient11 = '1 colher de chá de sal';
+    final String instructions1 = 'Vamos preparar minha primeira receita\n\\o/';
+
+    final String recipeName2 = 'Minha segunda receita';
+    final String portion2 = '19';
+    final String ingredient20 = '1 beterraba';
+    final String ingredient21 = '1 colher de chá de sal';
+    final String ingredient22 = '1 colher de chá de açucar';
+    final String instructions2 = 'Vamos preparar minha segunda receita\n\\o/';
 
     FlutterDriver driver;
 
@@ -94,29 +104,23 @@ void main() {
           true);
     });
 
-    test('new recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
-      await driver.tap(floatingActionNewRecipeButton);
+    test('insert first recipe', () async {
+      await Helper.addRecipe(driver, recipeName1, portion1,
+          [ingredient10, ingredient11], instructions1);
 
-      await driver.tap(saveRecipeNameField);
-      await driver.enterText(recipeName);
+      expect(await driver.getText(recipeListRowTitleText0), recipeName1);
 
-      await driver.tap(saveRecipePortionField);
-      await driver.enterText(portion);
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeActionSettingsNotification), driver),
+          true);
+    });
 
-      await driver.tap(saveRecipeIngredientField0);
-      await driver.enterText(ingredient0);
-      await driver.enterText("\n");
+    test('insert second recipe', () async {
+      await Helper.addRecipe(driver, recipeName2, portion2,
+          [ingredient20, ingredient21, ingredient22], instructions2);
 
-      await driver.tap(saveRecipeIngredientField1);
-      await driver.enterText(ingredient1);
-
-      await driver.tap(saveRecipeInstructionsField);
-      await driver.enterText(instructions);
-
-      await driver.tap(saveRecipeFloatingActionSaveButton);
-
-      expect(await driver.getText(recipeListRowTitleText0), recipeName);
+      expect(await driver.getText(recipeListRowTitleText1), recipeName2);
 
       expect(
           await Helper.isPresent(
@@ -129,13 +133,13 @@ void main() {
 
       await driver.tap(recipeListRowTitleText0);
 
-      expect(await driver.getText(viewRecipeTitle), recipeName);
+      expect(await driver.getText(viewRecipeTitle), recipeName1);
       expect(
-          await driver.getText(viewRecipeIngredientText0), "• " + ingredient0);
+          await driver.getText(viewRecipeIngredientText0), "• " + ingredient10);
       expect(
-          await driver.getText(viewRecipeIngredientText1), "• " + ingredient1);
+          await driver.getText(viewRecipeIngredientText1), "• " + ingredient11);
 
-      expect(await driver.getText(viewRecipeInstructionText), instructions);
+      expect(await driver.getText(viewRecipeInstructionText), instructions1);
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);
@@ -149,11 +153,63 @@ void main() {
       await driver.tap(viewRecipeFloatingActionEditButton);
 
       await driver.tap(saveRecipeNameField);
-      await driver.enterText(recipeName + " editado");
+      await driver.enterText(recipeName1 + " editado");
 
       await driver.tap(saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeTitle), recipeName + " editado");
+      expect(await driver.getText(viewRecipeTitle), recipeName1 + " editado");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('add first recipe to new grocery list', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText0);
+
+      await driver.tap(viewRecipeAddToGroceryListAction);
+
+      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.enterText("123");
+
+      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('add second recipe to same grocery list', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText1);
+
+      await driver.tap(viewRecipeAddToGroceryListAction);
+
+      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.enterText("123");
+
+      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+
+      await driver.tap(viewRecipeGroceryListToSelect0);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('add second recipe to new grocery list', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText1);
+
+      await driver.tap(viewRecipeAddToGroceryListAction);
+
+      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.enterText("123");
+
+      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+
+      await driver.tap(viewRecipeCreateNewGroceryListAction);
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);

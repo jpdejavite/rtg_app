@@ -1,29 +1,43 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:mockito/mockito.dart';
+import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 
 class MockBackupRepository extends Mock implements BackupRepository {}
 
 class MockRecipesRepository extends Mock implements RecipesRepository {}
 
+class MockGroceryListsRepository extends Mock
+    implements GroceryListsRepository {}
+
+class MockGoogleApi extends Mock implements GoogleApi {}
+
 void main() {
   HomeBloc homeBloc;
   MockBackupRepository backupRepository;
   MockRecipesRepository recipesRepository;
+  MockGroceryListsRepository groceryListsRepository;
+  MockGoogleApi googleApi;
 
   setUp(() {
     backupRepository = MockBackupRepository();
     recipesRepository = MockRecipesRepository();
+    groceryListsRepository = MockGroceryListsRepository();
+    googleApi = MockGoogleApi();
     homeBloc = HomeBloc(
-        backupRepository: backupRepository,
-        recipesRepository: recipesRepository);
+      backupRepository: backupRepository,
+      recipesRepository: recipesRepository,
+      groceryListsRepository: groceryListsRepository,
+      googleApi: googleApi,
+    );
   });
 
   tearDown(() {
@@ -90,5 +104,23 @@ void main() {
     });
 
     homeBloc.add(GetHomeDataEvent());
+  });
+
+  test('delete all data', () {
+    final expectedResponse = [AllDataDeleted()];
+    when(backupRepository.deleteAll()).thenAnswer((_) => Future.value(null));
+    when(recipesRepository.deleteAll()).thenAnswer((_) => Future.value(null));
+    when(groceryListsRepository.deleteAll())
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.logout()).thenAnswer((_) => Future.value(null));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, AllDataDeleted());
+    });
+
+    homeBloc.add(DeleteAllDataEvent());
   });
 }

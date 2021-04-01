@@ -43,10 +43,22 @@ class Keys {
       'view-recipe-instructions-text';
   static const String viewRecipeFloatingActionEditButton =
       'view-recipe-floating-action-edit-button';
+  static const String viewRecipeAddToGroceryListAction =
+      'view-recipe-add-to-grocery-list-action';
+  static const String viewRecipeGroceryListToSelect =
+      'view-recipe-grocery-list-to-select';
+  static const String viewRecipeCreateNewGroceryListAction =
+      'view-recipe-create-new-grocery-list-action';
 
   // settings screen
   static const String settingsGoogleDriveButtton =
       'setting-google-drive-button';
+
+  // add recipe to grocery list dialog
+  static const String addRecipeToGroceryListDialogConfirmButton =
+      'add-recipe-to-grocery-list-dialog-confirm-button';
+  static const String addRecipeToGroceryListDialogPortionTextField =
+      'add-recipe-to-grocery-list-dialog-portion-text-field';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

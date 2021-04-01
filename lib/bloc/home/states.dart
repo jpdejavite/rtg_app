@@ -18,3 +18,5 @@ class BackupHasError extends HomeState {
 class BackupNotConfigured extends HomeState {}
 
 class BackupOk extends HomeState {}
+
+class AllDataDeleted extends HomeState {}

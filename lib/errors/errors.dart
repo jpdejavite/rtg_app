@@ -1,11 +1,25 @@
-class NotFoundError extends Error {
+class RtgError extends Error {
+  @override
+  bool operator ==(other) {
+    if (other == null) {
+      return false;
+    }
+    if (runtimeType != other.runtimeType) {
+      return false;
+    }
+
+    return toString() == other.toString();
+  }
+}
+
+class NotFoundError extends RtgError {
   @override
   String toString() {
     return "not found";
   }
 }
 
-class GenericError extends Error {
+class GenericError extends RtgError {
   final String message;
   GenericError(this.message);
 
@@ -15,7 +29,7 @@ class GenericError extends Error {
   }
 }
 
-class RecipeAlreadyAddedToGroceryList extends Error {
+class RecipeAlreadyAddedToGroceryList extends RtgError {
   @override
   String toString() {
     return "recipe_already_added_to_grocery_list";

@@ -129,6 +129,10 @@ class GoogleApi {
   }
 
   Future<void> logout() async {
-    return _googleSignIn.disconnect();
+    if (_googleSignIn != null) {
+      if (await _googleSignIn.isSignedIn()) {
+        return _googleSignIn.disconnect();
+      }
+    }
   }
 }

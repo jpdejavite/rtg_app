@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 
 class AddRecipeToGroceryListDialog extends StatefulWidget {
@@ -69,6 +70,7 @@ class _AddRecipeToGroceryListDialogState
                   Text(AppLocalizations.of(context)
                       .type_in_recipe_portions_to_make),
                   TextFormField(
+                    key: Key(Keys.addRecipeToGroceryListDialogPortionTextField),
                     controller: _portionsController,
                     textInputAction: TextInputAction.newline,
                     maxLines: null,
@@ -103,6 +105,7 @@ class _AddRecipeToGroceryListDialogState
       ),
       actions: <Widget>[
         TextButton(
+          key: Key(Keys.addRecipeToGroceryListDialogConfirmButton),
           child: Text(AppLocalizations.of(context).confirm),
           onPressed: () {
             if (_formKey.currentState.validate()) {

@@ -11,6 +11,7 @@ import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/widgets/add_recipe_to_grocery_list_dialog.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -25,8 +26,10 @@ class ViewRecipeScreen extends StatefulWidget {
 
   static newViewRecipeBloc() {
     return BlocProvider(
-      create: (context) =>
-          ViewRecipeBloc(groceryListsRepository: GroceryListsRepository()),
+      create: (context) => ViewRecipeBloc(
+        groceryListsRepository: GroceryListsRepository(),
+        recipesRepository: RecipesRepository(),
+      ),
       child: ViewRecipeScreen(),
     );
   }
@@ -41,7 +44,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments;
-  
+
     if (args == null || !(args is Recipe)) {
       return Scaffold(
         appBar: AppBar(
@@ -102,6 +105,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
         },
       ),
       IconButton(
+        key: Key(Keys.viewRecipeAddToGroceryListAction),
         icon: Icon(Icons.playlist_add),
         tooltip: AppLocalizations.of(context).add_to_grocery_list,
         onPressed: () {
@@ -151,8 +155,9 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
   Future<void> showChooseGroceryListToRecipeEvent(
       BuildContext ctx, ChooseGroceryListToRecipeEvent state) {
     List<Widget> groceriesWidgets = [];
-    state.collection.groceryLists.forEach((groceryList) {
+    state.collection.groceryLists.asMap().forEach((i, groceryList) {
       groceriesWidgets.add(TextButton(
+          key: Key(Keys.viewRecipeGroceryListToSelect + i.toString()),
           child: Text(groceryList.title),
           onPressed: () {
             Navigator.of(context).pop();
@@ -178,6 +183,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
           ),
           actions: <Widget>[
             TextButton(
+              key: Key(Keys.viewRecipeCreateNewGroceryListAction),
               child:
                   Text(AppLocalizations.of(context).create_a_new_grocery_list),
               onPressed: () {

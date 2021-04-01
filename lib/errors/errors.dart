@@ -14,3 +14,10 @@ class GenericError extends Error {
     return this.message;
   }
 }
+
+class RecipeAlreadyAddedToGroceryList extends Error {
+  @override
+  String toString() {
+    return "recipe_already_added_to_grocery_list";
+  }
+}

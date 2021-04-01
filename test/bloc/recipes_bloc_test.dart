@@ -37,7 +37,6 @@ void main() {
         RecipesCollection(recipes: recipes, total: 2);
 
     final expectedResponse = [
-      RecipesLoading(),
       RecipesLoaded(recipesCollection: recipesCollection),
     ];
     when(recipesRepository.search(searchParams: null))
@@ -55,56 +54,27 @@ void main() {
   });
 
   test('fetch more recipes', () {
-    List<Recipe> recipes = [
-      Recipe(title: "teste 1"),
-      Recipe(title: "teste 2"),
-    ];
-    RecipesCollection recipesCollection =
-        RecipesCollection(recipes: recipes, total: 4);
     List<Recipe> moreRecipes = [
       Recipe(title: "teste 3"),
       Recipe(title: "teste 4"),
     ];
     RecipesCollection moreRecipesCollection =
-        RecipesCollection(recipes: moreRecipes, total: 4);
-    List<Recipe> totalRecipes = [];
-    totalRecipes.addAll(recipes);
-    totalRecipes.addAll(moreRecipes);
-    RecipesCollection toalRecipesCollection =
-        RecipesCollection(recipes: totalRecipes, total: 4);
-
-    final expectedResponse = [
-      RecipesLoading(),
-      RecipesLoaded(recipesCollection: recipesCollection),
-    ];
-
+        RecipesCollection(recipes: moreRecipes, total: 2);
+    SearchRecipesParams searchParams = SearchRecipesParams(offset: 2);
     final expectedMoreResponse = [
-      RecipesLoadingMore(recipesCollection: recipesCollection),
-      RecipesLoaded(recipesCollection: toalRecipesCollection),
+      RecipesLoaded(recipesCollection: moreRecipesCollection),
     ];
-    when(recipesRepository.search())
-        .thenAnswer((_) => Future.value(recipesCollection));
-    when(recipesRepository.search(searchParams: SearchRecipesParams(offset: 2)))
+
+    when(recipesRepository.search(searchParams: searchParams))
         .thenAnswer((_) => Future.value(moreRecipesCollection));
 
     expectLater(
       recipeBloc,
-      emitsInOrder(expectedResponse),
+      emitsInOrder(expectedMoreResponse),
     ).then((_) {
-      expect(recipeBloc.state,
-          RecipesLoaded(recipesCollection: recipesCollection));
-      // load more recipes
-      recipeBloc
-          .add(FetchRecipesEvent(searchParams: SearchRecipesParams(offset: 2)));
-      expectLater(
-        recipeBloc,
-        emitsInOrder(expectedMoreResponse),
-      ).then((_) {
-        expect(recipeBloc.state,
-            RecipesLoaded(recipesCollection: toalRecipesCollection));
-      });
+      expect(recipeBloc.state is RecipesLoaded, true);
     });
 
-    recipeBloc.add(StartFetchRecipesEvent());
+    recipeBloc.add(FetchRecipesEvent(searchParams: searchParams));
   });
 }

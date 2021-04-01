@@ -6,8 +6,9 @@ class CustomToast {
   static final int timeLong = Toast.LENGTH_LONG;
 
   static showToast({String text, BuildContext context, int time}) {
-    Toast.show(text, context,
+    WidgetsBinding.instance.addPostFrameCallback((_) => Toast.show(
+        text, context,
         duration: time == null ? Toast.LENGTH_LONG : time,
-        gravity: Toast.BOTTOM);
+        gravity: Toast.BOTTOM));
   }
 }

@@ -48,7 +48,7 @@ class RtgApp extends StatelessWidget {
           return SaveRecipeScreen.newSaveRecipeBloc(editRecipe);
         },
         ViewRecipeScreen.id: (context) {
-          return ViewRecipeScreen();
+          return ViewRecipeScreen.newViewRecipeBloc();
         },
         SettingsScreen.id: (context) {
           return SettingsScreen.newSettingsBloc();

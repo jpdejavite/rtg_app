@@ -32,7 +32,6 @@ void main() {
     SaveRecipeResponse recipeResponse = SaveRecipeResponse(recipe: recipe);
 
     final expectedResponse = [
-      SavingRecipe(),
       RecipeSaved(),
     ];
     when(recipesRepository.save(recipe: recipe))
@@ -55,7 +54,6 @@ void main() {
     SaveRecipeResponse recipeResponse = SaveRecipeResponse(error: error);
 
     final expectedResponse = [
-      SavingRecipe(),
       RecipeSaved(response: recipeResponse),
     ];
     when(recipesRepository.save(recipe: recipe))

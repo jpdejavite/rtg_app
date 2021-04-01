@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/settings/events.dart';
 import 'package:rtg_app/bloc/settings/settings_bloc.dart';
 import 'package:rtg_app/bloc/settings/states.dart';
 import 'package:rtg_app/errors/errors.dart';
+import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
@@ -73,24 +73,6 @@ class _SettingsState extends State<SettingsScreen> {
 
   Future<void> _showChooseDriveBackup(
       BuildContext ctx, ChooseDriveBackup state) async {
-    String localRecipesLastUpdatedAt = "";
-    if (state.localSummary.recipes.lastUpdated > 0) {
-      final DateTime lastUpdated = DateTime.fromMillisecondsSinceEpoch(
-          state.localSummary.recipes.lastUpdated);
-      localRecipesLastUpdatedAt =
-          DateFormat(AppLocalizations.of(context).backup_at_format)
-              .format(lastUpdated);
-    }
-
-    String remoteRecipesLastUpdatedAt = "";
-    if (state.localSummary.recipes.lastUpdated > 0) {
-      final DateTime lastUpdated = DateTime.fromMillisecondsSinceEpoch(
-          state.remoteSummary.recipes.lastUpdated);
-      remoteRecipesLastUpdatedAt =
-          DateFormat(AppLocalizations.of(context).backup_at_format)
-              .format(lastUpdated);
-    }
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -106,7 +88,9 @@ class _SettingsState extends State<SettingsScreen> {
                   text: sprintf(
                       AppLocalizations.of(context).backup_conflict_details, [
                     state.localSummary.recipes.total,
-                    localRecipesLastUpdatedAt
+                    DateFormatter.formatDateInMili(
+                        state.localSummary.recipes.lastUpdated,
+                        AppLocalizations.of(context).backup_at_format)
                   ]),
                 ),
                 ViewRecipeLabelText(
@@ -114,7 +98,9 @@ class _SettingsState extends State<SettingsScreen> {
                   text: sprintf(
                       AppLocalizations.of(context).backup_conflict_details, [
                     state.remoteSummary.recipes.total,
-                    remoteRecipesLastUpdatedAt
+                    DateFormatter.formatDateInMili(
+                        state.remoteSummary.recipes.lastUpdated,
+                        AppLocalizations.of(context).backup_at_format)
                   ]),
                 ),
                 Text(AppLocalizations.of(context).backup_conflict_choose),
@@ -281,12 +267,10 @@ class _SettingsState extends State<SettingsScreen> {
     }
 
     if (backup.lastestBackupAt != null && backup.lastestBackupAt > 0) {
-      final DateTime lastestBackupAt =
-          DateTime.fromMillisecondsSinceEpoch(backup.lastestBackupAt);
       children.add(ViewRecipeLabelText(
         label: AppLocalizations.of(context).done_at,
-        text: DateFormat(AppLocalizations.of(context).backup_at_format)
-            .format(lastestBackupAt),
+        text: DateFormatter.formatDateInMili(backup.lastestBackupAt,
+            AppLocalizations.of(context).backup_at_format),
       ));
     }
 

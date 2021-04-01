@@ -8,8 +8,6 @@ abstract class SaveRecipeState extends Equatable {
 
 class SaveRecipeInitState extends SaveRecipeState {}
 
-class SavingRecipe extends SaveRecipeState {}
-
 class RecipeSaved extends SaveRecipeState {
   final SaveRecipeResponse response;
   RecipeSaved({this.response});

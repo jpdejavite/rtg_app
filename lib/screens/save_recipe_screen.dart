@@ -104,6 +104,10 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
             context
                 .read<SaveRecipeBloc>()
                 .add(SaveRecipeEvent(recipe: getRecipeFromInputs()));
+            EasyLoading.show(
+              maskType: EasyLoadingMaskType.black,
+              status: AppLocalizations.of(context).saving_recipe,
+            );
           }
         },
         child: Icon(Icons.done),
@@ -115,14 +119,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   Widget buildBody() {
     return BlocBuilder<SaveRecipeBloc, SaveRecipeState>(
         builder: (BuildContext context, SaveRecipeState state) {
-      if (state is SavingRecipe) {
-        EasyLoading.show(
-          maskType: EasyLoadingMaskType.black,
-          status: AppLocalizations.of(context).saving_recipe,
-        );
-      } else {
-        EasyLoading.dismiss();
-      }
+      EasyLoading.dismiss();
       if (state is RecipeSaved) {
         if (state.response.error != null) {
           CustomToast.showToast(

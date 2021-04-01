@@ -71,5 +71,15 @@
   "remote_version":"versão remota",
   "confirm":"confirmar",
   "cancel":"cancelar",
+  "adding_recipe":"Adicionando receita...",
+  "copy_to_clipboard":"copiar para área de transferência",
+  "add_to_grocery_list":"adicionar à lista de compras",
+  "error_when_adding_to_grocery_list":"Erro ao adicionar à lista de compras",
+  "recipe_already_added_to_grocery_list":"Receita já foi adiciona à lista de compras",
+  "recipe_added_to_grocery_list":"Receita adiciona à lista de compras",
+  "choose_a_grocery_list":"Escolha uma lista de compras",
+  "create_a_new_grocery_list":"criar uma nova lista de compras",
+  "recipe_portions": "Porções da receita",
+  "type_in_recipe_portions_to_make":"Digite quantas porções quer fazer com essa receita",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

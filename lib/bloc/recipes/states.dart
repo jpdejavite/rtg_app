@@ -8,16 +8,7 @@ abstract class RecipesState extends Equatable {
 
 class RecipesInitState extends RecipesState {}
 
-class RecipesLoading extends RecipesState {}
-
-class RecipesLoadingMore extends RecipesState {
-  final RecipesCollection recipesCollection;
-  RecipesLoadingMore({this.recipesCollection});
-  @override
-  List<Object> get props => [recipesCollection];
-}
-
-class RecipesLoaded extends RecipesLoadingMore {
+class RecipesLoaded extends RecipesState {
   final RecipesCollection recipesCollection;
   RecipesLoaded({this.recipesCollection});
   @override

@@ -108,9 +108,6 @@ class RecipesListState extends State<RecipesList> {
           if (state is RecipesLoaded) {
             recipesCollection = state.recipesCollection;
           }
-          if (state is RecipesLoadingMore) {
-            recipesCollection = state.recipesCollection;
-          }
 
           if (recipesCollection == null || recipesCollection.recipes == null) {
             return Loading();

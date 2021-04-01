@@ -35,16 +35,12 @@ void main() {
     SerializableFinder backButtonFinder = find.byTooltip("Voltar");
     final viewRecipeFloatingActionEditButton =
         find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
-    final settingsGoogleDriveButtton =
-        find.byValueKey(Keys.settingsGoogleDriveButtton);
 
     final String recipeName = 'Minha primeira receita!';
     final String portion = '1';
     final String ingredient0 = '1 chuchu';
     final String ingredient1 = '1 colher de chá de sal';
     final String instructions = 'Vamos preparar minha primeira receita\n\\o/';
-
-    final String newUserGoogleAccountEmail = 'rtg.app.user@gmail.com';
 
     FlutterDriver driver;
 

@@ -11,7 +11,6 @@ class SaveRecipeBloc extends Bloc<SaveRecipeEvents, SaveRecipeState> {
   @override
   Stream<SaveRecipeState> mapEventToState(SaveRecipeEvents event) async* {
     if (event is SaveRecipeEvent) {
-      yield SavingRecipe();
       await recipesRepo.populateDB();
       SaveRecipeResponse response =
           await recipesRepo.save(recipe: event.recipe);

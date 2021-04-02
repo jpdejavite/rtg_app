@@ -35,12 +35,12 @@ class GroceryList {
   }
 
   // TODO: unit tests
-  static newGroceryListWithRecipe(Recipe recipe) {
+  static newGroceryListWithRecipe(Recipe recipe, String title) {
     return GroceryList(
       createdAt: CustomDateTime.current.millisecondsSinceEpoch,
       updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
       status: GroceryListStatus.active,
-      title: 'teste',
+      title: title,
       recipes: [recipe.id],
       groceries: GroceryListItem.addRecipeToItems(recipe, []),
     );

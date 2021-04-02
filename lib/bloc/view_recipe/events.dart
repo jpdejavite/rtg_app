@@ -6,12 +6,14 @@ abstract class ViewRecipeEvents {}
 class TryToAddRecipeToGroceryListEvent extends ViewRecipeEvents {
   final Recipe recipe;
   final int portions;
-  TryToAddRecipeToGroceryListEvent(this.recipe, this.portions);
+  final String groceryListTitle;
+  TryToAddRecipeToGroceryListEvent(
+      this.recipe, this.portions, this.groceryListTitle);
 }
 
-class AddRecipeToGroceryListEvent extends ViewRecipeEvents {
-  final Recipe recipe;
+class AddRecipeToGroceryListEvent extends TryToAddRecipeToGroceryListEvent {
   final GroceryList groceryList;
-  final int portions;
-  AddRecipeToGroceryListEvent(this.recipe, this.portions, this.groceryList);
+  AddRecipeToGroceryListEvent(
+      recipe, portions, groceryListTitle, this.groceryList)
+      : super(recipe, portions, groceryListTitle);
 }

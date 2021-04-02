@@ -8,7 +8,8 @@
   "people": "people",
   "not_possible_to_show_recipe_details":"An error occurred, it's not possible to show recipe details",
   "lists": "Lists",
-  "empty_recipes_list": "No receipes found",
+  "empty_recipes_list": "No recipes found",
+  "empty_grocery_list": "No grocery list found",
   "type_in_to_filter_recipes": "Type in to filter your recipes",
   "general_data":"General data",
   "recipe_name":"Recipe name",
@@ -81,5 +82,6 @@
   "create_a_new_grocery_list":"create a new grocery list",
   "recipe_portions": "Recipe portions",
   "type_in_recipe_portions_to_make":"Type in how many portions you want to make with this recipe",
+  "grocery_list_title":"week %d",
   "fill_this_required_field":"Fill this required field"
 }

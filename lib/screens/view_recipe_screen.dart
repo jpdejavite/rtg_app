@@ -8,6 +8,7 @@ import 'package:rtg_app/bloc/view_recipe/events.dart';
 import 'package:rtg_app/bloc/view_recipe/states.dart';
 import 'package:rtg_app/bloc/view_recipe/view_recipe_bloc.dart';
 import 'package:rtg_app/errors/errors.dart';
+import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
@@ -20,6 +21,7 @@ import 'package:rtg_app/widgets/view_recipe_label.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
 import 'package:rtg_app/widgets/view_recipe_title.dart';
+import 'package:sprintf/sprintf.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   static String id = 'view_recipe_screen';
@@ -113,9 +115,9 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
               context: context,
               recipe: recipe,
               onConfirm: (Recipe recipe, int portions) {
-                context
-                    .read<ViewRecipeBloc>()
-                    .add(TryToAddRecipeToGroceryListEvent(recipe, portions));
+                context.read<ViewRecipeBloc>().add(
+                    TryToAddRecipeToGroceryListEvent(
+                        recipe, portions, getGroceryListDefaultTitle()));
                 EasyLoading.show(
                   maskType: EasyLoadingMaskType.black,
                   status: AppLocalizations.of(context).saving_recipe,
@@ -124,6 +126,11 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
         },
       ),
     ];
+  }
+
+  String getGroceryListDefaultTitle() {
+    return sprintf(AppLocalizations.of(context).grocery_list_title,
+        [DateFormatter.weekOfMonth(DateTime.now())]);
   }
 
   Widget buildBody() {
@@ -161,8 +168,8 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
           child: Text(groceryList.title),
           onPressed: () {
             Navigator.of(context).pop();
-            ctx.read<ViewRecipeBloc>().add(AddRecipeToGroceryListEvent(
-                recipe, state.portions, groceryList));
+            ctx.read<ViewRecipeBloc>().add(AddRecipeToGroceryListEvent(recipe,
+                state.portions, getGroceryListDefaultTitle(), groceryList));
             EasyLoading.show(
               maskType: EasyLoadingMaskType.black,
               status: AppLocalizations.of(context).saving_recipe,
@@ -188,8 +195,11 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
                   Text(AppLocalizations.of(context).create_a_new_grocery_list),
               onPressed: () {
                 Navigator.of(context).pop();
-                ctx.read<ViewRecipeBloc>().add(
-                    AddRecipeToGroceryListEvent(recipe, state.portions, null));
+                ctx.read<ViewRecipeBloc>().add(AddRecipeToGroceryListEvent(
+                    recipe,
+                    state.portions,
+                    getGroceryListDefaultTitle(),
+                    null));
                 EasyLoading.show(
                   maskType: EasyLoadingMaskType.black,
                   status: AppLocalizations.of(context).saving_recipe,

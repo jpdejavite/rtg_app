@@ -5,7 +5,7 @@ import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../helper/widget_helper.dart';
+import '../widget_helper.dart';
 
 void main() {
   testWidgets('PreparationTimeLabelText 1 minute', (WidgetTester tester) async {

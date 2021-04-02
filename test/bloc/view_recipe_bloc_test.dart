@@ -69,13 +69,15 @@ void main() {
       expect(recipe.lastUsed, customTime.millisecondsSinceEpoch);
     });
 
-    viewRecipeBloc.add(TryToAddRecipeToGroceryListEvent(recipe, portions));
+    viewRecipeBloc
+        .add(TryToAddRecipeToGroceryListEvent(recipe, portions, "title"));
   });
 
   test('try to add recipe has grocery lists', () {
     Recipe recipe = Recipe(id: '1', ingredients: []);
     int portions = 2;
-    GroceryListsCollection collection = GroceryListsCollection(total: 1);
+    GroceryListsCollection collection =
+        GroceryListsCollection(total: 1, groceryLists: []);
 
     final expectedResponse = [
       ChooseGroceryListToRecipeEvent(
@@ -95,7 +97,8 @@ void main() {
               collection: collection, recipe: recipe, portions: portions));
     });
 
-    viewRecipeBloc.add(TryToAddRecipeToGroceryListEvent(recipe, portions));
+    viewRecipeBloc
+        .add(TryToAddRecipeToGroceryListEvent(recipe, portions, "title"));
   });
 
   test('add recipe to grocery lists', () {
@@ -132,8 +135,8 @@ void main() {
       ]);
     });
 
-    viewRecipeBloc
-        .add(AddRecipeToGroceryListEvent(recipe, portions, groceryList));
+    viewRecipeBloc.add(
+        AddRecipeToGroceryListEvent(recipe, portions, "title", groceryList));
   });
 
   test('add recipe to grocery lists, recipe already added', () {
@@ -173,8 +176,8 @@ void main() {
       expect(groceryList.recipes, [recipe.id]);
     });
 
-    viewRecipeBloc
-        .add(AddRecipeToGroceryListEvent(recipe, portions, groceryList));
+    viewRecipeBloc.add(
+        AddRecipeToGroceryListEvent(recipe, portions, "title", groceryList));
   });
 
   test('add recipe to new grocery lists', () {
@@ -201,6 +204,7 @@ void main() {
       expect(recipe.lastUsed, customTime.millisecondsSinceEpoch);
     });
 
-    viewRecipeBloc.add(AddRecipeToGroceryListEvent(recipe, portions, null));
+    viewRecipeBloc
+        .add(AddRecipeToGroceryListEvent(recipe, portions, "title", null));
   });
 }

@@ -48,16 +48,18 @@ class ViewRecipeBloc extends Bloc<ViewRecipeEvents, ViewRecipeState> {
       event.recipe.lastUsed = CustomDateTime.current.millisecondsSinceEpoch;
       await recipesRepository.save(recipe: event.recipe);
 
-      SaveGroceryListResponse response = await groceryListsRepository
-          .save(GroceryList.newGroceryListWithRecipe(event.recipe));
+      SaveGroceryListResponse response = await groceryListsRepository.save(
+          GroceryList.newGroceryListWithRecipe(
+              event.recipe, event.groceryListTitle));
       yield AddedRecipeToGroceryListEvent(response: response);
     } else if (event is TryToAddRecipeToGroceryListEvent) {
       GroceryListsCollection collection = await groceryListsRepository.fetch();
       if (collection.total == 0) {
         event.recipe.lastUsed = CustomDateTime.current.millisecondsSinceEpoch;
         await recipesRepository.save(recipe: event.recipe);
-        SaveGroceryListResponse response = await groceryListsRepository
-            .save(GroceryList.newGroceryListWithRecipe(event.recipe));
+        SaveGroceryListResponse response = await groceryListsRepository.save(
+            GroceryList.newGroceryListWithRecipe(
+                event.recipe, event.groceryListTitle));
         yield AddedRecipeToGroceryListEvent(response: response);
         return;
       }

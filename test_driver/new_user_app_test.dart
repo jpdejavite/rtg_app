@@ -38,6 +38,10 @@ void main() {
         find.byValueKey(Keys.addRecipeToGroceryListDialogPortionTextField);
     final addRecipeToGroceryListDialogConfirmButton =
         find.byValueKey(Keys.addRecipeToGroceryListDialogConfirmButton);
+    final groceryListRowTitleText0 =
+        find.byValueKey(Keys.groceryListRowTitleText + "0");
+    final groceryListRowTitleText1 =
+        find.byValueKey(Keys.groceryListRowTitleText + "1");
 
     final String recipeName1 = 'Minha primeira receita!';
     final String portion1 = '1';
@@ -100,7 +104,7 @@ void main() {
 
       expect(
           await Helper.isPresent(
-              find.byValueKey(Keys.homeBottomBarListsText), driver),
+              find.byValueKey(Keys.groceryListsEmptyText), driver),
           true);
     });
 
@@ -177,6 +181,10 @@ void main() {
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);
+
+      await driver.tap(homeBottomBarListsIcon);
+
+      expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
     });
 
     test('add second recipe to same grocery list', () async {
@@ -213,6 +221,10 @@ void main() {
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);
+
+      await driver.tap(homeBottomBarListsIcon);
+
+      expect(await Helper.isPresent(groceryListRowTitleText1, driver), true);
     });
 
     // TODO: implement backup

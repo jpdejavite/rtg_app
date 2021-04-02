@@ -10,6 +10,9 @@ class RtgError extends Error {
 
     return toString() == other.toString();
   }
+
+  @override
+  int get hashCode => toString().hashCode;
 }
 
 class NotFoundError extends RtgError {

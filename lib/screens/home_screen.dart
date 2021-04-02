@@ -5,6 +5,7 @@ import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
 import 'package:rtg_app/keys/keys.dart';
+import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
@@ -12,6 +13,7 @@ import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
+import 'package:rtg_app/widgets/grocery_lists_widget.dart';
 import 'package:rtg_app/widgets/named_icon.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
@@ -50,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<BottomBarNavigationOptions> _widgetOptions;
   GlobalKey<RecipesListState> _recipeKeyListkey = GlobalKey();
+  GlobalKey<GroceryListsState> _groceryListsKeyListkey = GlobalKey();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -57,9 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void refreshRecipeList() {
+  void refreshData() {
     if (_recipeKeyListkey != null && _recipeKeyListkey.currentState != null) {
       _recipeKeyListkey.currentState.loadRecipes();
+    }
+    if (_groceryListsKeyListkey != null &&
+        _groceryListsKeyListkey.currentState != null) {
+      _groceryListsKeyListkey.currentState.loadGroceryLists();
     }
     context.read<HomeBloc>().add(GetHomeDataEvent());
   }
@@ -69,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
       if (state is AllDataDeleted) {
-        refreshRecipeList();
+        refreshData();
       }
 
       buildWidgetList();
@@ -102,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         notificationKey: Keys.homeActionSettingsNotification,
         onPressed: () async {
           await Navigator.pushNamed(context, SettingsScreen.id);
-          refreshRecipeList();
+          refreshData();
         },
       ),
       IconButton(
@@ -173,26 +180,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 time: CustomToast.timeShort,
               );
             }
-            refreshRecipeList();
+            refreshData();
           },
           child: Icon(Icons.add),
         ),
         body: RecipesList.newRecipeListBloc(
-            key: _recipeKeyListkey,
-            onTapRecipe: (Recipe recipe) async {
-              await Navigator.pushNamed(
-                context,
-                ViewRecipeScreen.id,
-                arguments: recipe,
-              );
-              refreshRecipeList();
-            }),
+          key: _recipeKeyListkey,
+          onTapRecipe: (Recipe recipe) async {
+            await Navigator.pushNamed(
+              context,
+              ViewRecipeScreen.id,
+              arguments: recipe,
+            );
+            refreshData();
+          },
+        ),
       ),
       BottomBarNavigationOptions(
-        body: Text(
-          'Index 2: School',
-          style: optionStyle,
-          key: Key(Keys.homeBottomBarListsText),
+        body: GroceryLists.newGroceryListsBloc(
+          key: _recipeKeyListkey,
+          onTapGroceryList: (GroceryList groceryList) async {
+            // await Navigator.pushNamed(
+            //   context,
+            //   ViewRecipeScreen.id,
+            //   arguments: recipe,
+            // );
+            refreshData();
+          },
         ),
       ),
     ];

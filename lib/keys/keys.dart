@@ -7,7 +7,6 @@ class Keys {
   static const String homeFloatingActionNewRecipeButton =
       'home-floating-action-new-recipe-button';
   static const String homeBottomBarHomeText = 'home-bottom-bar-home-text-key';
-  static const String homeBottomBarListsText = 'home-bottom-bar-lists-text-key';
   static const String homeBottomBarHomeIcon = 'home-bottom-bar-home-icon-key';
   static const String homeBottomBarRecipesIcon =
       'home-bottom-bar-recipes-icon-key';
@@ -18,8 +17,14 @@ class Keys {
   static const String recipesList = 'recipes-list-key';
   static const String recipesListEmptyText = 'recipes-list-empy-text';
 
+  // grocery lists
+  static const String groceryListsEmptyText = 'grocery-lists-empy-text';
+
   // recipe list row
   static const String recipeListRowTitleText = 'recipes-list-row-title-text';
+
+  // grocery list row
+  static const String groceryListRowTitleText = 'grocery-list-row-title-text';
 
   // view recipe label text
   static const String viewRecipeLabelText = 'view-recipe-label-text';

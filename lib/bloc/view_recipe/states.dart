@@ -25,5 +25,5 @@ class ChooseGroceryListToRecipeEvent extends ViewRecipeState {
   ChooseGroceryListToRecipeEvent({this.collection, this.recipe, this.portions});
 
   @override
-  List<Object> get props => [collection, recipe];
+  List<Object> get props => [collection, recipe, portions];
 }

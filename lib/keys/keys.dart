@@ -52,8 +52,12 @@ class Keys {
       'save-grocery-list-archive-confirm';
   static const String saveGroceryListArchiveCancel =
       'save-grocery-list-archive-cancel';
+  static const String saveGroceryListBottomActionIcon =
+      'save-grocery-list-bottom-action-icon';
 
   // grocery item
+  static const String groceryItemActionIcon = 'grocery-item-action-icon';
+  static const String groceryItemCheckBox = 'grocery-item-check-box';
   static const String groceryItemTextField = 'grocery-item-text-field';
 
   // view recipe
@@ -82,7 +86,7 @@ class Keys {
   static const String addRecipeToGroceryListDialogPortionTextField =
       'add-recipe-to-grocery-list-dialog-portion-text-field';
 
-  // add recipe to grocery list dialog
+  //ingredient recipe source dialog
   static const String ingredientRecipeSourceDialogIngredientName =
       'ingredient-recipe-source-dialog-ingredient-name';
   static const String ingredientRecipeSourceDialogRecipe =

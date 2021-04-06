@@ -62,6 +62,7 @@ class _GroceryItemState extends State<GroceryItem> {
         widget.groceryListItem.recipes != null &&
         widget.groceryListItem.recipes.length > 0) {
       return IconButton(
+          key: Key(Keys.groceryItemActionIcon + widget.index.toString()),
           icon: Icon(Icons.library_books),
           onPressed: () {
             IngredientRecipeSourceDialog.showIngredientRecipeSourceDialog(
@@ -71,7 +72,10 @@ class _GroceryItemState extends State<GroceryItem> {
             );
           });
     }
-    return Icon(Icons.drag_indicator);
+    return Icon(
+      Icons.drag_indicator,
+      key: Key(Keys.groceryItemActionIcon + widget.index.toString()),
+    );
   }
 
   @override
@@ -90,6 +94,7 @@ class _GroceryItemState extends State<GroceryItem> {
         ),
         Checkbox(
           activeColor: Colors.lightBlueAccent,
+          key: Key(Keys.groceryItemCheckBox + widget.index.toString()),
           value: widget.groceryListItem.checked ?? false,
           onChanged: (checked) {
             setState(() {

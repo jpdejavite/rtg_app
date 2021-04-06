@@ -64,14 +64,6 @@ class GroceryListsState extends State<GroceryLists> {
       children: [
         BlocBuilder<GroceryListsBloc, GroceryListsListState>(
             builder: (BuildContext context, GroceryListsListState state) {
-          // if (state is ReciesError) {
-          //   final error = state.error;
-          //   String message = '${error.message}\nTap to Retry.';
-          //   return ErrorTxt(
-          //     message: message,
-          //     onTap: loadGroceryLists,
-          //   );
-          // }
           GroceryListsCollection groceryListsCollection;
           if (state is GroceryListsLoaded) {
             groceryListsCollection = state.groceryListsCollection;

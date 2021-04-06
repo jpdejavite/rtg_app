@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       BottomBarNavigationOptions(
         body: GroceryLists.newGroceryListsBloc(
-          key: _recipeKeyListkey,
+          key: _groceryListsKeyListkey,
           onTapGroceryList: (GroceryList groceryList) async {
             await Navigator.pushNamed(
               context,

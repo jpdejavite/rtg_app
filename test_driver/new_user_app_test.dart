@@ -42,6 +42,24 @@ void main() {
         find.byValueKey(Keys.groceryListRowTitleText + "0");
     final groceryListRowTitleText1 =
         find.byValueKey(Keys.groceryListRowTitleText + "1");
+    final groceryItemTextField0 =
+        find.byValueKey(Keys.groceryItemTextField + "0");
+    final groceryItemCheckBox1 =
+        find.byValueKey(Keys.groceryItemCheckBox + "1");
+    final saveGroceryListShowChecked =
+        find.byValueKey(Keys.saveGroceryListShowChecked);
+    final groceryItemActionIcon2 =
+        find.byValueKey(Keys.groceryItemActionIcon + "2");
+    final saveGroceryListBottomActionIcon =
+        find.byValueKey(Keys.saveGroceryListBottomActionIcon);
+    final ingredientRecipeSourceDialogRecipe0 =
+        find.byValueKey(Keys.ingredientRecipeSourceDialogRecipe + "0");
+    final ingredientRecipeSourceDialogCloseButton =
+        find.byValueKey(Keys.ingredientRecipeSourceDialogCloseButton);
+    final saveGroceryListArchiveAction =
+        find.byValueKey(Keys.saveGroceryListArchiveAction);
+    final saveGroceryListArchiveConfirm =
+        find.byValueKey(Keys.saveGroceryListArchiveConfirm);
 
     final String recipeName1 = 'Minha primeira receita!';
     final String portion1 = '1';
@@ -61,7 +79,6 @@ void main() {
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
-      // await DatbaseHelper.initDB(Users.newUser);
       await driver.tap(actionDeleteAllIcon);
     });
 
@@ -225,6 +242,86 @@ void main() {
       await driver.tap(homeBottomBarListsIcon);
 
       expect(await Helper.isPresent(groceryListRowTitleText1, driver), true);
+    });
+
+    test('edit grocery list item name', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      await driver.tap(groceryItemTextField0);
+      await driver.enterText("1 chuchu grande");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      expect(await driver.getText(groceryItemTextField0), "1 chuchu grande");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit grocery list check item', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      await driver.tap(groceryItemCheckBox1);
+
+      expect(await Helper.isPresent(saveGroceryListShowChecked, driver), true);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit grocery list drag item', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      // long press
+      await driver.scroll(
+          groceryItemActionIcon2, 0, 0, Duration(milliseconds: 1000));
+
+      await driver.scroll(
+          groceryItemActionIcon2, 0, -75, Duration(milliseconds: 3000));
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit grocery list show recipes', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      await driver.tap(saveGroceryListBottomActionIcon);
+
+      await driver.tap(groceryItemActionIcon2);
+
+      expect(await driver.getText(ingredientRecipeSourceDialogRecipe0),
+          recipeName2);
+
+      await driver.tap(ingredientRecipeSourceDialogCloseButton);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit grocery list archive recipes', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      await driver.tap(saveGroceryListArchiveAction);
+
+      await driver.tap(saveGroceryListArchiveConfirm);
+
+      expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
+
+      expect(await Helper.isPresent(groceryListRowTitleText1, driver), false);
     });
 
     // TODO: implement backup

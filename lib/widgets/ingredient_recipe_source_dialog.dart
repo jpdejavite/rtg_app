@@ -36,12 +36,14 @@ class IngredientRecipeSourceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> recipesTexts = [];
     if (recipes != null) {
-      recipes.forEach((recipe) {
+      recipes.asMap().forEach((index, recipe) {
         recipesTexts.add(Row(
           children: [
             TextButton(
                 child: Text(
                   recipe.title,
+                  key: Key(Keys.ingredientRecipeSourceDialogRecipe +
+                      index.toString()),
                 ),
                 onPressed: () {
                   Navigator.pushNamed(

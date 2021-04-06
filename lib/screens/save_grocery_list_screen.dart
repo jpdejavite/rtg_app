@@ -308,6 +308,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
               AppLocalizations.of(context).updated_at_format)
         ])),
         IconButton(
+            key: Key(Keys.saveGroceryListBottomActionIcon),
             icon: Icon(
                 showRecipeSource ? Icons.drag_indicator : Icons.library_books),
             onPressed: () {

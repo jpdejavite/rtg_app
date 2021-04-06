@@ -52,6 +52,7 @@
   "configured_at":"Configurado em",
   "done_at":"Feito em",
   "backup_at_format":"dd/MM/yyyy HH:mm",
+  "updated_at_format":"dd/MM HH:mm",
   "account":"Conta",
   "do_backup":"Fazer Backup",
   "status":"Status",
@@ -83,5 +84,14 @@
   "recipe_portions": "Porções da receita",
   "type_in_recipe_portions_to_make":"Digite quantas porções quer fazer com essa receita",
   "grocery_list_title":"semana %d",
+  "edit_grocery_list": "Editar Lista de Compras",
+  "generic_error_save_grocery_list":"Um erro aconteceu ao salvar lista de compras",
+  "checked_items":"itens marcados",
+  "checked_item":"item marcado",
+  "close": "fechar",
+  "item_recipes": "Receitas do item",
+  "updated_at_date": "Atualizado em %s",
+  "archive_grocery_list": "Arquivar Lista de Compras",
+  "archive_grocery_list_explanation": "Deseja realmente arquivar essa lista de compras?",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

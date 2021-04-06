@@ -116,26 +116,21 @@ class GroceryListsState extends State<GroceryLists> {
           }
 
           GroceryList groceryList = groceryListsCollection.groceryLists[index];
+          Widget groceryListRow = GroceryListListRow(
+            groceryList: groceryList,
+            index: index,
+            onTap: (int i) {
+              widget.onTapGroceryList(groceryListsCollection.groceryLists[i]);
+            },
+          );
           if (hasLoadedAll &&
               index == groceryListsCollection.groceryLists.length - 1) {
             return Padding(
               padding: EdgeInsets.only(bottom: 50),
-              child: GroceryListListRow(
-                groceryList: groceryList,
-                index: index,
-                onTap: (int i) {
-                  // widget.onTapGroceryList(groceryListsCollection.groceryLists[i]);
-                },
-              ),
+              child: groceryListRow,
             );
           }
-          return GroceryListListRow(
-            groceryList: groceryList,
-            index: index,
-            onTap: (int i) {
-              // widget.onTapGroceryList(groceryListsCollection.groceryLists[i]);
-            },
-          );
+          return groceryListRow;
         },
       ),
     );

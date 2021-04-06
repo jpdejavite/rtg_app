@@ -52,6 +52,7 @@
   "configured_at":"Configured at",
   "done_at":"Done at",
   "backup_at_format":"MM/dd/yyyy HH:mm",
+  "updated_at_format":"MM/dd HH:mm",
   "account":"Account",
   "do_backup":"Do Backup",
   "status":"Status",
@@ -83,5 +84,14 @@
   "recipe_portions": "Recipe portions",
   "type_in_recipe_portions_to_make":"Type in how many portions you want to make with this recipe",
   "grocery_list_title":"week %d",
+  "edit_grocery_list": "Edit Grocery List",
+  "generic_error_save_grocery_list":"An error occurred when saving grocery list",
+  "checked_items":"checked items",
+  "checked_item":"checked item",
+  "close": "close",
+  "item_recipes": "Item recipes",
+  "updated_at_date": "Updated at %s",
+  "archive_grocery_list": "Archive Grocery List",
+  "archive_grocery_list_explanation": "Do you really want to archive this grocery list?",
   "fill_this_required_field":"Fill this required field"
 }

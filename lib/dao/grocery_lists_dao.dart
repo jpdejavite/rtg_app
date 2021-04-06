@@ -25,7 +25,8 @@ class GroceryListsDao {
     );
 
     var records = await store.find(db, finder: finder);
-    var total = await store.count(db);
+    var total = await store.count(db,
+        filter: Filter.equals('status', GroceryListStatus.active.index));
 
     List<GroceryList> groceryLists = groceryListsFromRecords(records);
     return GroceryListsCollection(groceryLists: groceryLists, total: total);

@@ -1,15 +1,28 @@
+import 'package:rtg_app/helper/id_generator.dart';
 import 'package:rtg_app/model/recipe.dart';
 
 class GroceryListItem {
-  GroceryListItem({
-    this.quantity,
-    this.name,
-    this.recipes,
-  });
-
+  String id;
   int quantity;
   String name;
   List<String> recipes;
+  bool checked;
+
+  GroceryListItem({
+    this.id,
+    this.quantity,
+    this.name,
+    this.recipes,
+    this.checked,
+  });
+
+  static newEmptyGroceryListItem() {
+    return GroceryListItem(
+      id: IdGenerator.id(),
+      checked: false,
+      name: '',
+    );
+  }
 
   @override
   String toString() {
@@ -35,15 +48,17 @@ class GroceryListItem {
 
   factory GroceryListItem.fromMap(Map<String, Object> record) {
     List<String> recipes = [];
-    if (record["recipes"] is List<Object>) {
-      (record["recipes"] as List<Object>).forEach((el) {
+    if (record['recipes'] is List<Object>) {
+      (record['recipes'] as List<Object>).forEach((el) {
         recipes.add(el.toString());
       });
     }
 
     return GroceryListItem(
-      quantity: record["quantity"],
-      name: record["name"],
+      id: record['id'],
+      quantity: record['quantity'],
+      name: record['name'],
+      checked: record['checked'],
       recipes: recipes,
     );
   }
@@ -56,8 +71,10 @@ class GroceryListItem {
     List<Object> objects = [];
     items.forEach((i) {
       objects.add({
+        'id': i.id,
         'name': i.name,
         'recipes': i.recipes,
+        'checked': i.checked,
       });
     });
 
@@ -68,8 +85,10 @@ class GroceryListItem {
       Recipe recipe, List<GroceryListItem> items) {
     recipe.ingredients.forEach((ingredient) {
       items.add(GroceryListItem(
+        id: IdGenerator.id(),
         name: ingredient.name,
         recipes: [recipe.id],
+        checked: false,
       ));
     });
 
@@ -85,21 +104,7 @@ class GroceryListItem {
       return false;
     }
 
-    if (name != other.name) {
-      return false;
-    }
-
-    if (recipes.length != other.recipes.length) {
-      return false;
-    }
-
-    bool areEqual = true;
-    recipes.asMap().forEach((i, recipeId) {
-      if (recipeId != other.recipes[i]) {
-        areEqual = false;
-      }
-    });
-    return areEqual;
+    return id == other.id;
   }
 
   @override

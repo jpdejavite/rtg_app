@@ -21,4 +21,7 @@ class SaveGroceryListResponse {
 
     return groceryList == other.groceryList;
   }
+
+  @override
+  int get hashCode => super.hashCode;
 }

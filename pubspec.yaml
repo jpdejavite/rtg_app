@@ -38,6 +38,7 @@ dependencies:
   googleapis: ^2.0.0
   http: ^0.13.1
   sprintf: ^5.0.0
+  uuid: any
 
 dev_dependencies:
   flutter_test:

@@ -8,7 +8,6 @@ class DatbaseHelper {
 
   static initDB(String user) async {
     recipesDao.deleteAll();
-    print('database deleted');
     // await db.transaction((txn) async {
     //   for (int i = 0; i < 200; i++) {
     //     await store.add(txn, {

@@ -31,23 +31,31 @@ class RecipesDao {
     var db = await dbProvider.database;
 
     Filter filter;
-    if (searchParams != null &&
-        searchParams.filter != null &&
-        searchParams.filter != "") {
-      filter = Filter.or([
-        Filter.matchesRegExp(
-            'title', RegExp(searchParams.filter, caseSensitive: false)),
-        Filter.matchesRegExp(
-            'instructions', RegExp(searchParams.filter, caseSensitive: false)),
-        getFilterContainingProducts(
-            RegExp(searchParams.filter, caseSensitive: false)),
-      ]);
+    if (searchParams != null) {
+      if (searchParams.filter != null && searchParams.filter != "") {
+        filter = Filter.or([
+          Filter.matchesRegExp(
+              'title', RegExp(searchParams.filter, caseSensitive: false)),
+          Filter.matchesRegExp('instructions',
+              RegExp(searchParams.filter, caseSensitive: false)),
+          getFilterContainingProducts(
+              RegExp(searchParams.filter, caseSensitive: false)),
+        ]);
+      } else if (searchParams.ids != null && searchParams.ids.length > 0) {
+        List<Filter> filters = [];
+        searchParams.ids.forEach((id) {
+          filters.add(Filter.byKey(int.parse(id)));
+        });
+        filter = Filter.or(filters);
+      }
     }
 
     var finder = Finder(
       filter: filter,
       offset: searchParams != null ? searchParams.offset : 0,
-      limit: 20,
+      limit: searchParams != null && searchParams.limit != null
+          ? searchParams.limit
+          : 20,
       sortOrders: [
         SortOrder('title'),
       ],

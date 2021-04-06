@@ -39,6 +39,23 @@ class Keys {
   static const String saveRecipeFloatingActionSaveButton =
       'save-recipe-floating-action-save-button';
 
+  // save grocery list
+  static const String saveGroceryListGroceryItem =
+      'save-grocery-list-grocery-item';
+  static const String saveGroceryListShowChecked =
+      'save-grocery-list-show-checked';
+  static const String saveGroceryListTitleField =
+      'save-grocery-list-title-field';
+  static const String saveGroceryListArchiveAction =
+      'save-grocery-list-archive-action';
+  static const String saveGroceryListArchiveConfirm =
+      'save-grocery-list-archive-confirm';
+  static const String saveGroceryListArchiveCancel =
+      'save-grocery-list-archive-cancel';
+
+  // grocery item
+  static const String groceryItemTextField = 'grocery-item-text-field';
+
   // view recipe
   static const String viewRecipeTitle = 'view-recipe-title';
   static const String viewRecipePortionsLabelText =
@@ -64,6 +81,14 @@ class Keys {
       'add-recipe-to-grocery-list-dialog-confirm-button';
   static const String addRecipeToGroceryListDialogPortionTextField =
       'add-recipe-to-grocery-list-dialog-portion-text-field';
+
+  // add recipe to grocery list dialog
+  static const String ingredientRecipeSourceDialogIngredientName =
+      'ingredient-recipe-source-dialog-ingredient-name';
+  static const String ingredientRecipeSourceDialogRecipe =
+      'ingredient-recipe-source-dialog-recipe';
+  static const String ingredientRecipeSourceDialogCloseButton =
+      'ingredient-recipe-source-dialog-close-button';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

@@ -10,6 +10,7 @@ import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -200,11 +201,11 @@ class _HomeScreenState extends State<HomeScreen> {
         body: GroceryLists.newGroceryListsBloc(
           key: _recipeKeyListkey,
           onTapGroceryList: (GroceryList groceryList) async {
-            // await Navigator.pushNamed(
-            //   context,
-            //   ViewRecipeScreen.id,
-            //   arguments: recipe,
-            // );
+            await Navigator.pushNamed(
+              context,
+              SaveGroceryListScreen.id,
+              arguments: groceryList,
+            );
             refreshData();
           },
         ),

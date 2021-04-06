@@ -6,6 +6,7 @@ import 'package:rtg_app/bloc/view_recipe/states.dart';
 import 'package:rtg_app/bloc/view_recipe/view_recipe_bloc.dart';
 import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
+import 'package:rtg_app/helper/id_generator.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
@@ -14,11 +15,14 @@ import 'package:rtg_app/model/recipe_ingredient.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class MockGroceryListsRepository extends Mock
     implements GroceryListsRepository {}
 
 class MockRecipesRepository extends Mock implements RecipesRepository {}
+
+class MockUuid extends Mock implements Uuid {}
 
 void main() {
   ViewRecipeBloc viewRecipeBloc;
@@ -33,11 +37,13 @@ void main() {
         groceryListsRepository: groceryListsRepository,
         recipesRepository: recipesRepository);
     CustomDateTime.customTime = customTime;
+    IdGenerator.mock = MockUuid();
   });
 
   tearDown(() {
     viewRecipeBloc?.close();
     CustomDateTime.customTime = null;
+    IdGenerator.mock = null;
   });
 
   test('initial state is correct', () {

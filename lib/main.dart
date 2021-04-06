@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
+import 'package:rtg_app/screens/save_grocery_list_screen.dart';
+import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import 'model/grocery_list.dart';
 import 'model/recipe.dart';
 
 void main() {
@@ -46,6 +48,14 @@ class RtgApp extends StatelessWidget {
             editRecipe = args;
           }
           return SaveRecipeScreen.newSaveRecipeBloc(editRecipe);
+        },
+        SaveGroceryListScreen.id: (context) {
+          var args = ModalRoute.of(context).settings.arguments;
+          GroceryList editGroceryList;
+          if (args != null && args is GroceryList) {
+            editGroceryList = args;
+          }
+          return SaveGroceryListScreen.newSaveGroceryListBloc(editGroceryList);
         },
         ViewRecipeScreen.id: (context) {
           return ViewRecipeScreen.newViewRecipeBloc();

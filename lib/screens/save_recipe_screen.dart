@@ -279,7 +279,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     List<RecipeIngredient> recipeIngredients = [];
     ingredients.forEach((i) {
       if (i != null && i != "") {
-        recipeIngredients.add(RecipeIngredient(name: i));
+        recipeIngredients.add(RecipeIngredient.fromInput(i));
       }
     });
 

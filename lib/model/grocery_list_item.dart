@@ -86,7 +86,7 @@ class GroceryListItem {
     recipe.ingredients.forEach((ingredient) {
       items.add(GroceryListItem(
         id: IdGenerator.id(),
-        name: ingredient.name,
+        name: ingredient.originalName,
         recipes: [recipe.id],
         checked: false,
       ));

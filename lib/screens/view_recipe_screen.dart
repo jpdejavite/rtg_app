@@ -246,7 +246,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     recipe.ingredients.asMap().forEach((index, ingredient) {
       children.add(ViewRecipeText(
         keyString: Keys.viewRecipeIngredientText + index.toString(),
-        text: ingredient.name,
+        text: ingredient.originalName,
         hasBullet: true,
         hasPaddingTop: true,
       ));

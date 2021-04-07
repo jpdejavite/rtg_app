@@ -25,7 +25,7 @@ class Recipe {
   int lastUsed;
   String title;
   String source;
-  int portions;
+  double portions;
   int totalPrepartionTime;
   String instructions;
   List<RecipeIngredient> ingredients;

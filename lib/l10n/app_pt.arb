@@ -27,6 +27,7 @@
   "instructions_how_to_do_recipe":"Instruções de como fazer a receita",
   "instructions":"Instruções",
   "fill_a_value_greater_than_zero":"Preencha um valor maior que zero",
+  "fill_a_valid_double":"Preencha um valor maior que zero e com no máximo uma virgula",
   "generic_error_save_recipe":"Um erro aconteceu ao salvar receita",
   "saved_recipe":"Receita salva",
   "saving_recipe":"Salvando receita...",

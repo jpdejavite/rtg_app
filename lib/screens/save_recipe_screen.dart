@@ -174,14 +174,17 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         ),
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))
         ],
         validator: (value) {
           if (value == null || value.isEmpty) {
             return AppLocalizations.of(context).fill_this_required_field;
           }
-          if (int.parse(value) < 1) {
-            return AppLocalizations.of(context).fill_a_value_greater_than_zero;
+          try {
+            double.parse(value.replaceAll(",", "."));
+          } catch (e) {
+            print(e);
+            return AppLocalizations.of(context).fill_a_valid_double;
           }
           return null;
         },
@@ -288,7 +291,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
           : CustomDateTime.current.millisecondsSinceEpoch,
       updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
       instructions: _instructionsController.text,
-      portions: int.parse(_portionsController.text),
+      portions: double.parse(_portionsController.text.replaceAll(",", ".")),
       totalPrepartionTime: int.parse((_preparationTimeController.text == null ||
               _preparationTimeController.text == "")
           ? '0'

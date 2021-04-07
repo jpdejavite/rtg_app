@@ -27,6 +27,7 @@
   "instructions_how_to_do_recipe":"Instructions of how to do the recipe",
   "instructions":"Instructions",
   "fill_a_value_greater_than_zero":"Fill a value greater than zero",
+  "fill_a_valid_double":"Fill a value greater than zero and with at most one dot",
   "generic_error_save_recipe":"An error occurred when saving recipe",
   "saved_recipe":"Saved recipe",
   "saving_recipe":"Salving recipe...",

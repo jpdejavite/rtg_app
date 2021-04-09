@@ -59,8 +59,8 @@ class _GroceryItemState extends State<GroceryItem> {
 
   Widget buildActionIcon() {
     if (widget.showRecipeSource &&
-        widget.groceryListItem.recipes != null &&
-        widget.groceryListItem.recipes.length > 0) {
+        widget.groceryListItem.recipeIngredients != null &&
+        widget.groceryListItem.recipeIngredients.length > 0) {
       return IconButton(
           key: Key(Keys.groceryItemActionIcon + widget.index.toString()),
           icon: Icon(Icons.library_books),
@@ -81,7 +81,7 @@ class _GroceryItemState extends State<GroceryItem> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _nameController.text = widget.groceryListItem.name;
+      _nameController.text = widget.groceryListItem.getName(context);
     });
     return Row(
       children: [
@@ -126,7 +126,11 @@ class _GroceryItemState extends State<GroceryItem> {
                   return;
                 }
 
-                widget.groceryListItem.name = _nameController.text;
+                GroceryListItem newItem =
+                    GroceryListItem.fromInput(_nameController.text);
+                widget.groceryListItem.ingredientName = newItem.ingredientName;
+                widget.groceryListItem.quantity = newItem.quantity;
+                widget.groceryListItem.measureId = newItem.measureId;
                 widget.onEditName(widget.groceryListItem, widget.index);
               },
               decoration: InputDecoration(

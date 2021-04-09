@@ -5,7 +5,7 @@ abstract class ViewRecipeEvents {}
 
 class TryToAddRecipeToGroceryListEvent extends ViewRecipeEvents {
   final Recipe recipe;
-  final int portions;
+  final double portions;
   final String groceryListTitle;
   TryToAddRecipeToGroceryListEvent(
       this.recipe, this.portions, this.groceryListTitle);

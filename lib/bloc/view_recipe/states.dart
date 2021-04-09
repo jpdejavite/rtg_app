@@ -21,7 +21,7 @@ class AddedRecipeToGroceryListEvent extends ViewRecipeState {
 class ChooseGroceryListToRecipeEvent extends ViewRecipeState {
   final GroceryListsCollection collection;
   final Recipe recipe;
-  final int portions;
+  final double portions;
   ChooseGroceryListToRecipeEvent({this.collection, this.recipe, this.portions});
 
   @override

@@ -1,32 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:rtg_app/helper/diacritics.dart';
 import 'package:rtg_app/helper/id_generator.dart';
+import 'package:rtg_app/helper/ingredient_measure_converter.dart';
+import 'package:rtg_app/helper/string_helper.dart';
+import 'package:rtg_app/model/ingredient_quantity.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:edit_distance/edit_distance.dart';
+import 'ingredient_measure.dart';
 
 class GroceryListItem {
   String id;
-  int quantity;
-  String name;
-  List<String> recipes;
+  double quantity;
   bool checked;
+  // key => recipeID, value => ingredient index
+  Map<String, int> recipeIngredients;
+  IngredientMeasureId measureId;
+  String ingredientName;
 
   GroceryListItem({
     this.id,
     this.quantity,
-    this.name,
-    this.recipes,
     this.checked,
+    this.recipeIngredients,
+    this.measureId,
+    this.ingredientName,
   });
 
   static newEmptyGroceryListItem() {
     return GroceryListItem(
       id: IdGenerator.id(),
       checked: false,
-      name: '',
+      ingredientName: '',
+      recipeIngredients: Map<String, int>(),
     );
   }
 
   @override
   String toString() {
-    return name.toString();
+    return '$id $quantity $checked $recipeIngredients $measureId $ingredientName';
+  }
+
+  String getName(BuildContext context) {
+    if (ingredientName == null) {
+      return '';
+    }
+
+    if (measureId == null || quantity == null) {
+      return ingredientName;
+    }
+
+    String quantityToShow = quantity.toString();
+    if (quantity % 1 == 0) {
+      quantityToShow = quantity.toInt().toString();
+    }
+
+    if (measureId == IngredientMeasureId.unit) {
+      return '$quantityToShow $ingredientName';
+    }
+
+    return '$quantityToShow ${IngredientMeasure.i18nMeasure(measureId, quantity, context)} $ingredientName';
   }
 
   static List<GroceryListItem> fromObject(Object object) {
@@ -47,19 +79,21 @@ class GroceryListItem {
   }
 
   factory GroceryListItem.fromMap(Map<String, Object> record) {
-    List<String> recipes = [];
-    if (record['recipes'] is List<Object>) {
-      (record['recipes'] as List<Object>).forEach((el) {
-        recipes.add(el.toString());
+    Map<String, int> recipeIngredients = Map<String, int>();
+    if (record['recipeIngredients'] is Map<String, Object>) {
+      (record['recipeIngredients'] as Map<String, Object>)
+          .forEach((key, index) {
+        recipeIngredients[key] = index;
       });
     }
 
     return GroceryListItem(
       id: record['id'],
       quantity: record['quantity'],
-      name: record['name'],
       checked: record['checked'],
-      recipes: recipes,
+      recipeIngredients: recipeIngredients,
+      measureId: IngredientMeasureId.values[record["measureId"] as int],
+      ingredientName: record['ingredientName'],
     );
   }
 
@@ -72,9 +106,11 @@ class GroceryListItem {
     items.forEach((i) {
       objects.add({
         'id': i.id,
-        'name': i.name,
-        'recipes': i.recipes,
+        'quantity': i.quantity,
         'checked': i.checked,
+        'recipeIngredients': i.recipeIngredients,
+        'measureId': i.measureId.index,
+        'ingredientName': i.ingredientName,
       });
     });
 
@@ -82,17 +118,89 @@ class GroceryListItem {
   }
 
   static List<GroceryListItem> addRecipeToItems(
-      Recipe recipe, List<GroceryListItem> items) {
-    recipe.ingredients.forEach((ingredient) {
+      Recipe recipe, List<GroceryListItem> items, double portions) {
+    JaroWinkler jw = JaroWinkler();
+    recipe.ingredients.asMap().forEach((index, ingredient) {
+      String ingredientName =
+          Diacritics.removeDiacritics(ingredient.name).toLowerCase();
+      int matchIndex = -1;
+      items.asMap().forEach((i, item) {
+        String itemName =
+            Diacritics.removeDiacritics(item.ingredientName).toLowerCase();
+        if (1 - jw.normalizedDistance(itemName, ingredientName) >= 0.95) {
+          matchIndex = i;
+        }
+      });
+
+      if (matchIndex != -1) {
+        IngredientMeasureConversionItem conversion =
+            IngredientMeasureConverter.findConvertion(
+                ingredient.measureId, items[matchIndex].measureId);
+        if (conversion != null) {
+          IngredientMeasureConversionResult result =
+              IngredientMeasureConverter.convert(
+            measure: items[matchIndex].measureId,
+            quantity: items[matchIndex].quantity,
+            conversion: conversion,
+            quantityToAdd: ingredient.quantity,
+            measureToAdd: ingredient.measureId,
+            portions: portions,
+          );
+
+          items[matchIndex].quantity = result.quantity;
+          items[matchIndex].measureId = result.measure;
+          items[matchIndex].recipeIngredients[recipe.id] = index;
+          items[matchIndex].ingredientName = ingredient.name;
+          return;
+        }
+      }
       items.add(GroceryListItem(
         id: IdGenerator.id(),
-        name: ingredient.originalName,
-        recipes: [recipe.id],
+        quantity: ingredient.quantity * portions,
         checked: false,
+        recipeIngredients: {recipe.id: index},
+        measureId: ingredient.measureId,
+        ingredientName: ingredient.name,
       ));
     });
 
     return items;
+  }
+
+  static GroceryListItem fromInput(String originalText) {
+    double quantity = 1.0;
+    IngredientMeasureId measureId = IngredientMeasureId.unit;
+    if (originalText == null) {
+      return GroceryListItem(
+        ingredientName: originalText,
+        quantity: quantity,
+        measureId: measureId,
+      );
+    }
+    originalText = originalText.trim().replaceAll(RegExp(r'[\s]+'), ' ');
+    String text = originalText.toLowerCase();
+
+    String formattedText = Diacritics.removeDiacritics(text);
+    IngredientQuantity iq = IngredientQuantity.getQuantity(formattedText);
+    quantity = iq.quantity;
+    if (iq.hasMatch()) {
+      text = text.substring(iq.textMatch.length).trim();
+      formattedText = formattedText.substring(iq.textMatch.length).trim();
+    }
+    IngredientMeasure im = IngredientMeasure.getId(formattedText);
+    measureId = im.id;
+    if (im.hasMatch()) {
+      text = text.substring(im.textMatch.length).trim();
+      text = StringHelper.removeLeadingPropostion(text);
+      formattedText = formattedText.substring(im.textMatch.length).trim();
+      formattedText = StringHelper.removeLeadingPropostion(formattedText);
+    }
+
+    return GroceryListItem(
+      ingredientName: text,
+      quantity: quantity,
+      measureId: measureId,
+    );
   }
 
   @override

@@ -58,4 +58,15 @@ void main() {
           measureId: IngredientMeasureId.teaSpoon,
         ));
   });
+
+  test('get quantity from match with diacriticsand white spaces', () {
+    expect(
+        RecipeIngredient.fromInput("3,33 colher    de café de   cúrcuma"),
+        RecipeIngredient(
+          originalName: "3,33 colher de café de cúrcuma",
+          name: "cúrcuma",
+          quantity: 3.33,
+          measureId: IngredientMeasureId.coffeSpoon,
+        ));
+  });
 }

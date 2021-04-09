@@ -53,7 +53,7 @@ void main() {
   test('try to add recipe no grocery lists', () {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
     Recipe recipe = Recipe(id: '1', ingredients: []);
-    int portions = 2;
+    double portions = 2;
 
     final expectedResponse = [
       AddedRecipeToGroceryListEvent(response: response),
@@ -81,7 +81,7 @@ void main() {
 
   test('try to add recipe has grocery lists', () {
     Recipe recipe = Recipe(id: '1', ingredients: []);
-    int portions = 2;
+    double portions = 2;
     GroceryListsCollection collection =
         GroceryListsCollection(total: 1, groceryLists: []);
 
@@ -109,9 +109,10 @@ void main() {
 
   test('add recipe to grocery lists', () {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
-    RecipeIngredient ingredient = RecipeIngredient(name: "ingrediente 1");
+    RecipeIngredient ingredient =
+        RecipeIngredient(name: "ingrediente 1", quantity: 1);
     Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
-    int portions = 2;
+    double portions = 2;
     GroceryList groceryList = GroceryList(recipes: [], groceries: []);
 
     final expectedResponse = [
@@ -135,8 +136,8 @@ void main() {
       expect(groceryList.recipes, [recipe.id]);
       expect(groceryList.groceries, [
         GroceryListItem(
-          name: ingredient.name,
-          recipes: [recipe.id],
+          ingredientName: ingredient.name,
+          recipeIngredients: {recipe.id: 0},
         )
       ]);
     });
@@ -147,9 +148,10 @@ void main() {
 
   test('add recipe to grocery lists, recipe already added', () {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
-    RecipeIngredient ingredient = RecipeIngredient(name: "ingrediente 1");
+    RecipeIngredient ingredient =
+        RecipeIngredient(name: "ingrediente 1", quantity: 1);
     Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
-    int portions = 2;
+    double portions = 2;
     GroceryList groceryList = GroceryList(recipes: [recipe.id], groceries: []);
 
     final expectedResponse = [
@@ -188,9 +190,10 @@ void main() {
 
   test('add recipe to new grocery lists', () {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
-    RecipeIngredient ingredient = RecipeIngredient(name: "ingrediente 1");
+    RecipeIngredient ingredient =
+        RecipeIngredient(name: "ingrediente 1", quantity: 1);
     Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
-    int portions = 2;
+    double portions = 2;
 
     final expectedResponse = [
       AddedRecipeToGroceryListEvent(response: response),

@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.1
   sprintf: ^5.0.0
   uuid: any
+  edit_distance: ^0.4.1
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:rtg_app/helper/diacritics.dart';
+import 'package:rtg_app/helper/string_helper.dart';
 import 'package:rtg_app/model/ingredient_measure.dart';
 import 'package:rtg_app/model/ingredient_quantity.dart';
 
@@ -31,7 +32,8 @@ class RecipeIngredient {
         measureId: measureId,
       );
     }
-    String text = originalText.trim().replaceAll(r"\s", " ").toLowerCase();
+    originalText = originalText.trim().replaceAll(RegExp(r'[\s]+'), ' ');
+    String text = originalText.toLowerCase();
 
     String formattedText = Diacritics.removeDiacritics(text);
     IngredientQuantity iq = IngredientQuantity.getQuantity(formattedText);
@@ -44,7 +46,9 @@ class RecipeIngredient {
     measureId = im.id;
     if (im.hasMatch()) {
       text = text.substring(im.textMatch.length).trim();
+      text = StringHelper.removeLeadingPropostion(text);
       formattedText = formattedText.substring(im.textMatch.length).trim();
+      formattedText = StringHelper.removeLeadingPropostion(formattedText);
     }
 
     return RecipeIngredient(

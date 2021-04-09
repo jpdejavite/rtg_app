@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 enum IngredientMeasureId {
   unit,
   coffeSpoon,
@@ -32,8 +36,10 @@ final Map<String, IngredientMeasureId> _map = {
   "col cafe": IngredientMeasureId.coffeSpoon,
   "colher cafe": IngredientMeasureId.coffeSpoon,
   "colher de cafe": IngredientMeasureId.coffeSpoon,
+  "colheres cafe": IngredientMeasureId.coffeSpoon,
   "colheres de cafe": IngredientMeasureId.coffeSpoon,
   "colher(es) de cafe": IngredientMeasureId.coffeSpoon,
+  "colher(es) cafe": IngredientMeasureId.coffeSpoon,
 
   "cc ": IngredientMeasureId.teaSpoon,
   "cch": IngredientMeasureId.teaSpoon,
@@ -43,8 +49,10 @@ final Map<String, IngredientMeasureId> _map = {
   "col cha": IngredientMeasureId.teaSpoon,
   "colher cha": IngredientMeasureId.teaSpoon,
   "colher de cha": IngredientMeasureId.teaSpoon,
+  "colheres cha": IngredientMeasureId.teaSpoon,
   "colheres de cha": IngredientMeasureId.teaSpoon,
   "colher(es) de cha": IngredientMeasureId.teaSpoon,
+  "colher(es) cha": IngredientMeasureId.teaSpoon,
 
   "csb": IngredientMeasureId.desertSpoon,
   "col. sobremesa": IngredientMeasureId.desertSpoon,
@@ -54,7 +62,9 @@ final Map<String, IngredientMeasureId> _map = {
   "colher sobremesa": IngredientMeasureId.desertSpoon,
   "colher de sobremesa": IngredientMeasureId.desertSpoon,
   "colheres de sobremesa": IngredientMeasureId.desertSpoon,
+  "colheres sobremesa": IngredientMeasureId.desertSpoon,
   "colher(es) de sobremesa": IngredientMeasureId.desertSpoon,
+  "colher(es) sobremesa": IngredientMeasureId.desertSpoon,
 
   "cs ": IngredientMeasureId.tableSpoon,
   "csp": IngredientMeasureId.tableSpoon,
@@ -65,7 +75,9 @@ final Map<String, IngredientMeasureId> _map = {
   "colher sopa": IngredientMeasureId.tableSpoon,
   "colher de sopa": IngredientMeasureId.tableSpoon,
   "colheres de sopa": IngredientMeasureId.tableSpoon,
+  "colheres sopa": IngredientMeasureId.tableSpoon,
   "colher(es) de sopa": IngredientMeasureId.tableSpoon,
+  "colher(es) sopa": IngredientMeasureId.tableSpoon,
 
   "x ": IngredientMeasureId.cup,
   "x. ": IngredientMeasureId.cup,
@@ -141,6 +153,71 @@ class IngredientMeasure {
     }
 
     return id;
+  }
+
+  static String i18nMeasure(
+      IngredientMeasureId measureId, double quantity, BuildContext context) {
+    switch (measureId) {
+      case IngredientMeasureId.unit:
+        return quantity > 1
+            ? AppLocalizations.of(context).units
+            : AppLocalizations.of(context).unit;
+      case IngredientMeasureId.coffeSpoon:
+        return quantity > 1
+            ? AppLocalizations.of(context).coffe_spoons
+            : AppLocalizations.of(context).coffe_spoon;
+      case IngredientMeasureId.teaSpoon:
+        return quantity > 1
+            ? AppLocalizations.of(context).tea_spoons
+            : AppLocalizations.of(context).tea_spoon;
+      case IngredientMeasureId.desertSpoon:
+        return quantity > 1
+            ? AppLocalizations.of(context).desert_spoons
+            : AppLocalizations.of(context).desert_spoon;
+      case IngredientMeasureId.tableSpoon:
+        return quantity > 1
+            ? AppLocalizations.of(context).table_spoons
+            : AppLocalizations.of(context).table_spoon;
+      case IngredientMeasureId.cup:
+        return quantity > 1
+            ? AppLocalizations.of(context).cups
+            : AppLocalizations.of(context).cup;
+      case IngredientMeasureId.pint:
+      case IngredientMeasureId.liter:
+        return quantity > 1
+            ? AppLocalizations.of(context).liters
+            : AppLocalizations.of(context).liter;
+      case IngredientMeasureId.quart:
+        return quantity > 1
+            ? AppLocalizations.of(context).quarts
+            : AppLocalizations.of(context).quart;
+      case IngredientMeasureId.gallon:
+        return quantity > 1
+            ? AppLocalizations.of(context).gallons
+            : AppLocalizations.of(context).gallon;
+      case IngredientMeasureId.ounce:
+        return quantity > 1
+            ? AppLocalizations.of(context).ounces
+            : AppLocalizations.of(context).ounce;
+      case IngredientMeasureId.pound:
+        return quantity > 1
+            ? AppLocalizations.of(context).pounds
+            : AppLocalizations.of(context).pound;
+      case IngredientMeasureId.grams:
+        return quantity > 1
+            ? AppLocalizations.of(context).grams
+            : AppLocalizations.of(context).gram;
+      case IngredientMeasureId.kilograms:
+        return quantity > 1
+            ? AppLocalizations.of(context).kilograms
+            : AppLocalizations.of(context).kilogram;
+      case IngredientMeasureId.milliliters:
+        return quantity > 1
+            ? AppLocalizations.of(context).milliliters
+            : AppLocalizations.of(context).milliliter;
+    }
+
+    return "";
   }
 
   @override

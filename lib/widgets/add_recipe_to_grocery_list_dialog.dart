@@ -6,7 +6,7 @@ import 'package:rtg_app/model/recipe.dart';
 
 class AddRecipeToGroceryListDialog extends StatefulWidget {
   final Recipe recipe;
-  final void Function(Recipe recipe, int portions) onConfirm;
+  final void Function(Recipe recipe, double portions) onConfirm;
 
   AddRecipeToGroceryListDialog({
     this.recipe,
@@ -19,7 +19,7 @@ class AddRecipeToGroceryListDialog extends StatefulWidget {
   static Future<void> showChooseGroceryListToRecipeEvent({
     BuildContext context,
     Recipe recipe,
-    Function(Recipe recipe, int portions) onConfirm,
+    Function(Recipe recipe, double portions) onConfirm,
   }) {
     return showDialog<void>(
       context: context,
@@ -83,16 +83,18 @@ class _AddRecipeToGroceryListDialogState
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))
                     ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)
                             .fill_this_required_field;
                       }
-                      if (int.parse(value) < 1) {
-                        return AppLocalizations.of(context)
-                            .fill_a_value_greater_than_zero;
+                      try {
+                        double.parse(value.replaceAll(",", "."));
+                      } catch (e) {
+                        print(e);
+                        return AppLocalizations.of(context).fill_a_valid_double;
                       }
                       return null;
                     },
@@ -110,8 +112,8 @@ class _AddRecipeToGroceryListDialogState
           onPressed: () {
             if (_formKey.currentState.validate()) {
               Navigator.of(context).pop();
-              widget.onConfirm(
-                  widget.recipe, int.parse(_portionsController.text));
+              widget.onConfirm(widget.recipe,
+                  double.parse(_portionsController.text.replaceAll(",", ".")));
             }
           },
         ),

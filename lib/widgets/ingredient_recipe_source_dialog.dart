@@ -37,23 +37,25 @@ class IngredientRecipeSourceDialog extends StatelessWidget {
     List<Widget> recipesTexts = [];
     if (recipes != null) {
       recipes.asMap().forEach((index, recipe) {
-        recipesTexts.add(Row(
-          children: [
-            TextButton(
-                child: Text(
-                  recipe.title,
-                  key: Key(Keys.ingredientRecipeSourceDialogRecipe +
-                      index.toString()),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    ViewRecipeScreen.id,
-                    arguments: recipe,
-                  );
-                }),
-          ],
-        ));
+        if (groceryListItem.recipeIngredients[recipe.id] != null) {
+          recipesTexts.add(Row(
+            children: [
+              TextButton(
+                  child: Text(
+                    recipe.title,
+                    key: Key(Keys.ingredientRecipeSourceDialogRecipe +
+                        index.toString()),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      ViewRecipeScreen.id,
+                      arguments: recipe,
+                    );
+                  }),
+            ],
+          ));
+        }
       });
     }
 
@@ -66,7 +68,7 @@ class IngredientRecipeSourceDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(bottom: 10),
               child: Text(
-                groceryListItem.name,
+                groceryListItem.getName(context),
                 style: Theme.of(context).textTheme.bodyText2,
               ),
             ),

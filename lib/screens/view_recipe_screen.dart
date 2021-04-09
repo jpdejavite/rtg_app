@@ -114,7 +114,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
           AddRecipeToGroceryListDialog.showChooseGroceryListToRecipeEvent(
               context: context,
               recipe: recipe,
-              onConfirm: (Recipe recipe, int portions) {
+              onConfirm: (Recipe recipe, double portions) {
                 context.read<ViewRecipeBloc>().add(
                     TryToAddRecipeToGroceryListEvent(
                         recipe, portions, getGroceryListDefaultTitle()));

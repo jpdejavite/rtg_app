@@ -44,6 +44,12 @@ void main() {
         find.byValueKey(Keys.groceryListRowTitleText + "1");
     final groceryItemTextField0 =
         find.byValueKey(Keys.groceryItemTextField + "0");
+    final groceryItemTextField1 =
+        find.byValueKey(Keys.groceryItemTextField + "1");
+    final groceryItemTextField2 =
+        find.byValueKey(Keys.groceryItemTextField + "2");
+    final groceryItemTextField3 =
+        find.byValueKey(Keys.groceryItemTextField + "3");
     final groceryItemCheckBox1 =
         find.byValueKey(Keys.groceryItemCheckBox + "1");
     final saveGroceryListShowChecked =
@@ -192,7 +198,7 @@ void main() {
       await driver.tap(viewRecipeAddToGroceryListAction);
 
       await driver.tap(addRecipeToGroceryListDialogPortionTextField);
-      await driver.enterText("123");
+      await driver.enterText("2");
 
       await driver.tap(addRecipeToGroceryListDialogConfirmButton);
 
@@ -202,6 +208,16 @@ void main() {
       await driver.tap(homeBottomBarListsIcon);
 
       expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      expect(await driver.getText(groceryItemTextField0), "2 chuchu");
+
+      expect(
+          await driver.getText(groceryItemTextField1), "2 colheres de chá sal");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
     });
 
     test('add second recipe to same grocery list', () async {
@@ -212,11 +228,28 @@ void main() {
       await driver.tap(viewRecipeAddToGroceryListAction);
 
       await driver.tap(addRecipeToGroceryListDialogPortionTextField);
-      await driver.enterText("123");
+      await driver.enterText("3");
 
       await driver.tap(addRecipeToGroceryListDialogConfirmButton);
 
       await driver.tap(viewRecipeGroceryListToSelect0);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      expect(await driver.getText(groceryItemTextField0), "2 chuchu");
+
+      expect(
+          await driver.getText(groceryItemTextField1), "5 colheres de chá sal");
+
+      expect(await driver.getText(groceryItemTextField2), "3 beterraba");
+
+      expect(await driver.getText(groceryItemTextField3),
+          "3 colheres de chá açucar");
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);
@@ -230,7 +263,7 @@ void main() {
       await driver.tap(viewRecipeAddToGroceryListAction);
 
       await driver.tap(addRecipeToGroceryListDialogPortionTextField);
-      await driver.enterText("123");
+      await driver.enterText("2");
 
       await driver.tap(addRecipeToGroceryListDialogConfirmButton);
 
@@ -281,12 +314,10 @@ void main() {
 
       await driver.tap(groceryListRowTitleText0);
 
-      // long press
-      await driver.scroll(
-          groceryItemActionIcon2, 0, 0, Duration(milliseconds: 1000));
-
       await driver.scroll(
           groceryItemActionIcon2, 0, -75, Duration(milliseconds: 3000));
+
+      await Future.delayed(Duration(seconds: 2));
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);

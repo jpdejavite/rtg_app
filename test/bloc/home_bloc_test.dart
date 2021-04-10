@@ -5,11 +5,15 @@ import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
+import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/repository/user_data_repository.dart';
 
 class MockBackupRepository extends Mock implements BackupRepository {}
 
@@ -18,6 +22,8 @@ class MockRecipesRepository extends Mock implements RecipesRepository {}
 class MockGroceryListsRepository extends Mock
     implements GroceryListsRepository {}
 
+class MockUserDataRepository extends Mock implements UserDataRepository {}
+
 class MockGoogleApi extends Mock implements GoogleApi {}
 
 void main() {
@@ -25,22 +31,28 @@ void main() {
   MockBackupRepository backupRepository;
   MockRecipesRepository recipesRepository;
   MockGroceryListsRepository groceryListsRepository;
+  UserDataRepository userDataRepository;
   MockGoogleApi googleApi;
+  DateTime customTime = DateTime.parse("1969-07-20 20:18:04");
 
   setUp(() {
     backupRepository = MockBackupRepository();
     recipesRepository = MockRecipesRepository();
     groceryListsRepository = MockGroceryListsRepository();
+    userDataRepository = MockUserDataRepository();
     googleApi = MockGoogleApi();
+    CustomDateTime.customTime = customTime;
     homeBloc = HomeBloc(
       backupRepository: backupRepository,
       recipesRepository: recipesRepository,
       groceryListsRepository: groceryListsRepository,
+      userDataRepository: userDataRepository,
       googleApi: googleApi,
     );
   });
 
   tearDown(() {
+    CustomDateTime.customTime = null;
     homeBloc?.close();
   });
 
@@ -48,41 +60,146 @@ void main() {
     expect(homeBloc.state, HomeInitState());
   });
 
-  test('backup has error', () {
+  test('no recipes show recipe turorial', () {
     Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
 
-    final expectedResponse = [
-      BackupHasError(backup: backup),
-    ];
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: true,
+        backupNotConfigured: false,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: true);
+
+    final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: false)));
 
     expectLater(
       homeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
-      expect(homeBloc.state, BackupHasError(backup: backup));
+      expect(homeBloc.state, state);
     });
 
     homeBloc.add(GetHomeDataEvent());
   });
 
-  test('backup not configured', () {
-    Backup backup = Backup(type: BackupType.none);
+  test('no recipes dismiss recipe turorial', () {
+    Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
 
-    final expectedResponse = [
-      BackupNotConfigured(),
-    ];
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: true,
+        backupNotConfigured: false,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: false);
+
+    final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
-        .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
+        .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: true)));
 
     expectLater(
       homeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
-      expect(homeBloc.state, BackupNotConfigured());
+      expect(homeBloc.state, state);
+    });
+
+    homeBloc.add(GetHomeDataEvent());
+  });
+
+  test('backup has error', () {
+    Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
+
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: true,
+        backupNotConfigured: false,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: false);
+
+    final expectedResponse = [state];
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(recipesRepository.search())
+        .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(UserData()));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, state);
+    });
+
+    homeBloc.add(GetHomeDataEvent());
+  });
+
+  test('backup not configured has recipes', () {
+    Backup backup = Backup(type: BackupType.none);
+
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: false,
+        backupNotConfigured: true,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: false);
+
+    final expectedResponse = [state];
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(recipesRepository.search())
+        .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 0)));
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(UserData()));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, state);
+    });
+
+    homeBloc.add(GetHomeDataEvent());
+  });
+
+  test('backup not configured has groceries', () {
+    Backup backup = Backup(type: BackupType.none);
+
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: false,
+        backupNotConfigured: true,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: true);
+
+    final expectedResponse = [state];
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(recipesRepository.search())
+        .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: false)));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, state);
     });
 
     homeBloc.add(GetHomeDataEvent());
@@ -91,7 +208,14 @@ void main() {
   test('backup ok', () {
     Backup backup = Backup(type: BackupType.drive);
 
-    final expectedResponse = [BackupOk()];
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: false,
+        backupNotConfigured: false,
+        backupOk: true,
+        backup: backup,
+        showRecipeTutorial: false);
+
+    final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
@@ -100,10 +224,44 @@ void main() {
       homeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
-      expect(homeBloc.state, BackupOk());
+      expect(homeBloc.state, state);
     });
 
     homeBloc.add(GetHomeDataEvent());
+  });
+
+  test('dismiss recipe tutorial turorial', () {
+    Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
+    UserData userData = UserData(dimissRecipeTutorial: false);
+
+    final ShowHomeInfo state = ShowHomeInfo(
+        backupHasError: true,
+        backupNotConfigured: false,
+        backupOk: false,
+        backup: backup,
+        showRecipeTutorial: false);
+
+    final expectedResponse = [state];
+    when(userDataRepository.getUserData())
+        .thenAnswer((_) => Future.value(userData));
+    when(userDataRepository.save(any)).thenAnswer((_) => Future.value(null));
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(recipesRepository.search())
+        .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, state);
+
+      expect(userData.dimissRecipeTutorial, true);
+      expect(userData.updatedAt, customTime.millisecondsSinceEpoch);
+    });
+
+    homeBloc.add(DismissRecipeTutorial());
   });
 
   test('delete all data', () {
@@ -112,6 +270,7 @@ void main() {
     when(recipesRepository.deleteAll()).thenAnswer((_) => Future.value(null));
     when(groceryListsRepository.deleteAll())
         .thenAnswer((_) => Future.value(null));
+    when(userDataRepository.deleteAll()).thenAnswer((_) => Future.value(null));
     when(googleApi.logout()).thenAnswer((_) => Future.value(null));
 
     expectLater(

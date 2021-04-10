@@ -12,6 +12,9 @@ class Keys {
       'home-bottom-bar-recipes-icon-key';
   static const String homeBottomBarListsIcon =
       'home-bottom-bar-recipes-lists-key';
+  static const String homeCardRecipeTutorial = 'home-card-recipe-tutorial';
+  static const String homeCardRecipeTutorialDismiss =
+      'home-card-recipe-tutorial-dismiss';
 
   // recipes list
   static const String recipesList = 'recipes-list-key';

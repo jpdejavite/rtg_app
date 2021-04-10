@@ -10,6 +10,7 @@ import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/repository/user_data_repository.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
@@ -32,6 +33,7 @@ class HomeScreen extends StatefulWidget {
         recipesRepository: RecipesRepository(),
         googleApi: GoogleApi.getGoogleApi(),
         groceryListsRepository: GroceryListsRepository(),
+        userDataRepository: UserDataRepository(),
       ),
       child: HomeScreen(),
     );
@@ -46,12 +48,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<HomeBloc>().add(GetHomeDataEvent());
+    showHomeInfo = ShowHomeInfo(
+        backupHasError: false,
+        backupNotConfigured: false,
+        backupOk: false,
+        showRecipeTutorial: false);
   }
 
+  ShowHomeInfo showHomeInfo;
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  List<BottomBarNavigationOptions> _widgetOptions;
+  List<BottomBarNavigationOption> _widgetOptions;
   GlobalKey<RecipesListState> _recipeKeyListkey = GlobalKey();
   GlobalKey<GroceryListsState> _groceryListsKeyListkey = GlobalKey();
 
@@ -79,11 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (state is AllDataDeleted) {
         refreshData();
       }
+      if (state is ShowHomeInfo) {
+        showHomeInfo = state;
+      }
 
       buildWidgetList();
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).home),
+          title: Text(_widgetOptions.elementAt(_selectedIndex).title),
           actions: getAppBarActions(state),
         ),
         body: Container(
@@ -106,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: Key(Keys.homeActionSettingsIcon),
         tooltip: AppLocalizations.of(context).open_settings,
         iconData: Icons.settings,
-        showNotification: state is BackupNotConfigured,
+        showNotification: showHomeInfo.backupNotConfigured,
         notificationKey: Keys.homeActionSettingsNotification,
         onPressed: () async {
           await Navigator.pushNamed(context, SettingsScreen.id);
@@ -157,18 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void buildWidgetList() {
     _widgetOptions = [
-      BottomBarNavigationOptions(
-        body: Expanded(
-          child: Center(
-            child: Text(
-              'Index 0: Home',
-              style: optionStyle,
-              key: Key(Keys.homeBottomBarHomeText),
-            ),
-          ),
-        ),
+      BottomBarNavigationOption(
+        title: AppLocalizations.of(context).home,
+        body: buildHomeWidget(),
       ),
-      BottomBarNavigationOptions(
+      BottomBarNavigationOption(
+        title: AppLocalizations.of(context).recipes,
         floatingActionButton: FloatingActionButton(
           key: Key(Keys.homeFloatingActionNewRecipeButton),
           onPressed: () async {
@@ -197,7 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-      BottomBarNavigationOptions(
+      BottomBarNavigationOption(
+        title: AppLocalizations.of(context).lists,
         body: GroceryLists.newGroceryListsBloc(
           key: _groceryListsKeyListkey,
           onTapGroceryList: (GroceryList groceryList) async {
@@ -212,10 +218,72 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ];
   }
+
+  Widget buildHomeWidget() {
+    List<Widget> cards = [];
+
+    if (showHomeInfo.showRecipeTutorial) {
+      cards.add(Card(
+        key: Key(Keys.homeCardRecipeTutorial),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text(AppLocalizations.of(context).new_arround_here),
+              subtitle: Text(
+                  AppLocalizations.of(context).recipe_tutorial_explanation),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  key: Key(Keys.homeCardRecipeTutorialDismiss),
+                  child: Text(AppLocalizations.of(context).dismiss),
+                  onPressed: () {
+                    context.read<HomeBloc>().add(DismissRecipeTutorial());
+                  },
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  child: Text(AppLocalizations.of(context).see_tutorial),
+                  onPressed: () {
+                    CustomToast.showToast(
+                      text: 'TODO',
+                      context: context,
+                      time: CustomToast.timeShort,
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+          ],
+        ),
+      ));
+    }
+
+    return Expanded(
+      child: cards.length > 0
+          ? SingleChildScrollView(
+              padding: EdgeInsets.all(5),
+              child: ListBody(
+                children: cards,
+              ),
+            )
+          : Center(
+              child: Text(
+                AppLocalizations.of(context).no_relevant_info_for_you,
+                key: Key(Keys.homeBottomBarHomeText),
+              ),
+            ),
+    );
+  }
 }
 
-class BottomBarNavigationOptions {
+class BottomBarNavigationOption {
+  final String title;
   final Widget body;
   final FloatingActionButton floatingActionButton;
-  BottomBarNavigationOptions({this.body, this.floatingActionButton});
+  BottomBarNavigationOption({this.body, this.title, this.floatingActionButton});
 }

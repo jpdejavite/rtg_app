@@ -122,5 +122,10 @@
   "kilograms":"kilograms",
   "milliliter":"ml",
   "milliliters":"mls",
+  "no_relevant_info_for_you":"No relevant information for you",
+  "new_arround_here":"New arround here?",
+  "recipe_tutorial_explanation":"Clique in the tutorial below to find out how to add a recipe, your first steps.",
+  "dismiss":"dispensar",
+  "see_tutorial":"ver tutorial",
   "fill_this_required_field":"Fill this required field"
 }

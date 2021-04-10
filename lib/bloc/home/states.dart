@@ -8,15 +8,27 @@ abstract class HomeState extends Equatable {
 
 class HomeInitState extends HomeState {}
 
-class BackupHasError extends HomeState {
-  final Backup backup;
-  BackupHasError({this.backup});
-  @override
-  List<Object> get props => [backup];
-}
-
-class BackupNotConfigured extends HomeState {}
-
-class BackupOk extends HomeState {}
-
 class AllDataDeleted extends HomeState {}
+
+class ShowHomeInfo extends HomeState {
+  final bool backupHasError;
+  final bool backupNotConfigured;
+  final bool backupOk;
+  final Backup backup;
+  final bool showRecipeTutorial;
+  ShowHomeInfo({
+    this.backupHasError,
+    this.backupNotConfigured,
+    this.backupOk,
+    this.backup,
+    this.showRecipeTutorial,
+  });
+  @override
+  List<Object> get props => [
+        backupHasError,
+        backupNotConfigured,
+        backupOk,
+        backup,
+        showRecipeTutorial,
+      ];
+}

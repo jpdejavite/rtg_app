@@ -10,6 +10,8 @@ void main() {
     final homeBottomBarRecipesIcon =
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
     final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
+    final homeCardRecipeTutorialDismiss =
+        find.byValueKey(Keys.homeCardRecipeTutorialDismiss);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipeFloatingActionSaveButton =
@@ -100,8 +102,16 @@ void main() {
 
       expect(
           await Helper.isPresent(
+              find.byValueKey(Keys.homeCardRecipeTutorial), driver),
+          true);
+
+      await driver.tap(homeCardRecipeTutorialDismiss);
+
+      expect(
+          await Helper.isPresent(
               find.byValueKey(Keys.homeBottomBarHomeText), driver),
           true);
+
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsIcon), driver),

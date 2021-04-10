@@ -8,3 +8,5 @@ abstract class HomeEvents extends Equatable {
 class GetHomeDataEvent extends HomeEvents {}
 
 class DeleteAllDataEvent extends HomeEvents {}
+
+class DismissRecipeTutorial extends HomeEvents {}

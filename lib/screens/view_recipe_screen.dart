@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,6 +43,7 @@ class ViewRecipeScreen extends StatefulWidget {
 
 class _ViewRecipeState extends State<ViewRecipeScreen> {
   Recipe recipe;
+  bool wakeLockEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +101,18 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
 
   List<Widget> buildActions() {
     return [
+      IconButton(
+        icon: Icon(wakeLockEnabled ? Icons.visibility : Icons.visibility_off),
+        tooltip: wakeLockEnabled
+            ? AppLocalizations.of(context).turn_off_inactivity_suspension
+            : AppLocalizations.of(context).turn_on_inactivity_suspension,
+        onPressed: () {
+          setState(() {
+            wakeLockEnabled = !wakeLockEnabled;
+            Wakelock.toggle(enable: wakeLockEnabled);
+          });
+        },
+      ),
       IconButton(
         icon: Icon(Icons.copy),
         tooltip: AppLocalizations.of(context).copy_to_clipboard,

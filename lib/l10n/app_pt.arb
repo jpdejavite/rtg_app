@@ -114,7 +114,7 @@
   "gallons":"galões",
   "ounce":"onça",
   "ounces":"onças",
-  "pound":"libra","last_grocery_list_used":"Última lista usada",
+  "pound":"libra",
   "pounds":"libras",
   "gram":"grama",
   "grams":"gramas",
@@ -131,5 +131,7 @@
   "configure_backup_explanation":"Para você ter a segurança de que todos os seus dados estarão sempre salvos na nuvem, e caso qualquer coisa aconteça com o seu dispositivo, você sempre poderá recuperar seus dados. Configure um backup na ação abaixo.",
   "configure_backup_action":"configurar backup",
   "last_grocery_list_used":"Última lista usada",
+  "turn_off_inactivity_suspension":"Desligar suspensão por inatividade",
+  "turn_on_inactivity_suspension":"Ligar suspensão por inatividade",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

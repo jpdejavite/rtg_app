@@ -80,13 +80,13 @@ void main() {
         find.byValueKey(Keys.saveGroceryListArchiveConfirm);
 
     final String recipeName1 = 'Minha primeira receita!';
-    final String portion1 = '1.20';
+    final String portion1 = '1.00';
     final String ingredient10 = '1 chuchu';
     final String ingredient11 = '1 colher de chá de sal';
     final String instructions1 = 'Vamos preparar minha primeira receita\n\\o/';
 
     final String recipeName2 = 'Minha segunda receita';
-    final String portion2 = '19,10';
+    final String portion2 = '3,00';
     final String ingredient20 = '1 beterraba';
     final String ingredient21 = '1 colher de chá de sal';
     final String ingredient22 = '1 1/2 colher de chá de açucar';
@@ -284,7 +284,7 @@ void main() {
       await driver.tap(viewRecipeAddToGroceryListAction);
 
       await driver.tap(addRecipeToGroceryListDialogPortionTextField);
-      await driver.enterText("3");
+      await driver.enterText("9");
 
       await driver.tap(addRecipeToGroceryListDialogConfirmButton);
 

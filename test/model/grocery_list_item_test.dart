@@ -27,7 +27,7 @@ void main() {
       RecipeIngredient.fromInput('3.33 ml de água'),
     ];
     String recipeId = 'recipe-id-1';
-    Recipe recipe = Recipe(id: recipeId, ingredients: ingredients);
+    Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
     List<GroceryListItem> items = [];
     double portions = 3;
 
@@ -53,13 +53,46 @@ void main() {
     expect(groceries[1].ingredientName, 'água');
   });
 
+  test('add recipe to empty list item calculation proportional portion', () {
+    List<RecipeIngredient> ingredients = [
+      RecipeIngredient.fromInput('3 kg de farinha'),
+      RecipeIngredient.fromInput('300 ml de água'),
+    ];
+    String recipeId = 'recipe-id-1';
+    Recipe recipe =
+        Recipe(id: recipeId, portions: 30, ingredients: ingredients);
+    List<GroceryListItem> items = [];
+    double portions = 10;
+
+    List<String> ids = ['id-1', 'id-2'];
+
+    when(mockUuid.v4()).thenAnswer((_) => ids.removeAt(0));
+
+    List<GroceryListItem> groceries =
+        GroceryListItem.addRecipeToItems(recipe, items, portions);
+
+    expect(groceries[0].id, 'id-1');
+    expect(groceries[0].quantity, 1.0);
+    expect(groceries[0].checked, false);
+    expect(groceries[0].recipeIngredients, {recipeId: 0});
+    expect(groceries[0].measureId, IngredientMeasureId.kilograms);
+    expect(groceries[0].ingredientName, 'farinha');
+
+    expect(groceries[1].id, 'id-2');
+    expect(groceries[1].quantity, 100);
+    expect(groceries[1].checked, false);
+    expect(groceries[1].recipeIngredients, {recipeId: 1});
+    expect(groceries[1].measureId, IngredientMeasureId.milliliters);
+    expect(groceries[1].ingredientName, 'água');
+  });
+
   test('add recipe to list item with no matches', () {
     List<RecipeIngredient> ingredients = [
       RecipeIngredient.fromInput('1 tomate'),
       RecipeIngredient.fromInput('3.33 ml de água'),
     ];
     String recipeId = 'recipe-id-2';
-    Recipe recipe = Recipe(id: recipeId, ingredients: ingredients);
+    Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
 
     GroceryListItem item1 = GroceryListItem(
       id: 'id-1',
@@ -122,7 +155,7 @@ void main() {
       RecipeIngredient.fromInput('3.33 ml de água'),
     ];
     String recipeId = 'recipe-id-2';
-    Recipe recipe = Recipe(id: recipeId, ingredients: ingredients);
+    Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
 
     GroceryListItem item1 = GroceryListItem(
       id: 'id-1',
@@ -186,7 +219,7 @@ void main() {
       RecipeIngredient.fromInput('2 colheres sopa de oleo'),
     ];
     String recipeId = 'recipe-id-2';
-    Recipe recipe = Recipe(id: recipeId, ingredients: ingredients);
+    Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
 
     GroceryListItem item1 = GroceryListItem(
       id: 'id-1',

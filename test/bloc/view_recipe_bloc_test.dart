@@ -52,7 +52,7 @@ void main() {
 
   test('try to add recipe no grocery lists', () {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
-    Recipe recipe = Recipe(id: '1', ingredients: []);
+    Recipe recipe = Recipe(id: '1', portions: 1, ingredients: []);
     double portions = 2;
 
     final expectedResponse = [
@@ -111,7 +111,7 @@ void main() {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
     RecipeIngredient ingredient =
         RecipeIngredient(name: "ingrediente 1", quantity: 1);
-    Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
+    Recipe recipe = Recipe(id: '1', portions: 1, ingredients: [ingredient]);
     double portions = 2;
     GroceryList groceryList = GroceryList(recipes: [], groceries: []);
 
@@ -150,7 +150,7 @@ void main() {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
     RecipeIngredient ingredient =
         RecipeIngredient(name: "ingrediente 1", quantity: 1);
-    Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
+    Recipe recipe = Recipe(id: '1', portions: 1, ingredients: [ingredient]);
     double portions = 2;
     GroceryList groceryList = GroceryList(recipes: [recipe.id], groceries: []);
 
@@ -192,7 +192,7 @@ void main() {
     SaveGroceryListResponse response = SaveGroceryListResponse(error: null);
     RecipeIngredient ingredient =
         RecipeIngredient(name: "ingrediente 1", quantity: 1);
-    Recipe recipe = Recipe(id: '1', ingredients: [ingredient]);
+    Recipe recipe = Recipe(id: '1', portions: 1, ingredients: [ingredient]);
     double portions = 2;
 
     final expectedResponse = [

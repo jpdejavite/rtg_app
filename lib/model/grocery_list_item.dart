@@ -121,6 +121,7 @@ class GroceryListItem {
 
   static List<GroceryListItem> addRecipeToItems(
       Recipe recipe, List<GroceryListItem> items, double portions) {
+    portions = portions / recipe.portions;
     JaroWinkler jw = JaroWinkler();
     recipe.ingredients.asMap().forEach((index, ingredient) {
       String ingredientName =

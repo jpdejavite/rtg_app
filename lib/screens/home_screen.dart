@@ -16,6 +16,7 @@ import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/grocery_lists_widget.dart';
+import 'package:rtg_app/widgets/home_card.dart';
 import 'package:rtg_app/widgets/named_icon.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
@@ -57,8 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ShowHomeInfo showHomeInfo;
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<BottomBarNavigationOption> _widgetOptions;
   GlobalKey<RecipesListState> _recipeKeyListkey = GlobalKey();
   GlobalKey<GroceryListsState> _groceryListsKeyListkey = GlobalKey();
@@ -222,44 +221,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildHomeWidget() {
     List<Widget> cards = [];
 
+    if (showHomeInfo.backupNotConfigured) {
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardConfigureBackup),
+        icon: Icons.warning,
+        iconColor: Colors.yellowAccent,
+        dimissKey: Key(Keys.homeCardConfigureBackupDismiss),
+        actionKey: Key(Keys.homeCardConfigureBackupAction),
+        title: AppLocalizations.of(context).no_backup_yet,
+        subtitle: AppLocalizations.of(context).configure_backup_explanation,
+        action: AppLocalizations.of(context).configure_backup_action,
+        onAction: () async {
+          await Navigator.pushNamed(context, SettingsScreen.id);
+          refreshData();
+        },
+      ));
+    }
     if (showHomeInfo.showRecipeTutorial) {
-      cards.add(Card(
-        key: Key(Keys.homeCardRecipeTutorial),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text(AppLocalizations.of(context).new_arround_here),
-              subtitle: Text(
-                  AppLocalizations.of(context).recipe_tutorial_explanation),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  key: Key(Keys.homeCardRecipeTutorialDismiss),
-                  child: Text(AppLocalizations.of(context).dismiss),
-                  onPressed: () {
-                    context.read<HomeBloc>().add(DismissRecipeTutorial());
-                  },
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  child: Text(AppLocalizations.of(context).see_tutorial),
-                  onPressed: () {
-                    CustomToast.showToast(
-                      text: 'TODO',
-                      context: context,
-                      time: CustomToast.timeShort,
-                    );
-                  },
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
-          ],
-        ),
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardRecipeTutorial),
+        icon: Icons.info,
+        dimissKey: Key(Keys.homeCardRecipeTutorialDismiss),
+        actionKey: Key(Keys.homeCardRecipeTutorialSeeTutorial),
+        title: AppLocalizations.of(context).new_arround_here,
+        subtitle: AppLocalizations.of(context).recipe_tutorial_explanation,
+        onDismiss: () {
+          context.read<HomeBloc>().add(DismissRecipeTutorial());
+        },
+        action: AppLocalizations.of(context).see_tutorial,
+        onAction: () {
+          CustomToast.showToast(
+            text: 'TODO',
+            context: context,
+            time: CustomToast.timeShort,
+          );
+        },
       ));
     }
 

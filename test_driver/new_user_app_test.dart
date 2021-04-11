@@ -12,6 +12,10 @@ void main() {
     final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
     final homeCardRecipeTutorialDismiss =
         find.byValueKey(Keys.homeCardRecipeTutorialDismiss);
+    final homeCardConfigureBackup =
+        find.byValueKey(Keys.homeCardConfigureBackup);
+    final homeCardConfigureBackupAction =
+        find.byValueKey(Keys.homeCardConfigureBackupAction);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipeFloatingActionSaveButton =
@@ -97,19 +101,12 @@ void main() {
       }
     });
 
-    test('tap home', () async {
+    test('home inital screen', () async {
       await driver.tap(homeBottomBarHomeIcon);
 
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeCardRecipeTutorial), driver),
-          true);
-
-      await driver.tap(homeCardRecipeTutorialDismiss);
-
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeBottomBarHomeText), driver),
           true);
 
       expect(
@@ -122,7 +119,7 @@ void main() {
           false);
     });
 
-    test('tap recipes', () async {
+    test('recipes initial screen', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
       expect(
@@ -132,12 +129,28 @@ void main() {
           true);
     });
 
-    test('tap lists', () async {
+    test('lists initial screen', () async {
       await driver.tap(homeBottomBarListsIcon);
 
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.groceryListsEmptyText), driver),
+          true);
+    });
+
+    test('dimiss recipe tutorial', () async {
+      await driver.tap(homeBottomBarHomeIcon);
+
+      await driver.tap(homeCardRecipeTutorialDismiss);
+
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeBottomBarHomeText), driver),
+          true);
+
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeActionSettingsIcon), driver),
           true);
     });
 
@@ -151,6 +164,17 @@ void main() {
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsNotification), driver),
           true);
+    });
+
+    test('check configure backup home action', () async {
+      await driver.tap(homeBottomBarHomeIcon);
+
+      expect(await Helper.isPresent(homeCardConfigureBackup, driver), true);
+
+      await driver.tap(homeCardConfigureBackupAction);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
     });
 
     test('insert second recipe', () async {

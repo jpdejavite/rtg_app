@@ -15,6 +15,13 @@ class Keys {
   static const String homeCardRecipeTutorial = 'home-card-recipe-tutorial';
   static const String homeCardRecipeTutorialDismiss =
       'home-card-recipe-tutorial-dismiss';
+  static const String homeCardRecipeTutorialSeeTutorial =
+      'home-card-recipe-tutorial-see-tutorial';
+  static const String homeCardConfigureBackup = 'home-card-configure-backup';
+  static const String homeCardConfigureBackupDismiss =
+      'home-card-configure-backup-dismiss';
+  static const String homeCardConfigureBackupAction =
+      'home-card-configure-backup-action';
 
   // recipes list
   static const String recipesList = 'recipes-list-key';

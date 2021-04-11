@@ -191,31 +191,35 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: RecipesList.newRecipeListBloc(
           key: _recipeKeyListkey,
-          onTapRecipe: (Recipe recipe) async {
-            await Navigator.pushNamed(
-              context,
-              ViewRecipeScreen.id,
-              arguments: recipe,
-            );
-            refreshData();
-          },
+          onTapRecipe: onTapRecipe,
         ),
       ),
       BottomBarNavigationOption(
         title: AppLocalizations.of(context).lists,
         body: GroceryLists.newGroceryListsBloc(
           key: _groceryListsKeyListkey,
-          onTapGroceryList: (GroceryList groceryList) async {
-            await Navigator.pushNamed(
-              context,
-              SaveGroceryListScreen.id,
-              arguments: groceryList,
-            );
-            refreshData();
-          },
+          onTapGroceryList: onTapGroceryList,
         ),
       ),
     ];
+  }
+
+  void onTapGroceryList(GroceryList groceryList) async {
+    await Navigator.pushNamed(
+      context,
+      SaveGroceryListScreen.id,
+      arguments: groceryList,
+    );
+    refreshData();
+  }
+
+  void onTapRecipe(Recipe recipe) async {
+    await Navigator.pushNamed(
+      context,
+      ViewRecipeScreen.id,
+      arguments: recipe,
+    );
+    refreshData();
   }
 
   Widget buildHomeWidget() {
@@ -255,6 +259,21 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             time: CustomToast.timeShort,
           );
+        },
+      ));
+    }
+
+    if (showHomeInfo.lastUsedGroceryList != null) {
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardLastGroceryListUsed),
+        actionKey: Key(Keys.homeCardLastGroceryListUsedAction),
+        icon: Icons.list,
+        title: AppLocalizations.of(context).last_grocery_list_used,
+        lastUsedGroceryList: showHomeInfo.lastUsedGroceryList,
+        lastUsedGroceryListRecipes: showHomeInfo.lastUsedGroceryListRecipes,
+        onTapRecipe: onTapRecipe,
+        onAction: () {
+          onTapGroceryList(showHomeInfo.lastUsedGroceryList);
         },
       ));
     }

@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
+import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
@@ -58,6 +61,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     bool backupNotConfigured = false;
     bool backupOk = false;
     bool showRecipeTutorial = false;
+    GroceryList lastUsedGroceryList;
+    List<Recipe> lastUsedGroceryListRecipes;
     if (backup == null) {
       backup = await backupRepository.getBackup();
     }
@@ -87,11 +92,26 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       backupOk = true;
     }
 
+    if (groceriesCollection.total > 0) {
+      lastUsedGroceryList = groceriesCollection.groceryLists[0];
+      if (groceriesCollection.groceryLists[0].recipes != null &&
+          groceriesCollection.groceryLists[0].recipes.length > 0) {
+        RecipesCollection collection = await recipesRepository.search(
+            searchParams: SearchRecipesParams(
+                ids: groceriesCollection.groceryLists[0].recipes,
+                limit: groceriesCollection.groceryLists[0].recipes.length));
+        lastUsedGroceryListRecipes = collection.recipes;
+      }
+    }
+
     return ShowHomeInfo(
-        backupHasError: backupHasError,
-        backupNotConfigured: backupNotConfigured,
-        backupOk: backupOk,
-        backup: backup,
-        showRecipeTutorial: showRecipeTutorial);
+      backupHasError: backupHasError,
+      backupNotConfigured: backupNotConfigured,
+      backupOk: backupOk,
+      backup: backup,
+      showRecipeTutorial: showRecipeTutorial,
+      lastUsedGroceryList: lastUsedGroceryList,
+      lastUsedGroceryListRecipes: lastUsedGroceryListRecipes,
+    );
   }
 }

@@ -130,5 +130,6 @@
   "no_backup_yet":"Do not have a backup yet?",
   "configure_backup_explanation":"For your safety to ensure all your data is saved in cloud, and if anything happens to your device, you can recover your data. Configure a backup in the action below.",
   "configure_backup_action":"configure backup",
+  "last_grocery_list_used":"Last grocery list used",
   "fill_this_required_field":"Fill this required field"
 }

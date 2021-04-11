@@ -16,6 +16,12 @@ void main() {
         find.byValueKey(Keys.homeCardConfigureBackup);
     final homeCardConfigureBackupAction =
         find.byValueKey(Keys.homeCardConfigureBackupAction);
+    final homeCardLastGroceryListUsed =
+        find.byValueKey(Keys.homeCardLastGroceryListUsed);
+    final homeCardLastGroceryListUsedAction =
+        find.byValueKey(Keys.homeCardLastGroceryListUsedAction);
+    final homeCardRecipeButton0 =
+        find.byValueKey('${Keys.homeCardRecipeButton}-0');
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipeFloatingActionSaveButton =
@@ -249,6 +255,22 @@ void main() {
 
       expect(
           await driver.getText(groceryItemTextField1), "2 colheres de chá sal");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('check last used recipe on home', () async {
+      await driver.tap(homeBottomBarHomeIcon);
+
+      expect(await Helper.isPresent(homeCardLastGroceryListUsed, driver), true);
+
+      await driver.tap(homeCardLastGroceryListUsedAction);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+
+      await driver.tap(homeCardRecipeButton0);
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);

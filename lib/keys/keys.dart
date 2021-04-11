@@ -22,6 +22,13 @@ class Keys {
       'home-card-configure-backup-dismiss';
   static const String homeCardConfigureBackupAction =
       'home-card-configure-backup-action';
+  static const String homeCardLastGroceryListUsed =
+      'home-card-last-grocery-list-used';
+  static const String homeCardLastGroceryListUsedAction =
+      'home-card-last-grocery-list-used-action';
+
+  // home card
+  static const String homeCardRecipeButton = 'home-card-recipe-button';
 
   // recipes list
   static const String recipesList = 'recipes-list-key';

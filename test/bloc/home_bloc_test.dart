@@ -7,8 +7,11 @@ import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
+import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
@@ -62,20 +65,24 @@ void main() {
 
   test('no recipes show recipe turorial', () {
     Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
+    GroceryList groceryList = GroceryList();
 
     final ShowHomeInfo state = ShowHomeInfo(
-        backupHasError: true,
-        backupNotConfigured: false,
-        backupOk: false,
-        backup: backup,
-        showRecipeTutorial: true);
+      backupHasError: true,
+      backupNotConfigured: false,
+      backupOk: false,
+      backup: backup,
+      showRecipeTutorial: true,
+      lastUsedGroceryList: groceryList,
+    );
 
     final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
-    when(groceryListsRepository.fetch(limit: 1, offset: 0))
-        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0)).thenAnswer((_) =>
+        Future.value(
+            GroceryListsCollection(total: 1, groceryLists: [groceryList])));
     when(userDataRepository.getUserData())
         .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: false)));
 
@@ -91,20 +98,32 @@ void main() {
 
   test('no recipes dismiss recipe turorial', () {
     Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
+    GroceryList groceryList = GroceryList(recipes: ["1"]);
+    Recipe recipe = Recipe();
 
     final ShowHomeInfo state = ShowHomeInfo(
-        backupHasError: true,
-        backupNotConfigured: false,
-        backupOk: false,
-        backup: backup,
-        showRecipeTutorial: false);
+      backupHasError: true,
+      backupNotConfigured: false,
+      backupOk: false,
+      backup: backup,
+      showRecipeTutorial: false,
+      lastUsedGroceryList: groceryList,
+      lastUsedGroceryListRecipes: [recipe],
+    );
 
     final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
-    when(groceryListsRepository.fetch(limit: 1, offset: 0))
-        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(recipesRepository.search(
+            searchParams: SearchRecipesParams(
+                ids: groceryList.recipes, limit: groceryList.recipes.length)))
+        .thenAnswer((_) =>
+            Future.value(RecipesCollection(total: 1, recipes: [recipe])));
+
+    when(groceryListsRepository.fetch(limit: 1, offset: 0)).thenAnswer((_) =>
+        Future.value(
+            GroceryListsCollection(total: 1, groceryLists: [groceryList])));
     when(userDataRepository.getUserData())
         .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: true)));
 
@@ -120,20 +139,24 @@ void main() {
 
   test('backup has error', () {
     Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
+    GroceryList groceryList = GroceryList();
 
     final ShowHomeInfo state = ShowHomeInfo(
-        backupHasError: true,
-        backupNotConfigured: false,
-        backupOk: false,
-        backup: backup,
-        showRecipeTutorial: false);
+      backupHasError: true,
+      backupNotConfigured: false,
+      backupOk: false,
+      backup: backup,
+      showRecipeTutorial: false,
+      lastUsedGroceryList: groceryList,
+    );
 
     final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
-    when(groceryListsRepository.fetch(limit: 1, offset: 0))
-        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0)).thenAnswer((_) =>
+        Future.value(
+            GroceryListsCollection(total: 1, groceryLists: [groceryList])));
     when(userDataRepository.getUserData())
         .thenAnswer((_) => Future.value(UserData()));
 
@@ -178,20 +201,24 @@ void main() {
 
   test('backup not configured has groceries', () {
     Backup backup = Backup(type: BackupType.none);
+    GroceryList groceryList = GroceryList();
 
     final ShowHomeInfo state = ShowHomeInfo(
-        backupHasError: false,
-        backupNotConfigured: true,
-        backupOk: false,
-        backup: backup,
-        showRecipeTutorial: true);
+      backupHasError: false,
+      backupNotConfigured: true,
+      backupOk: false,
+      backup: backup,
+      showRecipeTutorial: true,
+      lastUsedGroceryList: groceryList,
+    );
 
     final expectedResponse = [state];
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
-    when(groceryListsRepository.fetch(limit: 1, offset: 0))
-        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0)).thenAnswer((_) =>
+        Future.value(
+            GroceryListsCollection(total: 1, groceryLists: [groceryList])));
     when(userDataRepository.getUserData())
         .thenAnswer((_) => Future.value(UserData(dimissRecipeTutorial: false)));
 
@@ -219,6 +246,8 @@ void main() {
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0))
+        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 0)));
 
     expectLater(
       homeBloc,
@@ -233,13 +262,16 @@ void main() {
   test('dismiss recipe tutorial turorial', () {
     Backup backup = Backup(lastestBackupStatus: BackupStatus.error);
     UserData userData = UserData(dimissRecipeTutorial: false);
+    GroceryList groceryList = GroceryList();
 
     final ShowHomeInfo state = ShowHomeInfo(
-        backupHasError: true,
-        backupNotConfigured: false,
-        backupOk: false,
-        backup: backup,
-        showRecipeTutorial: false);
+      backupHasError: true,
+      backupNotConfigured: false,
+      backupOk: false,
+      backup: backup,
+      showRecipeTutorial: false,
+      lastUsedGroceryList: groceryList,
+    );
 
     final expectedResponse = [state];
     when(userDataRepository.getUserData())
@@ -248,8 +280,9 @@ void main() {
     when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
     when(recipesRepository.search())
         .thenAnswer((_) => Future.value(RecipesCollection(total: 0)));
-    when(groceryListsRepository.fetch(limit: 1, offset: 0))
-        .thenAnswer((_) => Future.value(GroceryListsCollection(total: 1)));
+    when(groceryListsRepository.fetch(limit: 1, offset: 0)).thenAnswer((_) =>
+        Future.value(
+            GroceryListsCollection(total: 1, groceryLists: [groceryList])));
 
     expectLater(
       homeBloc,

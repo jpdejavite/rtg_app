@@ -133,5 +133,6 @@
   "last_grocery_list_used":"Last grocery list used",
   "turn_off_inactivity_suspension":"Turn off inactivity suspension",
   "turn_on_inactivity_suspension":"Turn on inactivity suspension",
+  "paste_multiple_ingredients":"Paste multiple ingredients",
   "fill_this_required_field":"Fill this required field"
 }

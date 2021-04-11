@@ -201,7 +201,21 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
           FilteringTextInputFormatter.digitsOnly
         ],
       ),
-      TextFormSectionLabelFields(AppLocalizations.of(context).ingredients),
+      TextFormSectionLabelFields(
+        AppLocalizations.of(context).ingredients,
+        iconTooltip: AppLocalizations.of(context).paste_multiple_ingredients,
+        icon: Icons.playlist_add,
+        onIconPressed: () async {
+          ClipboardData data = await Clipboard.getData('text/plain');
+          if (data.text != null && data.text != "") {
+            data.text.split('\n').forEach((line) {
+              ingredients.add(line);
+              focusNodes.add(FocusNode());
+            });
+            setState(() {});
+          }
+        },
+      ),
     ];
 
     ingredients.asMap().forEach((index, value) {
@@ -260,9 +274,6 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ),
     ]);
 
-    // if (recipe != null) {
-    //   _nameController.text = recipe.title;
-    // }
     return Form(
       key: _formKey,
       child: Container(

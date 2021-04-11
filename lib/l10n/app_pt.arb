@@ -133,5 +133,6 @@
   "last_grocery_list_used":"Última lista usada",
   "turn_off_inactivity_suspension":"Desligar suspensão por inatividade",
   "turn_on_inactivity_suspension":"Ligar suspensão por inatividade",
+  "paste_multiple_ingredients":"Colar múltiplos ingredientes",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

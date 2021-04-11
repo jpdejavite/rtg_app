@@ -46,6 +46,18 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
   bool wakeLockEnabled = true;
 
   @override
+  void initState() {
+    super.initState();
+    Wakelock.toggle(enable: wakeLockEnabled);
+  }
+
+   @override
+  void dispose() {
+    Wakelock.toggle(enable: false);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context).settings.arguments;
 

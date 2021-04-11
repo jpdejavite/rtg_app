@@ -1,4 +1,5 @@
 import 'package:rtg_app/helper/diacritics.dart';
+import 'package:rtg_app/helper/ingredient_parser.dart';
 import 'package:rtg_app/helper/string_helper.dart';
 import 'package:rtg_app/model/ingredient_measure.dart';
 import 'package:rtg_app/model/ingredient_quantity.dart';
@@ -22,40 +23,12 @@ class RecipeIngredient {
   }
 
   static RecipeIngredient fromInput(String originalText) {
-    double quantity = 1.0;
-    IngredientMeasureId measureId = IngredientMeasureId.unit;
-    if (originalText == null) {
-      return RecipeIngredient(
-        originalName: originalText,
-        name: originalText,
-        quantity: quantity,
-        measureId: measureId,
-      );
-    }
-    originalText = originalText.trim().replaceAll(RegExp(r'[\s]+'), ' ');
-    String text = originalText.toLowerCase();
-
-    String formattedText = Diacritics.removeDiacritics(text);
-    IngredientQuantity iq = IngredientQuantity.getQuantity(formattedText);
-    quantity = iq.quantity;
-    if (iq.hasMatch()) {
-      text = text.substring(iq.textMatch.length).trim();
-      formattedText = formattedText.substring(iq.textMatch.length).trim();
-    }
-    IngredientMeasure im = IngredientMeasure.getId(formattedText);
-    measureId = im.id;
-    if (im.hasMatch()) {
-      text = text.substring(im.textMatch.length).trim();
-      text = StringHelper.removeLeadingPropostion(text);
-      formattedText = formattedText.substring(im.textMatch.length).trim();
-      formattedText = StringHelper.removeLeadingPropostion(formattedText);
-    }
-
+    IngredientParseResult result = IngredientParser.fromInput(originalText);
     return RecipeIngredient(
-      originalName: originalText,
-      name: text,
-      quantity: quantity,
-      measureId: measureId,
+      originalName: result.originalName,
+      name: result.name,
+      quantity: result.quantity,
+      measureId: result.measureId,
     );
   }
 

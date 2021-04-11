@@ -235,4 +235,55 @@ void main() {
     expect(groceries[2].measureId, IngredientMeasureId.tableSpoon);
     expect(groceries[2].ingredientName, 'oleo');
   });
+
+  test('get name null ingredient name', () {
+    expect(GroceryListItem().getName(null), '');
+  });
+
+  test('get name null measureId', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+        ).getName(null),
+        'ingrediente');
+  });
+
+  test('get name null quantity', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+          measureId: IngredientMeasureId.unit,
+        ).getName(null),
+        'ingrediente');
+  });
+
+  test('get name measure unit', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+          measureId: IngredientMeasureId.unit,
+          quantity: 2,
+        ).getName(null),
+        '2 ingrediente');
+  });
+
+  test('get name measure coffe spoon', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+          measureId: IngredientMeasureId.coffeSpoon,
+          quantity: 2,
+        ).getName(null),
+        '2 1 ingrediente');
+  });
+
+  test('get name quantity as fraction', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+          measureId: IngredientMeasureId.coffeSpoon,
+          quantity: 2.75,
+        ).getName(null),
+        '2 3/4 1 ingrediente');
+  });
 }

@@ -89,7 +89,7 @@ void main() {
     final String portion2 = '19,10';
     final String ingredient20 = '1 beterraba';
     final String ingredient21 = '1 colher de chá de sal';
-    final String ingredient22 = '1 colher de chá de açucar';
+    final String ingredient22 = '1 1/2 colher de chá de açucar';
     final String instructions2 = 'Vamos preparar minha segunda receita\n\\o/';
 
     FlutterDriver driver;
@@ -305,7 +305,7 @@ void main() {
       expect(await driver.getText(groceryItemTextField2), "3 beterraba");
 
       expect(await driver.getText(groceryItemTextField3),
-          "3 colheres de chá açucar");
+          "4 1/2 colheres de chá açucar");
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);

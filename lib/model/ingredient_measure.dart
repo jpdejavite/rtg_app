@@ -157,6 +157,11 @@ class IngredientMeasure {
 
   static String i18nMeasure(
       IngredientMeasureId measureId, double quantity, BuildContext context) {
+    // if (context == null) {
+    //   // unit test
+    //   return measureId.index.toString();
+    // }
+
     switch (measureId) {
       case IngredientMeasureId.unit:
         return quantity > 1

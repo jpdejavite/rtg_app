@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fraction/fraction.dart';
 import 'package:rtg_app/helper/diacritics.dart';
 import 'package:rtg_app/helper/id_generator.dart';
 import 'package:rtg_app/helper/ingredient_measure_converter.dart';
-import 'package:rtg_app/helper/string_helper.dart';
-import 'package:rtg_app/model/ingredient_quantity.dart';
+import 'package:rtg_app/helper/ingredient_parser.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:edit_distance/edit_distance.dart';
 import 'ingredient_measure.dart';
@@ -52,6 +52,8 @@ class GroceryListItem {
     String quantityToShow = quantity.toString();
     if (quantity % 1 == 0) {
       quantityToShow = quantity.toInt().toString();
+    } else {
+      quantityToShow = quantity.toMixedFraction().toString();
     }
 
     if (measureId == IngredientMeasureId.unit) {
@@ -168,38 +170,11 @@ class GroceryListItem {
   }
 
   static GroceryListItem fromInput(String originalText) {
-    double quantity = 1.0;
-    IngredientMeasureId measureId = IngredientMeasureId.unit;
-    if (originalText == null) {
-      return GroceryListItem(
-        ingredientName: originalText,
-        quantity: quantity,
-        measureId: measureId,
-      );
-    }
-    originalText = originalText.trim().replaceAll(RegExp(r'[\s]+'), ' ');
-    String text = originalText.toLowerCase();
-
-    String formattedText = Diacritics.removeDiacritics(text);
-    IngredientQuantity iq = IngredientQuantity.getQuantity(formattedText);
-    quantity = iq.quantity;
-    if (iq.hasMatch()) {
-      text = text.substring(iq.textMatch.length).trim();
-      formattedText = formattedText.substring(iq.textMatch.length).trim();
-    }
-    IngredientMeasure im = IngredientMeasure.getId(formattedText);
-    measureId = im.id;
-    if (im.hasMatch()) {
-      text = text.substring(im.textMatch.length).trim();
-      text = StringHelper.removeLeadingPropostion(text);
-      formattedText = formattedText.substring(im.textMatch.length).trim();
-      formattedText = StringHelper.removeLeadingPropostion(formattedText);
-    }
-
+    IngredientParseResult result = IngredientParser.fromInput(originalText);
     return GroceryListItem(
-      ingredientName: text,
-      quantity: quantity,
-      measureId: measureId,
+      ingredientName: result.name,
+      quantity: result.quantity,
+      measureId: result.measureId,
     );
   }
 

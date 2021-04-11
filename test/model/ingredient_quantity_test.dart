@@ -35,4 +35,14 @@ void main() {
     expect(IngredientQuantity.getQuantity("2,000.00 colher de cha de acucar"),
         IngredientQuantity(1, ""));
   });
+
+  test('get quantity from fraction', () {
+    expect(IngredientQuantity.getQuantity("1/4 colher de cha de acucar"),
+        IngredientQuantity(0.25, "1/4"));
+  });
+
+  test('get quantity from mixed fraction', () {
+    expect(IngredientQuantity.getQuantity("2 3/4 colher de cha de acucar"),
+        IngredientQuantity(2.75, "2 3/4"));
+  });
 }

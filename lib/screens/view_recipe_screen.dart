@@ -51,7 +51,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     Wakelock.toggle(enable: wakeLockEnabled);
   }
 
-   @override
+  @override
   void dispose() {
     Wakelock.toggle(enable: false);
     super.dispose();
@@ -155,8 +155,11 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
   }
 
   String getGroceryListDefaultTitle() {
-    return sprintf(AppLocalizations.of(context).grocery_list_title,
-        [DateFormatter.weekOfMonth(DateTime.now())]);
+    DateTime now = DateTime.now();
+    return sprintf(AppLocalizations.of(context).grocery_list_title, [
+      DateFormatter.weekOfMonth(now),
+      DateFormatter.dateMonth(now, context)
+    ]);
   }
 
   Widget buildBody() {

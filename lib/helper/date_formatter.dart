@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateFormatter {
@@ -13,6 +14,16 @@ class DateFormatter {
   static String formatDate(DateTime dateTime, String format) {
     if (dateTime != null) {
       return DateFormat(format).format(dateTime);
+    }
+
+    return '';
+  }
+
+  static String dateMonth(DateTime dateTime, BuildContext context) {
+    if (dateTime != null) {
+      Locale locale = Localizations.localeOf(context);
+      DateFormat formatter = DateFormat.LLLL(locale.toString());
+      return formatter.format(dateTime);
     }
 
     return '';

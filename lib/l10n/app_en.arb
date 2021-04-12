@@ -84,7 +84,7 @@
   "create_a_new_grocery_list":"create a new grocery list",
   "recipe_portions": "Recipe portions",
   "type_in_recipe_portions_to_make":"Type in how many portions you want to make with this recipe",
-  "grocery_list_title":"week %d",
+  "grocery_list_title":"%dº week %s",
   "edit_grocery_list": "Edit Grocery List",
   "generic_error_save_grocery_list":"An error occurred when saving grocery list",
   "checked_items":"checked items",

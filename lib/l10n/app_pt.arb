@@ -84,7 +84,7 @@
   "create_a_new_grocery_list":"criar uma nova lista de compras",
   "recipe_portions": "Porções da receita",
   "type_in_recipe_portions_to_make":"Digite quantas porções quer fazer com essa receita",
-  "grocery_list_title":"semana %d",
+  "grocery_list_title":"%dº semana %s",
   "edit_grocery_list": "Editar Lista de Compras",
   "generic_error_save_grocery_list":"Um erro aconteceu ao salvar lista de compras",
   "checked_items":"itens marcados",

@@ -47,6 +47,7 @@ class Helper {
       }
     }
 
+    await driver.scrollIntoView(saveRecipeInstructionsField);
     await driver.tap(saveRecipeInstructionsField);
     await driver.enterText(instructions);
 

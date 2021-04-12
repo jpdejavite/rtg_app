@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rtg_app/model/grocery_list.dart';
+import 'package:rtg_app/widgets/choose_grocery_list_to_recipe_dialog.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -9,7 +11,6 @@ import 'package:rtg_app/bloc/view_recipe/events.dart';
 import 'package:rtg_app/bloc/view_recipe/states.dart';
 import 'package:rtg_app/bloc/view_recipe/view_recipe_bloc.dart';
 import 'package:rtg_app/errors/errors.dart';
-import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
@@ -22,7 +23,6 @@ import 'package:rtg_app/widgets/view_recipe_label.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
 import 'package:rtg_app/widgets/view_recipe_title.dart';
-import 'package:sprintf/sprintf.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   static String id = 'view_recipe_screen';
@@ -142,8 +142,8 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
               recipe: recipe,
               onConfirm: (Recipe recipe, double portions) {
                 context.read<ViewRecipeBloc>().add(
-                    TryToAddRecipeToGroceryListEvent(
-                        recipe, portions, getGroceryListDefaultTitle()));
+                    TryToAddRecipeToGroceryListEvent(recipe, portions,
+                        GroceryList.getGroceryListDefaultTitle(context)));
                 EasyLoading.show(
                   maskType: EasyLoadingMaskType.black,
                   status: AppLocalizations.of(context).saving_recipe,
@@ -152,14 +152,6 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
         },
       ),
     ];
-  }
-
-  String getGroceryListDefaultTitle() {
-    DateTime now = DateTime.now();
-    return sprintf(AppLocalizations.of(context).grocery_list_title, [
-      DateFormatter.weekOfMonth(now),
-      DateFormatter.dateMonth(now, context)
-    ]);
   }
 
   Widget buildBody() {
@@ -180,65 +172,29 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
           time: CustomToast.timeLong,
         );
       } else if (state is ChooseGroceryListToRecipeEvent) {
-        WidgetsBinding.instance.addPostFrameCallback(
-            (_) => showChooseGroceryListToRecipeEvent(context, state));
+        WidgetsBinding.instance.addPostFrameCallback((_) => {
+              ChooseGroceryListToRecipeDialog
+                  .showChooseGroceryListToRecipeDialog(
+                context: context,
+                groceryLists: state.collection.groceryLists,
+                onSelectGroceryList: (GroceryList groceryList) {
+                  context.read<ViewRecipeBloc>().add(
+                      AddRecipeToGroceryListEvent(
+                          state.recipe,
+                          state.portions,
+                          GroceryList.getGroceryListDefaultTitle(context),
+                          groceryList));
+                  EasyLoading.show(
+                    maskType: EasyLoadingMaskType.black,
+                    status: AppLocalizations.of(context).saving_recipe,
+                  );
+                },
+              )
+            });
       }
 
       return buildRecipeFieldsForm(context);
     });
-  }
-
-  Future<void> showChooseGroceryListToRecipeEvent(
-      BuildContext ctx, ChooseGroceryListToRecipeEvent state) {
-    List<Widget> groceriesWidgets = [];
-    state.collection.groceryLists.asMap().forEach((i, groceryList) {
-      groceriesWidgets.add(TextButton(
-          key: Key(Keys.viewRecipeGroceryListToSelect + i.toString()),
-          child: Text(groceryList.title),
-          onPressed: () {
-            Navigator.of(context).pop();
-            ctx.read<ViewRecipeBloc>().add(AddRecipeToGroceryListEvent(recipe,
-                state.portions, getGroceryListDefaultTitle(), groceryList));
-            EasyLoading.show(
-              maskType: EasyLoadingMaskType.black,
-              status: AppLocalizations.of(context).saving_recipe,
-            );
-          }));
-    });
-
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context).choose_a_grocery_list),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: groceriesWidgets,
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              key: Key(Keys.viewRecipeCreateNewGroceryListAction),
-              child:
-                  Text(AppLocalizations.of(context).create_a_new_grocery_list),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ctx.read<ViewRecipeBloc>().add(AddRecipeToGroceryListEvent(
-                    recipe,
-                    state.portions,
-                    getGroceryListDefaultTitle(),
-                    null));
-                EasyLoading.show(
-                  maskType: EasyLoadingMaskType.black,
-                  status: AppLocalizations.of(context).saving_recipe,
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Widget buildRecipeFieldsForm(BuildContext context) {

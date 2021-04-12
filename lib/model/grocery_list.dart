@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
+import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:sembast/sembast.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sprintf/sprintf.dart';
 
 import 'grocery_list_item.dart';
 
@@ -44,6 +48,14 @@ class GroceryList {
       recipes: [recipe.id],
       groceries: GroceryListItem.addRecipeToItems(recipe, [], portions),
     );
+  }
+
+  static String getGroceryListDefaultTitle(BuildContext context) {
+    DateTime now = DateTime.now();
+    return sprintf(AppLocalizations.of(context).grocery_list_title, [
+      DateFormatter.weekOfMonth(now),
+      DateFormatter.dateMonth(now, context)
+    ]);
   }
 
   factory GroceryList.fromRecord(int id, Map<String, Object> record) {

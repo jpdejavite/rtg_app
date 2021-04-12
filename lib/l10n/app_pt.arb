@@ -54,6 +54,7 @@
   "done_at":"Feito em",
   "backup_at_format":"dd/MM/yyyy HH:mm",
   "updated_at_format":"dd/MM HH:mm",
+  "last_used_format":"dd/MM/yy",
   "account":"Conta",
   "do_backup":"Fazer Backup",
   "status":"Status",

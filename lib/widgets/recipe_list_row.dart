@@ -3,15 +3,15 @@ import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:rtg_app/widgets/add_recipe_to_grocery_list_dialog.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:fraction/fraction.dart';
 
 class RecipeListRow extends StatelessWidget {
   final Recipe recipe;
   final int index;
-  final void Function(int index) onTap;
-  RecipeListRow({this.onTap, this.recipe, this.index});
+  final void Function() onTap;
+  final void Function() onAddToGroceryList;
+  RecipeListRow({this.onTap, this.onAddToGroceryList, this.recipe, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class RecipeListRow extends StatelessWidget {
         SizedBox(width: 4),
         Text(
           DateFormatter.formatDateInMili(
-              recipe.lastUsed, AppLocalizations.of(context).updated_at_format),
+              recipe.lastUsed, AppLocalizations.of(context).last_used_format),
           style: Theme.of(context)
               .textTheme
               .caption
@@ -88,31 +88,17 @@ class RecipeListRow extends StatelessWidget {
         child: SizedBox(),
       ),
       IconButton(
-        key: Key(Keys.viewRecipeAddToGroceryListAction),
+        key: Key(Keys.viewRecipeAddToGroceryListAction + index.toString()),
         icon: Icon(Icons.playlist_add),
         tooltip: AppLocalizations.of(context).add_to_grocery_list,
         onPressed: () {
-          AddRecipeToGroceryListDialog.showChooseGroceryListToRecipeEvent(
-              context: context,
-              recipe: recipe,
-              onConfirm: (Recipe recipe, double portions) {
-                // context.read<ViewRecipeBloc>().add(
-                //     TryToAddRecipeToGroceryListEvent(
-                //         recipe,
-                //         portions,
-                //         getGroceryListDefaultTitle()));
-                // EasyLoading.show(
-                //   maskType: EasyLoadingMaskType.black,
-                //   status: AppLocalizations.of(context)
-                //       .saving_recipe,
-                // );
-              });
+          onAddToGroceryList();
         },
       ),
     ]);
     return InkWell(
         onTap: () {
-          this.onTap(index);
+          onTap();
         },
         child: Card(
           // key: cardKey,

@@ -54,6 +54,7 @@
   "done_at":"Done at",
   "backup_at_format":"MM/dd/yyyy HH:mm",
   "updated_at_format":"MM/dd HH:mm",
+  "last_used_format":"MM/dd/yy",
   "account":"Account",
   "do_backup":"Do Backup",
   "status":"Status",

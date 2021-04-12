@@ -71,7 +71,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ingredients = [];
       focusNodes = [];
       widget.editRecipe.ingredients.forEach((ingredient) {
-        ingredients.add(ingredient.toString());
+        ingredients.add(ingredient.originalName);
         focusNodes.add(FocusNode());
       });
     }
@@ -127,7 +127,8 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
             context: context,
           );
         } else {
-          Navigator.pop(context, state.response.recipe);
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => Navigator.pop(context, state.response.recipe));
         }
       }
 

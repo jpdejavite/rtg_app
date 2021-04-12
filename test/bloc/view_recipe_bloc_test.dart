@@ -73,6 +73,7 @@ void main() {
       expect(viewRecipeBloc.state,
           AddedRecipeToGroceryListEvent(response: response));
       expect(recipe.lastUsed, customTime.millisecondsSinceEpoch);
+      expect(recipe.updatedAt, customTime.millisecondsSinceEpoch);
     });
 
     viewRecipeBloc
@@ -131,6 +132,7 @@ void main() {
       expect(viewRecipeBloc.state,
           AddedRecipeToGroceryListEvent(response: response));
       expect(recipe.lastUsed, customTime.millisecondsSinceEpoch);
+      expect(recipe.updatedAt, customTime.millisecondsSinceEpoch);
 
       expect(groceryList.updatedAt, customTime.millisecondsSinceEpoch);
       expect(groceryList.recipes, [recipe.id]);
@@ -179,6 +181,7 @@ void main() {
             ),
           ));
       expect(recipe.lastUsed, null);
+      expect(recipe.updatedAt, null);
 
       expect(groceryList.updatedAt, null);
       expect(groceryList.recipes, [recipe.id]);
@@ -211,6 +214,7 @@ void main() {
       expect(viewRecipeBloc.state,
           AddedRecipeToGroceryListEvent(response: response));
       expect(recipe.lastUsed, customTime.millisecondsSinceEpoch);
+      expect(recipe.updatedAt, customTime.millisecondsSinceEpoch);
     });
 
     viewRecipeBloc

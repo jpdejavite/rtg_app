@@ -35,6 +35,8 @@ void main() {
         find.byValueKey(Keys.viewRecipeIngredientText + "0");
     final viewRecipeIngredientText1 =
         find.byValueKey(Keys.viewRecipeIngredientText + "1");
+    final viewRecipeAddToGroceryListAction1 =
+        find.byValueKey(Keys.viewRecipeAddToGroceryListAction + "1");
     final viewRecipeInstructionText =
         find.byValueKey(Keys.viewRecipeInstructionText);
     SerializableFinder backButtonFinder = find.byTooltip("Voltar");
@@ -279,9 +281,7 @@ void main() {
     test('add second recipe to same grocery list', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText1);
-
-      await driver.tap(viewRecipeAddToGroceryListAction);
+      await driver.tap(viewRecipeAddToGroceryListAction1);
 
       await driver.tap(addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("9");
@@ -289,9 +289,6 @@ void main() {
       await driver.tap(addRecipeToGroceryListDialogConfirmButton);
 
       await driver.tap(viewRecipeGroceryListToSelect0);
-
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
 
       await driver.tap(homeBottomBarListsIcon);
 

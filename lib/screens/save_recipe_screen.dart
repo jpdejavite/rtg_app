@@ -192,6 +192,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ),
       TextFormField(
         controller: _preparationTimeController,
+        key: Key(Keys.saveRecipePreparationTimeField),
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).preparation_time_in_minutes,
           floatingLabelBehavior: FloatingLabelBehavior.always,

@@ -47,6 +47,16 @@ void main() {
         findsOneWidget);
   });
 
+  testWidgets('PreparationTimeLabelText 1 h 40 m', (WidgetTester tester) async {
+    await tester.pumpWidget(MyWidget(
+      preparationTime: 100,
+    ));
+
+    expect(
+        WidgetHelper.findTextSpanWithText(find, 'Preparation time: 1 h 40 m'),
+        findsOneWidget);
+  });
+
   testWidgets('PreparationTimeLabelText 3 h 15 m', (WidgetTester tester) async {
     await tester.pumpWidget(MyWidget(
       preparationTime: 60 * 3 + 15,

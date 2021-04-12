@@ -13,8 +13,6 @@ class RecipesRepository {
   Future<RecipesCollection> search({SearchRecipesParams searchParams}) =>
       recipesDao.searchRecipes(searchParams: searchParams);
 
-  Future populateDB() => recipesDao.populateDB();
-
   Future<SaveRecipeResponse> save({Recipe recipe}) =>
       recipesDao.save(recipe: recipe);
 

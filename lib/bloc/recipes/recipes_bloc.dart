@@ -16,7 +16,6 @@ class RecipesBloc
   @override
   Stream<RecipesState> mapEventToState(RecipesEvents event) async* {
     if (event is StartFetchRecipesEvent) {
-      await recipesRepository.populateDB();
       _recipesCollection =
           await recipesRepository.search(searchParams: event.searchParams);
       yield RecipesLoaded(recipesCollection: _recipesCollection);

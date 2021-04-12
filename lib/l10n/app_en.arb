@@ -135,5 +135,15 @@
   "turn_off_inactivity_suspension":"Turn off inactivity suspension",
   "turn_on_inactivity_suspension":"Turn on inactivity suspension",
   "paste_multiple_ingredients":"Paste multiple ingredients",
+    "newest":"newest",
+  "oldest":"oldest",
+  "recentlyUsed":"recently used",
+  "usedALongTime":"used a long time",
+  "faster":"faster",
+  "slower":"slower",
+  "titleAz":"title A - Z",
+  "titleZa":"title Z- A",
+  "sort_by":"Sort by",
+  "clean":"clean",
   "fill_this_required_field":"Fill this required field"
 }

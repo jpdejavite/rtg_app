@@ -20,15 +20,19 @@ class NamedIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isClickable = onPressed != null;
+
     List<Widget> children = [
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          IconButton(
-            icon: Icon(iconData),
-            tooltip: tooltip,
-            onPressed: onPressed,
-          ),
+          !isClickable
+              ? Icon(iconData)
+              : IconButton(
+                  icon: Icon(iconData),
+                  tooltip: tooltip,
+                  onPressed: onPressed,
+                ),
         ],
       ),
     ];
@@ -39,8 +43,8 @@ class NamedIcon extends StatelessWidget {
           : '$notificationCount';
       children.add(Positioned(
         key: Key(notificationKey),
-        top: 0,
-        right: 4,
+        top: isClickable ? 4 : -4,
+        right: isClickable ? 8 : 0,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
           decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),

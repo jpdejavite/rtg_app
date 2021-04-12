@@ -33,6 +33,30 @@ class Keys {
   // recipes list
   static const String recipesList = 'recipes-list-key';
   static const String recipesListEmptyText = 'recipes-list-empy-text';
+  static const String recipesListFilter = 'recipes-list-filter';
+  static const String recipesListSort = 'recipes-list-sort';
+  static const String recipesListSortNotification =
+      'recipes-list-sort-notification';
+
+  // choose recipe sort dialog
+  static const String chooseRecipeSortDialogNewestRadio =
+      'choose-recipe-sort-dialog-newest-radio';
+  static const String chooseRecipeSortDialogOldesRadio =
+      'choose-recipe-sort-dialog-oldest-radio';
+  static const String chooseRecipeSortDialogRecentlyUsedRadio =
+      'choose-recipe-sort-dialog-recentlyUsed-radio';
+  static const String chooseRecipeSortDialogUsedALongTimeRadio =
+      'choose-recipe-sort-dialog-usedALongTime-radio';
+  static const String chooseRecipeSortDialogFasterRadio =
+      'choose-recipe-sort-dialog-faster-radio';
+  static const String chooseRecipeSortDialogSlowerRadio =
+      'choose-recipe-sort-dialog-slower-radio';
+  static const String chooseRecipeSortDialogTitleAzRadio =
+      'choose-recipe-sort-dialog-titleAz-radio';
+  static const String chooseRecipeSortDialogTitleZaRadio =
+      'choose-recipe-sort-dialog-titleZa-radio';
+  static const String chooseRecipeSortDialogClear =
+      'choose-recipe-sort-dialog-titleZa-clear';
 
   // grocery lists
   static const String groceryListsEmptyText = 'grocery-lists-empy-text';
@@ -49,6 +73,8 @@ class Keys {
   // save recipe
   static const String saveRecipeNameField = 'save-recipe-name-field';
   static const String saveRecipePortionField = 'save-recipe-portion-field';
+  static const String saveRecipePreparationTimeField =
+      'save-recipe-preparation-time-field';
   static const String saveRecipeIngredientField =
       'save-recipe-ingredient-field';
   static const String saveRecipeInstructionsField =

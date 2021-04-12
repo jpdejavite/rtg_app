@@ -13,14 +13,21 @@ class Helper {
   }
 
   /// add a recipe, must be called from home
-  static addRecipe(FlutterDriver driver, String recipeName, String portion,
-      List<String> ingredients, String instructions) async {
+  static addRecipe(
+      FlutterDriver driver,
+      String recipeName,
+      String portion,
+      String preparationTime,
+      List<String> ingredients,
+      String instructions) async {
     final homeBottomBarRecipesIcon =
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
     final floatingActionNewRecipeButton =
         find.byValueKey(Keys.homeFloatingActionNewRecipeButton);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipePortionField = find.byValueKey(Keys.saveRecipePortionField);
+    final saveRecipePreparationTimeField =
+        find.byValueKey(Keys.saveRecipePreparationTimeField);
     final saveRecipeInstructionsField =
         find.byValueKey(Keys.saveRecipeInstructionsField);
     final saveRecipeFloatingActionSaveButton =
@@ -34,6 +41,11 @@ class Helper {
 
     await driver.tap(saveRecipePortionField);
     await driver.enterText(portion);
+
+    if (preparationTime != null) {
+      await driver.tap(saveRecipePreparationTimeField);
+      await driver.enterText(preparationTime);
+    }
 
     final ingredientsMap = ingredients.asMap();
     for (int i = 0; i < ingredientsMap.length; i++) {

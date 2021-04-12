@@ -8,11 +8,14 @@ import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/model/recipe_sort.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/widgets/choose_recipe_sort_dialog.dart';
 import 'package:rtg_app/widgets/error.dart';
+import 'package:rtg_app/widgets/named_icon.dart';
 import 'package:rtg_app/widgets/recipe_list_row.dart';
 import 'package:rtg_app/widgets/loading.dart';
 import 'package:rtg_app/widgets/loading_row.dart';
@@ -49,18 +52,27 @@ class RecipesList extends StatefulWidget {
 }
 
 class RecipesListState extends State<RecipesList> {
-  String filter;
+  TextEditingController _filterController;
+  RecipeSort sort;
+  bool hasShowChooseGroceryListToRecipeDialog = false;
   @override
   void initState() {
     super.initState();
+    _filterController = TextEditingController();
     loadRecipes();
-    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _filterController.dispose();
+    super.dispose();
   }
 
   loadRecipes() async {
     context.read<RecipesBloc>().add(
           StartFetchRecipesEvent(
-            searchParams: SearchRecipesParams(filter: filter),
+            searchParams:
+                SearchRecipesParams(filter: _filterController.text, sort: sort),
           ),
         );
   }
@@ -68,124 +80,174 @@ class RecipesListState extends State<RecipesList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: _body(),
+      child: body(),
     );
   }
 
-  _body() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Flexible(
-              // TODO: add icon to clear input
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText:
-                      AppLocalizations.of(context).type_in_to_filter_recipes,
+  Widget body() {
+    return BlocBuilder<RecipesBloc, RecipesState>(
+        builder: (BuildContext context, RecipesState state) {
+      EasyLoading.dismiss();
+      if (state is AddedRecipeToGroceryListEvent) {
+        String text = AppLocalizations.of(context).recipe_added_to_grocery_list;
+        if (state.response.error != null) {
+          text = state.response.error is RecipeAlreadyAddedToGroceryList
+              ? AppLocalizations.of(context)
+                  .recipe_already_added_to_grocery_list
+              : AppLocalizations.of(context).error_when_adding_to_grocery_list;
+        }
+        CustomToast.showToast(
+          text: text,
+          context: context,
+          time: CustomToast.timeLong,
+        );
+      } else if (state is ChooseGroceryListToRecipeEvent) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!hasShowChooseGroceryListToRecipeDialog) {
+            ChooseGroceryListToRecipeDialog.showChooseGroceryListToRecipeDialog(
+              context: context,
+              groceryLists: state.collection.groceryLists,
+              onSelectGroceryList: (GroceryList groceryList) {
+                context.read<RecipesBloc>().add(AddRecipeToGroceryListEvent(
+                    state.recipe,
+                    state.portions,
+                    GroceryList.getGroceryListDefaultTitle(context),
+                    groceryList));
+                EasyLoading.show(
+                  maskType: EasyLoadingMaskType.black,
+                  status: AppLocalizations.of(context).saving_recipe,
+                );
+                hasShowChooseGroceryListToRecipeDialog = false;
+              },
+            );
+          }
+          hasShowChooseGroceryListToRecipeDialog = true;
+        });
+      } else if (state is RecipesListError) {
+        final error = state.error;
+        String message = '${error.message}\nTap to Retry.';
+        return ErrorTxt(
+          message: message,
+          onTap: loadRecipes,
+        );
+      }
+      RecipesCollection recipesCollection;
+      if (state is RecipesLoaded) {
+        recipesCollection = state.recipesCollection;
+      }
+
+      return Column(
+        children: [
+          buildSearchFields(),
+          buildList(recipesCollection),
+        ],
+      );
+    });
+  }
+
+  Widget buildSearchFields() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Flexible(
+            child: TextField(
+              key: Key(Keys.recipesListFilter),
+              controller: _filterController,
+              decoration: InputDecoration(
+                hintText:
+                    AppLocalizations.of(context).type_in_to_filter_recipes,
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    if (FocusScope.of(context).hasFocus) {
+                      FocusScope.of(context).unfocus();
+                    }
+                    _filterController.text = '';
+                    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
+                          searchParams: SearchRecipesParams(
+                              filter: _filterController.text, sort: sort),
+                        ));
+                  },
+                  icon: Icon(
+                    Icons.clear,
+                    color: FocusScope.of(context).hasFocus
+                        ? null
+                        : Colors.transparent,
+                  ),
                 ),
-                onChanged: (String newValue) {
-                  setState(() {
-                    filter = newValue;
-                  });
-                  context.read<RecipesBloc>().add(StartFetchRecipesEvent(
-                        searchParams: SearchRecipesParams(filter: filter),
-                      ));
-                },
               ),
-            ),
-            ElevatedButton(
-              // TODO: change to filter
-              child: Text('Refresh'),
-              onPressed: () {
-                context.read<RecipesBloc>().add(StartFetchRecipesEvent());
+              onChanged: (String newValue) {
+                print(_filterController.text);
+                context.read<RecipesBloc>().add(StartFetchRecipesEvent(
+                      searchParams: SearchRecipesParams(
+                          filter: _filterController.text, sort: sort),
+                    ));
               },
             ),
-          ],
-        ),
-        BlocBuilder<RecipesBloc, RecipesState>(
-            builder: (BuildContext context, RecipesState state) {
-          EasyLoading.dismiss();
-          if (state is AddedRecipeToGroceryListEvent) {
-            String text =
-                AppLocalizations.of(context).recipe_added_to_grocery_list;
-            if (state.response.error != null) {
-              text = state.response.error is RecipeAlreadyAddedToGroceryList
-                  ? AppLocalizations.of(context)
-                      .recipe_already_added_to_grocery_list
-                  : AppLocalizations.of(context)
-                      .error_when_adding_to_grocery_list;
-            }
-            CustomToast.showToast(
-              text: text,
-              context: context,
-              time: CustomToast.timeLong,
-            );
-          } else if (state is ChooseGroceryListToRecipeEvent) {
-            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                ChooseGroceryListToRecipeDialog
-                    .showChooseGroceryListToRecipeDialog(
-                  context: context,
-                  groceryLists: state.collection.groceryLists,
-                  onSelectGroceryList: (GroceryList groceryList) {
-                    context.read<RecipesBloc>().add(AddRecipeToGroceryListEvent(
-                        state.recipe,
-                        state.portions,
-                        GroceryList.getGroceryListDefaultTitle(context),
-                        groceryList));
-                    EasyLoading.show(
-                      maskType: EasyLoadingMaskType.black,
-                      status: AppLocalizations.of(context).saving_recipe,
-                    );
-                  },
-                ));
-          } else if (state is RecipesListError) {
-            final error = state.error;
-            String message = '${error.message}\nTap to Retry.';
-            return ErrorTxt(
-              message: message,
-              onTap: loadRecipes,
-            );
-          }
-          RecipesCollection recipesCollection;
-          if (state is RecipesLoaded) {
-            recipesCollection = state.recipesCollection;
-          }
-
-          if (recipesCollection == null || recipesCollection.recipes == null) {
-            return Loading();
-          }
-
-          if (recipesCollection.recipes.length > 0) {
-            return _list(recipesCollection);
-          }
-
-          return Expanded(
-            child: Center(
-              child: Text(
-                AppLocalizations.of(context).empty_recipes_list,
-                key: Key(Keys.recipesListEmptyText),
-              ),
+          ),
+          ElevatedButton(
+            child: NamedIcon(
+              key: Key(Keys.recipesListSort),
+              tooltip: AppLocalizations.of(context).open_settings,
+              iconData: Icons.sort,
+              showNotification: sort != null,
+              notificationKey: Keys.recipesListSortNotification,
             ),
-          );
-        }),
-      ],
+            onPressed: () {
+              ChooseRecipeSortDialog.showChooseRecipeSortDialog(
+                  context: context,
+                  current: sort,
+                  onSelectSort: (RecipeSort selected) {
+                    setState(() {
+                      sort = selected;
+                    });
+                    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
+                          searchParams: SearchRecipesParams(
+                              filter: _filterController.text, sort: sort),
+                        ));
+                  });
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _list(RecipesCollection recipesCollection) {
+  Widget buildList(RecipesCollection recipesCollection) {
+    if (recipesCollection == null || recipesCollection.recipes == null) {
+      return Loading();
+    }
+
+    if (recipesCollection.recipes.length == 0) {
+      return Expanded(
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context).empty_recipes_list,
+            key: Key(Keys.recipesListEmptyText),
+          ),
+        ),
+      );
+    }
+
     bool hasLoadedAll =
         (recipesCollection.recipes.length == recipesCollection.total);
     return Expanded(
-      key: Key(Keys.recipesList),
       child: ListView.builder(
+        key: Key(Keys.recipesList),
         itemCount: recipesCollection.recipes.length + (hasLoadedAll ? 0 : 1),
         itemBuilder: (_, index) {
-          if (index == recipesCollection.recipes.length) {
+          if (!hasLoadedAll && index == recipesCollection.recipes.length) {
             context.read<RecipesBloc>().add(FetchRecipesEvent(
                 searchParams: SearchRecipesParams(
-                    filter: filter, offset: recipesCollection.recipes.length)));
+                    filter: _filterController.text,
+                    sort: sort,
+                    offset: recipesCollection.recipes.length)));
             return LoadingRow();
           }
 
@@ -197,6 +259,7 @@ class RecipesListState extends State<RecipesList> {
                 widget.onTapRecipe(recipe);
               },
               onAddToGroceryList: () {
+                hasShowChooseGroceryListToRecipeDialog = true;
                 AddRecipeToGroceryListDialog.showChooseGroceryListToRecipeEvent(
                     context: context,
                     recipe: recipe,
@@ -208,6 +271,7 @@ class RecipesListState extends State<RecipesList> {
                         maskType: EasyLoadingMaskType.black,
                         status: AppLocalizations.of(context).saving_recipe,
                       );
+                      hasShowChooseGroceryListToRecipeDialog = false;
                     });
               });
           if (hasLoadedAll && index == recipesCollection.recipes.length - 1) {

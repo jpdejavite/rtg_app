@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import 'helper.dart';
 
 void main() {
-  group('New User RTG App', () {
+  group('basic fetures app test', () {
     final homeBottomBarHomeIcon = find.byValueKey(Keys.homeBottomBarHomeIcon);
     final homeBottomBarRecipesIcon =
         find.byValueKey(Keys.homeBottomBarRecipesIcon);
@@ -163,7 +163,7 @@ void main() {
     });
 
     test('insert first recipe', () async {
-      await Helper.addRecipe(driver, recipeName1, portion1,
+      await Helper.addRecipe(driver, recipeName1, portion1, null,
           [ingredient10, ingredient11], instructions1);
 
       expect(await driver.getText(recipeListRowTitleText0), recipeName1);
@@ -186,7 +186,7 @@ void main() {
     });
 
     test('insert second recipe', () async {
-      await Helper.addRecipe(driver, recipeName2, portion2,
+      await Helper.addRecipe(driver, recipeName2, portion2, null,
           [ingredient20, ingredient21, ingredient22], instructions2);
 
       expect(await driver.getText(recipeListRowTitleText1), recipeName2);

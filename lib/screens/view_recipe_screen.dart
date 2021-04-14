@@ -43,12 +43,11 @@ class ViewRecipeScreen extends StatefulWidget {
 
 class _ViewRecipeState extends State<ViewRecipeScreen> {
   Recipe recipe;
-  bool wakeLockEnabled = true;
 
   @override
   void initState() {
     super.initState();
-    Wakelock.toggle(enable: wakeLockEnabled);
+    Wakelock.toggle(enable: true);
   }
 
   @override
@@ -113,18 +112,6 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
 
   List<Widget> buildActions() {
     return [
-      IconButton(
-        icon: Icon(wakeLockEnabled ? Icons.visibility : Icons.visibility_off),
-        tooltip: wakeLockEnabled
-            ? AppLocalizations.of(context).turn_off_inactivity_suspension
-            : AppLocalizations.of(context).turn_on_inactivity_suspension,
-        onPressed: () {
-          setState(() {
-            wakeLockEnabled = !wakeLockEnabled;
-            Wakelock.toggle(enable: wakeLockEnabled);
-          });
-        },
-      ),
       IconButton(
         icon: Icon(Icons.copy),
         tooltip: AppLocalizations.of(context).copy_to_clipboard,

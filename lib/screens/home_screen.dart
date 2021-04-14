@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' as Foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/api/google_api.dart';
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Widget> getAppBarActions(HomeState state) {
-    return [
+    List<Widget> actions = [
       NamedIcon(
         key: Key(Keys.homeActionSettingsIcon),
         tooltip: AppLocalizations.of(context).open_settings,
@@ -122,16 +123,21 @@ class _HomeScreenState extends State<HomeScreen> {
           await Navigator.pushNamed(context, SettingsScreen.id);
           refreshData();
         },
-      ),
-      IconButton(
+      )
+    ];
+
+    if (Foundation.kDebugMode) {
+      actions.add(IconButton(
         key: Key(Keys.actionDeleteAllIcon),
         icon: Icon(Icons.delete_forever),
         tooltip: 'Delete all database',
         onPressed: () async {
           context.read<HomeBloc>().add(DeleteAllDataEvent());
         },
-      ),
-    ];
+      ));
+    }
+
+    return actions;
   }
 
   BottomNavigationBar getBottomNavigationBar() {

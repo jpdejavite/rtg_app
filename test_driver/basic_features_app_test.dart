@@ -54,8 +54,16 @@ void main() {
         find.byValueKey(Keys.addRecipeToGroceryListDialogConfirmButton);
     final groceryListRowTitleText0 =
         find.byValueKey(Keys.groceryListRowTitleText + "0");
+    final groceryListRowShowRecipes0 =
+        find.byValueKey(Keys.groceryListRowShowRecipes + "0");
     final groceryListRowTitleText1 =
         find.byValueKey(Keys.groceryListRowTitleText + "1");
+    final groceryListRecipesDialogRecipe0 =
+        find.byValueKey(Keys.groceryListRecipesDialogRecipe + "0");
+    final groceryListRecipesDialogRecipe1 =
+        find.byValueKey(Keys.groceryListRecipesDialogRecipe + "1");
+    final groceryListRecipesDialogCloseButton =
+        find.byValueKey(Keys.groceryListRecipesDialogCloseButton);
     final groceryItemTextField0 =
         find.byValueKey(Keys.groceryItemTextField + "0");
     final groceryItemTextField1 =
@@ -406,6 +414,20 @@ void main() {
       expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
 
       expect(await Helper.isPresent(groceryListRowTitleText1, driver), false);
+    });
+
+    test('show grocery list recipes', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowShowRecipes0);
+
+      expect(
+          await driver.getText(groceryListRecipesDialogRecipe0), recipeName1);
+
+      expect(
+          await driver.getText(groceryListRecipesDialogRecipe1), recipeName2);
+
+      await driver.tap(groceryListRecipesDialogCloseButton);
     });
 
     // TODO: implement backup

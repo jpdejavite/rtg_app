@@ -43,8 +43,8 @@ class _AddRecipeToGroceryListDialogState
           key: Key(Keys.viewRecipeGroceryListToSelect + i.toString()),
           child: Text(groceryList.title),
           onPressed: () {
-            Navigator.of(context).pop();
             widget.onSelectGroceryList(groceryList);
+            Navigator.of(context).pop();
           }));
     });
 
@@ -60,8 +60,8 @@ class _AddRecipeToGroceryListDialogState
           key: Key(Keys.viewRecipeCreateNewGroceryListAction),
           child: Text(AppLocalizations.of(context).create_a_new_grocery_list),
           onPressed: () {
-            Navigator.of(context).pop();
             widget.onSelectGroceryList(null);
+            Navigator.of(context).pop();
           },
         ),
       ],

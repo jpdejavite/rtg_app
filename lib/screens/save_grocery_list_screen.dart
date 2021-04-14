@@ -287,6 +287,12 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
         ),
+        onChanged: (String newValue) {
+          editGroceryList.title = _titleController.text;
+          context
+              .read<SaveGroceryListBloc>()
+              .add(SaveGroceryListSilentlyEvent(editGroceryList));
+        },
       ),
     );
   }

@@ -66,6 +66,8 @@ class Keys {
 
   // grocery list row
   static const String groceryListRowTitleText = 'grocery-list-row-title-text';
+  static const String groceryListRowShowRecipes =
+      'grocery-list-row-show-recipes';
 
   // view recipe label text
   static const String viewRecipeLabelText = 'view-recipe-label-text';
@@ -136,6 +138,12 @@ class Keys {
       'ingredient-recipe-source-dialog-recipe';
   static const String ingredientRecipeSourceDialogCloseButton =
       'ingredient-recipe-source-dialog-close-button';
+
+  //grocery list recipes dialog
+  static const String groceryListRecipesDialogRecipe =
+      'grocery-list-recipes-dialog-recipe';
+  static const String groceryListRecipesDialogCloseButton =
+      'grocery-list-recipes-dialog-close-button';
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';

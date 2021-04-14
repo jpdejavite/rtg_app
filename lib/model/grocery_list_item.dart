@@ -94,7 +94,9 @@ class GroceryListItem {
       quantity: record['quantity'],
       checked: record['checked'],
       recipeIngredients: recipeIngredients,
-      measureId: IngredientMeasureId.values[record["measureId"] as int],
+      measureId: record["measureId"] == null
+          ? null
+          : IngredientMeasureId.values[record["measureId"] as int],
       ingredientName: record['ingredientName'],
     );
   }
@@ -111,7 +113,7 @@ class GroceryListItem {
         'quantity': i.quantity,
         'checked': i.checked,
         'recipeIngredients': i.recipeIngredients,
-        'measureId': i.measureId.index,
+        'measureId': i.measureId == null ? null : i.measureId.index,
         'ingredientName': i.ingredientName,
       });
     });

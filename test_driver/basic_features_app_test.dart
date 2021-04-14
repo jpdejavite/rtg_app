@@ -76,6 +76,8 @@ void main() {
         find.byValueKey(Keys.groceryItemCheckBox + "1");
     final saveGroceryListShowChecked =
         find.byValueKey(Keys.saveGroceryListShowChecked);
+    final groceryItemActionIcon1 =
+        find.byValueKey(Keys.groceryItemActionIcon + "1");
     final groceryItemActionIcon2 =
         find.byValueKey(Keys.groceryItemActionIcon + "2");
     final saveGroceryListBottomActionIcon =
@@ -357,19 +359,6 @@ void main() {
       await driver.tap(backButtonFinder);
     });
 
-    test('edit grocery list check item', () async {
-      await driver.tap(homeBottomBarListsIcon);
-
-      await driver.tap(groceryListRowTitleText0);
-
-      await driver.tap(groceryItemCheckBox1);
-
-      expect(await Helper.isPresent(saveGroceryListShowChecked, driver), true);
-
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
-    });
-
     test('edit grocery list drag item', () async {
       await driver.tap(homeBottomBarListsIcon);
 
@@ -384,6 +373,19 @@ void main() {
       await driver.tap(backButtonFinder);
     });
 
+    test('edit grocery list check item', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      await driver.tap(groceryItemCheckBox1);
+
+      expect(await Helper.isPresent(saveGroceryListShowChecked, driver), true);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
     test('edit grocery list show recipes', () async {
       await driver.tap(homeBottomBarListsIcon);
 
@@ -391,7 +393,7 @@ void main() {
 
       await driver.tap(saveGroceryListBottomActionIcon);
 
-      await driver.tap(groceryItemActionIcon2);
+      await driver.tap(groceryItemActionIcon1);
 
       expect(await driver.getText(ingredientRecipeSourceDialogRecipe0),
           recipeName2);

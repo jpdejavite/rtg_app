@@ -12,6 +12,7 @@ class GroceryItem extends StatefulWidget {
       this.groceryListItem,
       this.recipes,
       this.index,
+      this.nameController,
       this.focusNode,
       this.onCheck,
       this.onEditName,
@@ -23,6 +24,7 @@ class GroceryItem extends StatefulWidget {
   final GroceryListItem groceryListItem;
   final List<Recipe> recipes;
   final int index;
+  final TextEditingController nameController;
   final FocusNode focusNode;
   final Function(bool checked, GroceryListItem groceryListItem, int index)
       onCheck;
@@ -36,13 +38,12 @@ class GroceryItem extends StatefulWidget {
 }
 
 class _GroceryItemState extends State<GroceryItem> {
-  TextEditingController _nameController;
   GlobalKey<GroceryItemSuffixIconState> _deleteItemKey = GlobalKey();
+  String initialText;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
     widget.focusNode.addListener(() {
       if (_deleteItemKey != null && _deleteItemKey.currentState != null) {
         _deleteItemKey.currentState.onFocusChange(widget.focusNode.hasFocus);
@@ -53,7 +54,6 @@ class _GroceryItemState extends State<GroceryItem> {
   @override
   void dispose() {
     widget.focusNode.removeListener(() {});
-    _nameController.dispose();
     super.dispose();
   }
 
@@ -80,9 +80,11 @@ class _GroceryItemState extends State<GroceryItem> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _nameController.text = widget.groceryListItem.getName(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initialText = widget.groceryListItem.getName(context);
+      widget.nameController.text = initialText;
     });
+
     return Row(
       children: [
         SizedBox(
@@ -106,7 +108,7 @@ class _GroceryItemState extends State<GroceryItem> {
         Flexible(
             child: TextFormField(
               key: Key(Keys.groceryItemTextField + widget.index.toString()),
-              controller: _nameController,
+              controller: widget.nameController,
               style: TextStyle(
                 decoration: widget.groceryListItem.checked ?? false
                     ? TextDecoration.lineThrough
@@ -116,18 +118,24 @@ class _GroceryItemState extends State<GroceryItem> {
               maxLines: null,
               focusNode: widget.focusNode,
               onChanged: (v) {
+                if (initialText == v) {
+                  return;
+                }
+
                 if (v.contains("\n")) {
-                  _nameController.text = v.replaceAll("\n", "");
-                  _nameController.selection = TextSelection(
-                    baseOffset: _nameController.text.toString().length,
-                    extentOffset: _nameController.text.toString().length,
-                  );
+                  widget.nameController.text = v.replaceAll("\n", "");
+                  initialText = widget.nameController.text;
+                  // _nameController.selection = TextSelection(
+                  //   baseOffset: _nameController.text.toString().length,
+                  //   extentOffset: _nameController.text.toString().length,
+                  // );
                   widget.onAddNewField(widget.index);
                   return;
                 }
 
+                initialText = widget.nameController.text;
                 GroceryListItem newItem =
-                    GroceryListItem.fromInput(_nameController.text);
+                    GroceryListItem.fromInput(widget.nameController.text);
                 widget.groceryListItem.ingredientName = newItem.ingredientName;
                 widget.groceryListItem.quantity = newItem.quantity;
                 widget.groceryListItem.measureId = newItem.measureId;

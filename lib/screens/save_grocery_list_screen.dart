@@ -46,7 +46,10 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
   bool hasKeyboardOpenOnce;
   List<Recipe> recipes;
   Map<GroceryListItem, FocusNode> focusNodes;
+  Map<GroceryListItem, TextEditingController> textEditingControllers;
+
   GroceryListItem itemToFocus;
+  int checkedDividerIndex;
 
   @override
   void initState() {
@@ -62,9 +65,11 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
 
     titleFocusNodes = FocusNode();
     focusNodes = Map();
+    textEditingControllers = Map();
     if (widget.editGroceryList != null) {
       widget.editGroceryList.groceries.forEach((ingredient) {
         addFocusNode(ingredient);
+        addTextEditingController(ingredient);
       });
     }
 
@@ -76,6 +81,10 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
   void addFocusNode(GroceryListItem item) {
     FocusNode focusNode = FocusNode();
     focusNodes[item] = focusNode;
+  }
+
+  void addTextEditingController(GroceryListItem item) {
+    textEditingControllers[item] = TextEditingController();
   }
 
   void checkKeyboardVisibility() {
@@ -107,6 +116,9 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
     _titleController.dispose();
     focusNodes.forEach((i, focus) {
       focus.dispose();
+    });
+    textEditingControllers.forEach((i, controller) {
+      controller.dispose();
     });
     titleFocusNodes.dispose();
     super.dispose();
@@ -203,14 +215,19 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
       recipes: recipes,
       index: index,
       focusNode: focusNodes[item],
+      nameController: textEditingControllers[item],
       showRecipeSource: showRecipeSource,
       onCheck: (bool checked, GroceryListItem groceryListItem, int i) {
         setState(() {
           editGroceryList.groceries[i] = groceryListItem;
+          GroceryListItem item = editGroceryList.groceries.removeAt(i);
+          int addIndex = checked ? editGroceryList.groceries.length : 0;
+          editGroceryList.groceries.insert(addIndex, item);
+          isLoading = true;
+
           context
               .read<SaveGroceryListBloc>()
               .add(SaveGroceryListEvent(editGroceryList));
-          isLoading = true;
         });
       },
       onEditName: (GroceryListItem groceryListItem, int i) {
@@ -227,6 +244,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
               .read<SaveGroceryListBloc>()
               .add(SaveGroceryListEvent(editGroceryList));
           addFocusNode(newItem);
+          addTextEditingController(newItem);
           itemToFocus = newItem;
           isLoading = true;
         });
@@ -236,6 +254,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
           GroceryListItem removedItem = editGroceryList.groceries.removeAt(i);
           focusNodes[removedItem].unfocus();
           focusNodes.remove(removedItem);
+          textEditingControllers.remove(removedItem);
 
           itemToFocus = null;
           isLoading = true;
@@ -247,8 +266,8 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
     );
   }
 
-  Widget buildCheckedDivider(List<Widget> checkedChildren) {
-    String checkItemsText = checkedChildren.length > 1
+  Widget buildCheckedDivider(int checkedChildrenLength) {
+    String checkItemsText = checkedChildrenLength > 1
         ? AppLocalizations.of(context).checked_items
         : AppLocalizations.of(context).checked_item;
     return TextButton(
@@ -264,7 +283,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
               ? Icons.keyboard_arrow_up
               : Icons.keyboard_arrow_down),
           Text(
-            '${checkedChildren.length} $checkItemsText',
+            '$checkedChildrenLength $checkItemsText',
           )
         ],
       ),
@@ -327,12 +346,15 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
   }
 
   void onReorderListItems(oldIndex, newIndex) {
-    if (oldIndex == newIndex) {
+    if (oldIndex == newIndex ||
+        checkedDividerIndex > oldIndex ||
+        checkedDividerIndex > newIndex) {
       return;
     }
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
+
     setState(() {
       GroceryListItem groceryListItem =
           editGroceryList.groceries.removeAt(oldIndex);
@@ -345,38 +367,25 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
   }
 
   Widget buildForm(BuildContext context) {
-    List<Widget> uncheckedChildren = [];
-    List<Widget> checkedChildren = [];
+    List<Widget> children = [];
 
     if (itemToFocus != null) {
       focusNodes[itemToFocus].requestFocus();
     }
 
+    checkedDividerIndex = -1;
     editGroceryList.groceries.asMap().forEach((index, item) {
-      GroceryItem groceryItem = newGroceryItem(item, index);
-      if ((item.checked ?? false)) {
-        checkedChildren.add(groceryItem);
-      } else {
-        uncheckedChildren.add(groceryItem);
+      if ((item.checked ?? false) && checkedDividerIndex == -1) {
+        checkedDividerIndex = index;
+        children
+            .add(buildCheckedDivider(editGroceryList.groceries.length - index));
       }
+      if ((item.checked ?? false) && !showChecked) {
+        return;
+      }
+      GroceryItem groceryItem = newGroceryItem(item, index);
+      children.add(groceryItem);
     });
-
-    if (uncheckedChildren.length == 0) {
-      GroceryListItem newItem = GroceryListItem.newEmptyGroceryListItem();
-      editGroceryList.groceries.insert(0, newItem);
-      context
-          .read<SaveGroceryListBloc>()
-          .add(SaveGroceryListEvent(editGroceryList));
-      addFocusNode(newItem);
-      isLoading = true;
-    }
-    if (checkedChildren.length > 0) {
-      uncheckedChildren.add(buildCheckedDivider(checkedChildren));
-    }
-
-    if (!showChecked) {
-      checkedChildren = [];
-    }
 
     return Column(
       children: [
@@ -384,7 +393,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
         Flexible(
           child: ReorderableListView(
             onReorder: onReorderListItems,
-            children: [...uncheckedChildren, ...checkedChildren],
+            children: children,
           ),
           flex: 1,
         ),

@@ -183,7 +183,6 @@ class RecipesListState extends State<RecipesList> {
                 ),
               ),
               onChanged: (String newValue) {
-                print(_filterController.text);
                 context.read<RecipesBloc>().add(StartFetchRecipesEvent(
                       searchParams: SearchRecipesParams(
                           filter: _filterController.text, sort: sort),

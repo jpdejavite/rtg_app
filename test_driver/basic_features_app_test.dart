@@ -22,6 +22,8 @@ void main() {
         find.byValueKey(Keys.homeCardLastGroceryListUsedAction);
     final homeCardRecipeButton0 =
         find.byValueKey('${Keys.homeCardRecipeButton}-0');
+    final homeFloatingActionNewGroceryListButton =
+        find.byValueKey(Keys.homeFloatingActionNewGroceryListButton);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipeFloatingActionSaveButton =
@@ -430,6 +432,48 @@ void main() {
           await driver.getText(groceryListRecipesDialogRecipe1), recipeName2);
 
       await driver.tap(groceryListRecipesDialogCloseButton);
+    });
+
+    test('new grocery list', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(homeFloatingActionNewGroceryListButton);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('add items to new grocery list', () async {
+      await driver.tap(homeBottomBarListsIcon);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      String groceryItem0 = 'sabão em pó';
+      await driver.tap(groceryItemTextField0);
+      await driver.enterText(groceryItem0);
+      await driver.enterText("\n");
+
+      String groceryItem1 = '1 colher de sopa de azeite';
+      await driver.tap(groceryItemTextField1);
+      await driver.enterText(groceryItem1);
+      await driver.enterText("\n");
+
+      String groceryItem2 = '1 coca';
+      await driver.tap(groceryItemTextField2);
+      await driver.enterText(groceryItem2);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+
+      await driver.tap(groceryListRowTitleText0);
+
+      expect(await driver.getText(groceryItemTextField0), groceryItem0);
+      expect(await driver.getText(groceryItemTextField1),
+          '1 colher de sopa azeite');
+      expect(await driver.getText(groceryItemTextField2), groceryItem2);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
     });
 
     // TODO: implement backup

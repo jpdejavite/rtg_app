@@ -176,7 +176,7 @@ class GroceryListItem {
     IngredientParseResult result = IngredientParser.fromInput(originalText);
     return GroceryListItem(
       ingredientName: result.name,
-      quantity: result.quantity,
+      quantity: result.hasParsedQuantity ? result.quantity : null,
       measureId: result.measureId,
     );
   }

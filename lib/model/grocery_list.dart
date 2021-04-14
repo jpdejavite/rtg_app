@@ -38,6 +38,17 @@ class GroceryList {
     return this.id != null && this.id != "" && this.id != "0";
   }
 
+  static newEmptyGroceryList(String title) {
+    return GroceryList(
+      createdAt: CustomDateTime.current.millisecondsSinceEpoch,
+      updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
+      status: GroceryListStatus.active,
+      title: title,
+      recipes: [],
+      groceries: [],
+    );
+  }
+
   static newGroceryListWithRecipe(
       Recipe recipe, String title, double portions) {
     return GroceryList(

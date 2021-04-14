@@ -11,6 +11,7 @@ import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
@@ -314,5 +315,22 @@ void main() {
     });
 
     homeBloc.add(DeleteAllDataEvent());
+  });
+
+  test('save new grocery list', () {
+    SaveGroceryListResponse response = SaveGroceryListResponse();
+    final expectedResponse = [SavedNewGroceryListState(response)];
+
+    when(groceryListsRepository.save(any))
+        .thenAnswer((_) => Future.value(response));
+
+    expectLater(
+      homeBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(homeBloc.state, SavedNewGroceryListState(response));
+    });
+
+    homeBloc.add(SaveNewGroceryList("title"));
   });
 }

@@ -387,6 +387,16 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
       children.add(groceryItem);
     });
 
+    if (checkedDividerIndex == 0 || editGroceryList.groceries.length == 0) {
+      GroceryListItem newItem = GroceryListItem.newEmptyGroceryListItem();
+      editGroceryList.groceries.insert(0, newItem);
+      context
+          .read<SaveGroceryListBloc>()
+          .add(SaveGroceryListSilentlyEvent(editGroceryList));
+      addFocusNode(newItem);
+      addTextEditingController(newItem);
+    }
+
     return Column(
       children: [
         buildTitleField(),

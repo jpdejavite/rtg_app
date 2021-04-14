@@ -7,6 +7,7 @@ import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
+import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
@@ -48,6 +49,10 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       await googleApi.logout();
       await userDataRepository.deleteAll();
       yield AllDataDeleted();
+    } else if (event is SaveNewGroceryList) {
+      SaveGroceryListResponse response = await groceryListsRepository
+          .save(GroceryList.newEmptyGroceryList(event.groceryListTitle));
+      yield SavedNewGroceryListState(response);
     }
   }
 

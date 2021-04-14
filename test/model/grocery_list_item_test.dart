@@ -319,4 +319,24 @@ void main() {
         ).getName(null),
         '2 3/4 1 ingrediente');
   });
+
+  test('fromInput has NOT parsed quantity', () {
+    expect(
+        GroceryListItem.fromInput("colher    de café de   cúrcuma"),
+        GroceryListItem(
+          ingredientName: "colher de café de cúrcuma",
+          quantity: null,
+          measureId: IngredientMeasureId.coffeSpoon,
+        ));
+  });
+
+  test('fromInput has parsed quantity', () {
+    expect(
+        GroceryListItem.fromInput("2 1/2 colher    de café de   cúrcuma"),
+        GroceryListItem(
+          ingredientName: "cúrcuma",
+          quantity: 2.5,
+          measureId: IngredientMeasureId.coffeSpoon,
+        ));
+  });
 }

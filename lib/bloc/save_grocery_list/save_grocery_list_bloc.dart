@@ -27,7 +27,7 @@ class SaveGroceryListBloc
           await groceryListsRepo.save(event.groceryList);
       yield GroceryListSaved(response);
     } else if (event is SaveGroceryListSilentlyEvent) {
-      yield SaveGroceryListInitState();
+      // yield SaveGroceryListInitState();
       event.groceryList.updatedAt =
           CustomDateTime.current.millisecondsSinceEpoch;
       SaveGroceryListResponse response =

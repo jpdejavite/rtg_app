@@ -125,10 +125,6 @@ class _GroceryItemState extends State<GroceryItem> {
                 if (v.contains("\n")) {
                   widget.nameController.text = v.replaceAll("\n", "");
                   initialText = widget.nameController.text;
-                  // _nameController.selection = TextSelection(
-                  //   baseOffset: _nameController.text.toString().length,
-                  //   extentOffset: _nameController.text.toString().length,
-                  // );
                   widget.onAddNewField(widget.index);
                   return;
                 }

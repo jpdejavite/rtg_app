@@ -10,6 +10,7 @@ void main() {
           originalName: null,
           name: null,
           quantity: 1,
+          hasParsedQuantity: false,
           measureId: IngredientMeasureId.unit,
         ));
   });
@@ -21,6 +22,7 @@ void main() {
           originalName: "",
           name: "",
           quantity: 1,
+          hasParsedQuantity: false,
           measureId: IngredientMeasureId.unit,
         ));
   });
@@ -32,6 +34,7 @@ void main() {
           originalName: "mao de arroz",
           name: "mao de arroz",
           quantity: 1,
+          hasParsedQuantity: false,
           measureId: IngredientMeasureId.unit,
         ));
   });
@@ -43,6 +46,7 @@ void main() {
           originalName: "5.3 colher de sopa arroz",
           name: "arroz",
           quantity: 5.3,
+          hasParsedQuantity: true,
           measureId: IngredientMeasureId.tableSpoon,
         ));
   });
@@ -54,6 +58,7 @@ void main() {
           originalName: "5 colher de chá feijão",
           name: "feijão",
           quantity: 5,
+          hasParsedQuantity: true,
           measureId: IngredientMeasureId.teaSpoon,
         ));
   });
@@ -65,6 +70,7 @@ void main() {
           originalName: "3,33 colher de café de cúrcuma",
           name: "cúrcuma",
           quantity: 3.33,
+          hasParsedQuantity: true,
           measureId: IngredientMeasureId.coffeSpoon,
         ));
   });
@@ -76,6 +82,7 @@ void main() {
           originalName: "1 1/2 colher de café de cúrcuma",
           name: "cúrcuma",
           quantity: 1.5,
+          hasParsedQuantity: true,
           measureId: IngredientMeasureId.coffeSpoon,
         ));
   });
@@ -87,6 +94,7 @@ void main() {
           originalName: "1 chuchu grande",
           name: "chuchu grande",
           quantity: 1,
+          hasParsedQuantity: true,
           measureId: IngredientMeasureId.unit,
         ));
   });

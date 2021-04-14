@@ -84,6 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, HomeState state) {
+      if (state is SavedNewGroceryListState) {
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => onTapGroceryList(state.response.groceryList));
+      }
+
       if (state is AllDataDeleted) {
         refreshData();
       }
@@ -205,6 +210,14 @@ class _HomeScreenState extends State<HomeScreen> {
         body: GroceryLists.newGroceryListsBloc(
           key: _groceryListsKeyListkey,
           onTapGroceryList: onTapGroceryList,
+        ),
+        floatingActionButton: FloatingActionButton(
+          key: Key(Keys.homeFloatingActionNewGroceryListButton),
+          onPressed: () {
+            context.read<HomeBloc>().add(SaveNewGroceryList(
+                GroceryList.getGroceryListDefaultTitle(context)));
+          },
+          child: Icon(Icons.add),
         ),
       ),
     ];

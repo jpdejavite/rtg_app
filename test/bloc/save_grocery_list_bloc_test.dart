@@ -77,9 +77,7 @@ void main() {
     SaveGroceryListResponse response =
         SaveGroceryListResponse(groceryList: groceryList);
 
-    final expectedResponse = [
-      SaveGroceryListInitState(),
-    ];
+    final expectedResponse = [];
 
     when(groceryListsRepository.save(groceryList))
         .thenAnswer((_) => Future.value(response));
@@ -87,11 +85,7 @@ void main() {
     expectLater(
       saveGroceryListBloc,
       emitsInOrder(expectedResponse),
-    ).then((_) {
-      expect(saveGroceryListBloc.state, SaveGroceryListInitState());
-      expect(groceryList.status, GroceryListStatus.active);
-      expect(groceryList.updatedAt, customTime.millisecondsSinceEpoch);
-    });
+    );
 
     saveGroceryListBloc.add(SaveGroceryListSilentlyEvent(groceryList));
   });
@@ -103,7 +97,6 @@ void main() {
         groceryList: groceryList, error: GenericError("test error"));
 
     final expectedResponse = [
-      SaveGroceryListInitState(),
       GroceryListSaved(response),
     ];
 

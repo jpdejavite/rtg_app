@@ -6,6 +6,8 @@ class Keys {
   static const String actionDeleteAllIcon = 'home-action-delete-all-icon';
   static const String homeFloatingActionNewRecipeButton =
       'home-floating-action-new-recipe-button';
+      static const String homeFloatingActionNewGroceryListButton =
+      'home-floating-action-new-grocery-list-button';
   static const String homeBottomBarHomeText = 'home-bottom-bar-home-text-key';
   static const String homeBottomBarHomeIcon = 'home-bottom-bar-home-icon-key';
   static const String homeBottomBarRecipesIcon =

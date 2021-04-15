@@ -11,10 +11,14 @@ import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
+import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
+import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:rtg_app/widgets/text_form_list_field.dart';
 import 'package:rtg_app/widgets/text_form_section_label.dart';
+
+import 'edit_recipe_preparation_time_details_screen.dart';
 
 class SaveRecipeScreen extends StatefulWidget {
   static String id = 'save_recipe_screen';
@@ -39,10 +43,10 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   TextEditingController _sourceController;
   TextEditingController _instructionsController;
   TextEditingController _portionsController;
-  TextEditingController _preparationTimeController;
   List<FocusNode> focusNodes;
   List<String> ingredients;
   int textFieldToFocus;
+  RecipePreparationTimeDetails preparationTimeDetails;
 
   @override
   void initState() {
@@ -60,10 +64,6 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
                 ? ''
                 : widget.editRecipe.portions.toString()
             : '');
-    _preparationTimeController = TextEditingController(
-        text: widget.editRecipe != null
-            ? widget.editRecipe.totalPrepartionTime.toString()
-            : '');
     if (widget.editRecipe == null) {
       ingredients = [''];
       focusNodes = [FocusNode()];
@@ -74,6 +74,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         ingredients.add(ingredient.originalName);
         focusNodes.add(FocusNode());
       });
+      preparationTimeDetails = widget.editRecipe.preparationTimeDetails;
     }
     textFieldToFocus = -1;
   }
@@ -84,7 +85,6 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     _instructionsController.dispose();
     _sourceController.dispose();
     _portionsController.dispose();
-    _preparationTimeController.dispose();
     focusNodes.forEach((focus) {
       focus.dispose();
     });
@@ -95,7 +95,9 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).new_recipe),
+        title: Text(widget.editRecipe == null
+            ? AppLocalizations.of(context).new_recipe
+            : AppLocalizations.of(context).edit_recipe),
       ),
       floatingActionButton: FloatingActionButton(
         key: Key(Keys.saveRecipeFloatingActionSaveButton),
@@ -114,6 +116,59 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ),
       body: buildBody(),
     );
+  }
+
+  List<Widget> buildPreparationTimeFields() {
+    List<Widget> fields = [
+      Padding(
+        padding: EdgeInsets.only(top: 10),
+        child: Text(
+          AppLocalizations.of(context).preparation_time,
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: Text(
+                preparationTimeDetails != null
+                    ? PreparationTimeLabelText.getPreparationTimeText(
+                        preparationTimeDetails.getTotalPreparationTime(),
+                        false,
+                        context)
+                    : '-',
+                key: Key(Keys.saveRecipePreparationTimeText),
+              ),
+            ),
+          ),
+          TextButton(
+            key: Key(Keys.saveRecipePreparationTimeAction),
+            child: Text(AppLocalizations.of(context).edit),
+            onPressed: () async {
+              final result = await Navigator.pushNamed(
+                  context, EditPreparationTimeDetailsScreen.id,
+                  arguments: preparationTimeDetails);
+              if (result != null && result is RecipePreparationTimeDetails) {
+                preparationTimeDetails = result;
+                setState(() {});
+              }
+            },
+          )
+        ],
+      ),
+    ];
+
+    if (preparationTimeDetails != null) {
+      fields.add(Padding(
+          padding: EdgeInsets.only(left: 5),
+          child: Text(
+            preparationTimeDetails.getPreparationTimeDetails(context),
+            style: Theme.of(context).textTheme.caption,
+          )));
+    }
+    return fields;
   }
 
   Widget buildBody() {
@@ -190,19 +245,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
           return null;
         },
       ),
-      TextFormField(
-        controller: _preparationTimeController,
-        key: Key(Keys.saveRecipePreparationTimeField),
-        decoration: InputDecoration(
-          hintText: AppLocalizations.of(context).preparation_time_in_minutes,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          labelText: AppLocalizations.of(context).preparation_time_in_minutes,
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
-        ],
-      ),
+      ...buildPreparationTimeFields(),
       TextFormSectionLabelFields(
         AppLocalizations.of(context).ingredients,
         iconTooltip: AppLocalizations.of(context).paste_multiple_ingredients,
@@ -305,10 +348,10 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       updatedAt: CustomDateTime.current.millisecondsSinceEpoch,
       instructions: _instructionsController.text,
       portions: double.parse(_portionsController.text.replaceAll(",", ".")),
-      totalPrepartionTime: int.parse((_preparationTimeController.text == null ||
-              _preparationTimeController.text == "")
-          ? '0'
-          : _preparationTimeController.text),
+      totalPreparationTime: (preparationTimeDetails == null)
+          ? 0
+          : preparationTimeDetails.getTotalPreparationTime(),
+      preparationTimeDetails: preparationTimeDetails,
       source: _sourceController.text,
       ingredients: recipeIngredients,
     );

@@ -33,8 +33,8 @@ class RecipeSort {
   static const RecipeSort oldest = RecipeSort('createdAt', true);
   static const RecipeSort recentlyUsed = RecipeSort('lastUsed', false);
   static const RecipeSort usedALongTime = RecipeSort('lastUsed', true);
-  static const RecipeSort faster = RecipeSort('totalPrepartionTime', true);
-  static const RecipeSort slower = RecipeSort('totalPrepartionTime', false);
+  static const RecipeSort faster = RecipeSort('totalPreparationTime', true);
+  static const RecipeSort slower = RecipeSort('totalPreparationTime', false);
   static const RecipeSort titleAz = RecipeSort('title', true);
   static const RecipeSort titleZa = RecipeSort('title', false);
 }

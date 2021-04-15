@@ -1,5 +1,6 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:rtg_app/keys/keys.dart';
+import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
 import 'helper.dart';
@@ -7,7 +8,7 @@ import 'helper.dart';
 class RecipeInput {
   final String name;
   final String portion;
-  final String preparationTime;
+  final RecipePreparationTimeDetails preparationTime;
   final List<String> ingredients;
   final String instructions;
 
@@ -42,13 +43,13 @@ void main() {
       RecipeInput(
           'Minha primeira receita!',
           '1.00',
-          '100',
+          RecipePreparationTimeDetails(cooking: 90, preparation: 10),
           ['1 chuchu', '1 colher de chá de sal'],
           'Vamos preparar minha primeira receita\n\\o/'),
       RecipeInput(
           'Minha segunda receita!',
           '2.00',
-          '45',
+          RecipePreparationTimeDetails(preparation: 45),
           [
             '1 beterraba',
             '1 colher de chá de sal',
@@ -58,19 +59,19 @@ void main() {
       RecipeInput(
           'Terceira receita!',
           '3.00',
-          '54',
+          RecipePreparationTimeDetails(oven: 50, preparation: 4),
           ['1 colher de chá de sal', '1 1/2 colher de chá de açucar'],
           'Vamos preparar minha terceira receita\n\\o/'),
       RecipeInput(
           'Quarta receita lol!',
           '3.00',
-          '22',
+          RecipePreparationTimeDetails(preparation: 22),
           ['1 colher de chá de sal', '1 1/2 colher de chá de açucar'],
           'Vamos preparar minha receita\n\\o/'),
       RecipeInput(
           'Quinta receita lol!',
           '3.00',
-          '169',
+          RecipePreparationTimeDetails(cooking: 100, preparation: 9, oven: 60),
           [
             '1 petiti gatewau pronto',
           ],
@@ -78,7 +79,8 @@ void main() {
       RecipeInput(
           'Sexta receita!',
           '3.00',
-          '400',
+          RecipePreparationTimeDetails(
+              cooking: 100, preparation: 100, oven: 100, freezer: 100),
           [
             '1 kilo sal',
           ],

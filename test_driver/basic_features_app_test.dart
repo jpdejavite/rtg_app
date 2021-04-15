@@ -1,5 +1,6 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:rtg_app/keys/keys.dart';
+import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
 import 'helper.dart';
@@ -33,6 +34,8 @@ void main() {
     final recipeListRowTitleText1 =
         find.byValueKey(Keys.recipeListRowTitleText + "1");
     final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
+    final viewRecipePreparationTimeDetailsText =
+        find.byValueKey(Keys.viewRecipePreparationTimeDetailsText);
     final viewRecipeIngredientText0 =
         find.byValueKey(Keys.viewRecipeIngredientText + "0");
     final viewRecipeIngredientText1 =
@@ -97,6 +100,8 @@ void main() {
     final String portion1 = '1.00';
     final String ingredient10 = '1 chuchu';
     final String ingredient11 = '1 colher de chá de sal';
+    final RecipePreparationTimeDetails preparationTimeDetails1 =
+        RecipePreparationTimeDetails(preparation: 10, cooking: 120);
     final String instructions1 = 'Vamos preparar minha primeira receita\n\\o/';
 
     final String recipeName2 = 'Minha segunda receita';
@@ -175,8 +180,8 @@ void main() {
     });
 
     test('insert first recipe', () async {
-      await Helper.addRecipe(driver, recipeName1, portion1, null,
-          [ingredient10, ingredient11], instructions1);
+      await Helper.addRecipe(driver, recipeName1, portion1,
+          preparationTimeDetails1, [ingredient10, ingredient11], instructions1);
 
       expect(await driver.getText(recipeListRowTitleText0), recipeName1);
 
@@ -219,6 +224,8 @@ void main() {
           await driver.getText(viewRecipeIngredientText0), "• " + ingredient10);
       expect(
           await driver.getText(viewRecipeIngredientText1), "• " + ingredient11);
+      expect(await driver.getText(viewRecipePreparationTimeDetailsText),
+          '10 m preparo + 2 h cozimento');
 
       expect(await driver.getText(viewRecipeInstructionText), instructions1);
 

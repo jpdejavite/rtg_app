@@ -6,7 +6,7 @@ class Keys {
   static const String actionDeleteAllIcon = 'home-action-delete-all-icon';
   static const String homeFloatingActionNewRecipeButton =
       'home-floating-action-new-recipe-button';
-      static const String homeFloatingActionNewGroceryListButton =
+  static const String homeFloatingActionNewGroceryListButton =
       'home-floating-action-new-grocery-list-button';
   static const String homeBottomBarHomeText = 'home-bottom-bar-home-text-key';
   static const String homeBottomBarHomeIcon = 'home-bottom-bar-home-icon-key';
@@ -77,14 +77,32 @@ class Keys {
   // save recipe
   static const String saveRecipeNameField = 'save-recipe-name-field';
   static const String saveRecipePortionField = 'save-recipe-portion-field';
-  static const String saveRecipePreparationTimeField =
+  static const String saveRecipePreparationTimeText =
       'save-recipe-preparation-time-field';
+  static const String saveRecipePreparationTimeAction =
+      'save-recipe-preparation-time-action';
   static const String saveRecipeIngredientField =
       'save-recipe-ingredient-field';
   static const String saveRecipeInstructionsField =
       'save-recipe-instructions-field';
   static const String saveRecipeFloatingActionSaveButton =
       'save-recipe-floating-action-save-button';
+
+  // edit recipe preparation time details
+  static const String editRecipePreparationTimeDetailsPreparationField =
+      'edit-recipe-preparation-time-details-preparation-field';
+  static const String editRecipePreparationTimeDetailsCookingField =
+      'edit-recipe-preparation-time-details-cooking-field';
+  static const String editRecipePreparationTimeDetailsOvenField =
+      'edit-recipe-preparation-time-details-oven-field';
+  static const String editRecipePreparationTimeDetailsMarinateField =
+      'edit-recipe-preparation-time-details-marinate-field';
+  static const String editRecipePreparationTimeDetailsFridgeField =
+      'edit-recipe-preparation-time-details-fridge-field';
+  static const String editRecipePreparationTimeDetailsFreezerField =
+      'edit-recipe-preparation-time-details-freezer-field';
+  static const String editRecipePreparationTimeDetailsSaveButton =
+      'edit-recipe-preparation-time-details-save-button';
 
   // save grocery list
   static const String saveGroceryListGroceryItem =
@@ -111,6 +129,8 @@ class Keys {
   static const String viewRecipeTitle = 'view-recipe-title';
   static const String viewRecipePortionsLabelText =
       'view-recipe-portions-label-text';
+  static const String viewRecipePreparationTimeDetailsText =
+      'view-recipe-preparation-time-details-text';
   static const String viewRecipeIngredientText = 'view-recipe-ingredient-text';
   static const String viewRecipeInstructionText =
       'view-recipe-instructions-text';

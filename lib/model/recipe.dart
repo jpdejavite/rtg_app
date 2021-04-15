@@ -1,4 +1,5 @@
 import 'package:rtg_app/model/recipe_ingredient.dart';
+import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:sembast/sembast.dart';
 
 List<Recipe> recipesFromRecords(
@@ -14,7 +15,8 @@ class Recipe {
     this.title,
     this.source,
     this.portions,
-    this.totalPrepartionTime,
+    this.totalPreparationTime,
+    this.preparationTimeDetails,
     this.instructions,
     this.ingredients,
   });
@@ -26,7 +28,8 @@ class Recipe {
   String title;
   String source;
   double portions;
-  int totalPrepartionTime;
+  int totalPreparationTime;
+  RecipePreparationTimeDetails preparationTimeDetails;
   String instructions;
   List<RecipeIngredient> ingredients;
 
@@ -43,7 +46,9 @@ class Recipe {
       title: record['title'],
       source: record['source'],
       portions: record['portions'],
-      totalPrepartionTime: record['totalPrepartionTime'],
+      totalPreparationTime: record['totalPreparationTime'],
+      preparationTimeDetails: RecipePreparationTimeDetails.fromRecord(
+          record['preparationTimeDetails']),
       instructions: record['instructions'],
       ingredients:
           RecipeIngredient.recipeIngredientsFromObject(record['ingredients']),
@@ -58,7 +63,10 @@ class Recipe {
       'lastUsed': this.lastUsed,
       'source': this.source == '' ? null : this.source,
       'portions': this.portions,
-      'totalPrepartionTime': this.totalPrepartionTime,
+      'totalPreparationTime': this.totalPreparationTime,
+      'preparationTimeDetails': this.preparationTimeDetails != null
+          ? this.preparationTimeDetails.toRecord()
+          : null,
       'instructions': this.instructions,
       'ingredients':
           RecipeIngredient.recipeIngredientsToRecord(this.ingredients),

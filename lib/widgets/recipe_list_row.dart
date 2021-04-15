@@ -25,7 +25,8 @@ class RecipeListRow extends StatelessWidget {
         ),
       ),
     ];
-    if (recipe.totalPrepartionTime != null && recipe.totalPrepartionTime > 0) {
+    if (recipe.totalPreparationTime != null &&
+        recipe.totalPreparationTime > 0) {
       titleWidgets.addAll([
         Icon(
           Icons.schedule,
@@ -35,7 +36,7 @@ class RecipeListRow extends StatelessWidget {
         SizedBox(width: 4),
         Text(
           PreparationTimeLabelText.getPreparationTimeText(
-              recipe.totalPrepartionTime, true, context),
+              recipe.totalPreparationTime, true, context),
           style: Theme.of(context).textTheme.caption,
         )
       ]);

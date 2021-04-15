@@ -204,10 +204,20 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
               : AppLocalizations.of(context).person),
     ));
 
-    if (recipe.totalPrepartionTime != null && recipe.totalPrepartionTime > 0) {
-      children.add(PreparationTimeLabelText(
-        preparationTime: recipe.totalPrepartionTime,
-      ));
+    if (recipe.totalPreparationTime != null &&
+        recipe.totalPreparationTime > 0) {
+      children.addAll([
+        PreparationTimeLabelText(
+          preparationTime: recipe.totalPreparationTime,
+        ),
+        Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(
+              recipe.preparationTimeDetails.getPreparationTimeDetails(context),
+              key: Key(Keys.viewRecipePreparationTimeDetailsText),
+              style: Theme.of(context).textTheme.caption,
+            ))
+      ]);
     }
 
     children.add(ViewRecipeLabel(
@@ -261,11 +271,12 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
               : AppLocalizations.of(context).person),
     );
 
-    if (recipe.totalPrepartionTime != null && recipe.totalPrepartionTime > 0) {
+    if (recipe.totalPreparationTime != null &&
+        recipe.totalPreparationTime > 0) {
       data.add(AppLocalizations.of(context).preparation_time +
           ": " +
           PreparationTimeLabelText.getPreparationTimeText(
-              recipe.totalPrepartionTime, false, context));
+              recipe.totalPreparationTime, false, context));
     }
 
     data.add("\n" + AppLocalizations.of(context).ingredients);

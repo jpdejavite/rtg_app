@@ -166,6 +166,10 @@ class Keys {
       'ingredient-recipe-source-dialog-ingredient-name';
   static const String ingredientRecipeSourceDialogRecipe =
       'ingredient-recipe-source-dialog-recipe';
+  static const String ingredientRecipeSourceDialogRecipeIngredientQuantity =
+      'ingredient-recipe-source-dialog-recipe-ingredient-quantity';
+  static const String ingredientRecipeSourceDialogRecipeIngredientLabel =
+      'ingredient-recipe-source-dialog-recipe-ingredient-label';
   static const String ingredientRecipeSourceDialogCloseButton =
       'ingredient-recipe-source-dialog-close-button';
 

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:fraction/fraction.dart';
 import 'package:rtg_app/helper/ingredient_parser.dart';
 import 'package:rtg_app/model/ingredient_measure.dart';
 
@@ -19,6 +21,17 @@ class RecipeIngredient {
   @override
   String toString() {
     return '$quantity $measureId $name $originalName $label';
+  }
+
+  String getQuantity(BuildContext context) {
+    String quantityToShow = quantity.toString();
+    if (quantity % 1 == 0) {
+      quantityToShow = quantity.toInt().toString();
+    } else {
+      quantityToShow = quantity.toMixedFraction().toString();
+    }
+
+    return '$quantityToShow ${IngredientMeasure.i18nMeasure(measureId, quantity, context)}';
   }
 
   static RecipeIngredient fromInput(String originalText, String label) {

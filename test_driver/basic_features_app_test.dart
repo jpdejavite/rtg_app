@@ -113,6 +113,11 @@ void main() {
         find.byValueKey(Keys.saveGroceryListBottomActionIcon);
     final ingredientRecipeSourceDialogRecipe0 =
         find.byValueKey(Keys.ingredientRecipeSourceDialogRecipe + "0");
+    final ingredientRecipeSourceDialogRecipeIngredientQuantity0 =
+        find.byValueKey(
+            Keys.ingredientRecipeSourceDialogRecipeIngredientQuantity + "0");
+    final ingredientRecipeSourceDialogRecipeIngredientLabel0 = find.byValueKey(
+        Keys.ingredientRecipeSourceDialogRecipeIngredientLabel + "0");
     final ingredientRecipeSourceDialogCloseButton =
         find.byValueKey(Keys.ingredientRecipeSourceDialogCloseButton);
     final saveGroceryListArchiveAction =
@@ -631,6 +636,10 @@ void main() {
 
       expect(await driver.getText(ingredientRecipeSourceDialogRecipe0),
           recipeName2);
+      expect(
+          await driver
+              .getText(ingredientRecipeSourceDialogRecipeIngredientQuantity0),
+          "1 colher de chá");
 
       await driver.tap(ingredientRecipeSourceDialogCloseButton);
 

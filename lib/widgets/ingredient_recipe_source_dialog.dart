@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/model/recipe_ingredient.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/widgets/view_recipe_label.dart';
 
@@ -38,22 +39,60 @@ class IngredientRecipeSourceDialog extends StatelessWidget {
     if (recipes != null) {
       recipes.asMap().forEach((index, recipe) {
         if (groceryListItem.recipeIngredients[recipe.id] != null) {
-          recipesTexts.add(Row(
-            children: [
-              TextButton(
+          List<Widget> recipeDetails = [
+            TextButton(
+                child: Text(
+                  recipe.title,
+                  key: Key(Keys.ingredientRecipeSourceDialogRecipe +
+                      index.toString()),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    ViewRecipeScreen.id,
+                    arguments: recipe,
+                  );
+                })
+          ];
+
+          RecipeIngredient ingredient =
+              recipe.ingredients[groceryListItem.recipeIngredients[recipe.id]];
+          if (ingredient != null) {
+            recipeDetails.add(Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text(
+                  ingredient.getQuantity(context),
+                  key: Key(
+                      Keys.ingredientRecipeSourceDialogRecipeIngredientQuantity +
+                          index.toString()),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.caption,
+                )));
+
+            if (ingredient.label != null) {
+              recipeDetails.add(Padding(
+                  padding: EdgeInsets.only(left: 8),
                   child: Text(
-                    recipe.title,
-                    key: Key(Keys.ingredientRecipeSourceDialogRecipe +
-                        index.toString()),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      ViewRecipeScreen.id,
-                      arguments: recipe,
-                    );
-                  }),
-            ],
+                    ingredient.label,
+                    key: Key(
+                        Keys.ingredientRecipeSourceDialogRecipeIngredientLabel +
+                            index.toString()),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  )));
+            }
+          }
+
+          recipesTexts.add(Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: recipeDetails,
           ));
         }
       });

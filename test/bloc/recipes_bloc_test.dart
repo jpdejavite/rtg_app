@@ -88,7 +88,7 @@ void main() {
         RecipesCollection(recipes: moreRecipes, total: 2);
     SearchRecipesParams searchParams = SearchRecipesParams(offset: 2);
     final expectedMoreResponse = [
-      RecipesLoaded(recipesCollection: moreRecipesCollection),
+      isNotNull,
     ];
 
     when(recipesRepository.search(searchParams: searchParams))
@@ -99,6 +99,14 @@ void main() {
       emitsInOrder(expectedMoreResponse),
     ).then((_) {
       expect(recipeBloc.state is RecipesLoaded, true);
+
+      RecipesLoaded state = (recipeBloc.state as RecipesLoaded);
+      expect(state.recipesCollection.recipes.length,
+          moreRecipesCollection.recipes.length);
+      expect(state.recipesCollection.recipes[0].id,
+          moreRecipesCollection.recipes[0].id);
+      expect(state.recipesCollection.recipes[1].id,
+          moreRecipesCollection.recipes[1].id);
     });
 
     recipeBloc.add(FetchRecipesEvent(searchParams: searchParams));

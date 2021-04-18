@@ -23,8 +23,8 @@ void main() {
 
   test('add recipe to empty list item', () {
     List<RecipeIngredient> ingredients = [
-      RecipeIngredient.fromInput('1 colher de chá de acúcar'),
-      RecipeIngredient.fromInput('3.33 ml de água'),
+      RecipeIngredient.fromInput('1 colher de chá de acúcar', null),
+      RecipeIngredient.fromInput('3.33 ml de água', null),
     ];
     String recipeId = 'recipe-id-1';
     Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
@@ -55,8 +55,8 @@ void main() {
 
   test('add recipe to empty list item calculation proportional portion', () {
     List<RecipeIngredient> ingredients = [
-      RecipeIngredient.fromInput('3 kg de farinha'),
-      RecipeIngredient.fromInput('300 ml de água'),
+      RecipeIngredient.fromInput('3 kg de farinha', null),
+      RecipeIngredient.fromInput('300 ml de água', null),
     ];
     String recipeId = 'recipe-id-1';
     Recipe recipe =
@@ -88,8 +88,8 @@ void main() {
 
   test('add recipe to list item with no matches', () {
     List<RecipeIngredient> ingredients = [
-      RecipeIngredient.fromInput('1 tomate'),
-      RecipeIngredient.fromInput('3.33 ml de água'),
+      RecipeIngredient.fromInput('1 tomate', null),
+      RecipeIngredient.fromInput('3.33 ml de água', null),
     ];
     String recipeId = 'recipe-id-2';
     Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
@@ -151,8 +151,8 @@ void main() {
 
   test('add recipe to list item with no conversion', () {
     List<RecipeIngredient> ingredients = [
-      RecipeIngredient.fromInput('1 tomate italian'),
-      RecipeIngredient.fromInput('3.33 ml de água'),
+      RecipeIngredient.fromInput('1 tomate italian', null),
+      RecipeIngredient.fromInput('3.33 ml de água', null),
     ];
     String recipeId = 'recipe-id-2';
     Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);
@@ -214,9 +214,9 @@ void main() {
 
   test('add recipe to list item with conversions', () {
     List<RecipeIngredient> ingredients = [
-      RecipeIngredient.fromInput('1 tomate italian'),
-      RecipeIngredient.fromInput('1 l de água de coco'),
-      RecipeIngredient.fromInput('2 colheres sopa de oleo'),
+      RecipeIngredient.fromInput('1 tomate italian', null),
+      RecipeIngredient.fromInput('1 l de água de coco', null),
+      RecipeIngredient.fromInput('2 colheres sopa de oleo', null),
     ];
     String recipeId = 'recipe-id-2';
     Recipe recipe = Recipe(id: recipeId, portions: 1, ingredients: ingredients);

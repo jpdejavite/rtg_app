@@ -43,6 +43,7 @@ class ViewRecipeScreen extends StatefulWidget {
 
 class _ViewRecipeState extends State<ViewRecipeScreen> {
   Recipe recipe;
+  List<String> ingredients;
 
   @override
   void initState() {
@@ -220,15 +221,41 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
       ]);
     }
 
+    ingredients = [];
+    String label;
+    recipe.ingredients.asMap().forEach((index, ingredient) {
+      if (label != ingredient.label) {
+        label = ingredient.label;
+        ingredients.add(ingredient.label);
+      }
+      ingredients.add(
+          (ingredient.label != null ? '    ' : '') + ingredient.originalName);
+    });
+
     children.add(ViewRecipeLabel(
       label: AppLocalizations.of(context).ingredients,
-      copyText: recipe.ingredients.join("\n"),
+      copyText: ingredients.join("\n"),
     ));
 
+    label = null;
+    int labelCount = 0;
     recipe.ingredients.asMap().forEach((index, ingredient) {
+      if (label != ingredient.label) {
+        children.add(ViewRecipeText(
+          keyString: Keys.viewRecipeIngredientLabelText + labelCount.toString(),
+          text: ingredient.label,
+          hasLabel: false,
+          fontWeight: FontWeight.bold,
+          hasBullet: false,
+          hasPaddingTop: true,
+        ));
+        label = ingredient.label;
+        labelCount++;
+      }
       children.add(ViewRecipeText(
         keyString: Keys.viewRecipeIngredientText + index.toString(),
         text: ingredient.originalName,
+        hasLabel: ingredient.label != null,
         hasBullet: true,
         hasPaddingTop: true,
       ));
@@ -280,7 +307,7 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     }
 
     data.add("\n" + AppLocalizations.of(context).ingredients);
-    data.add(recipe.ingredients.join("\n") + "\n");
+    data.add(ingredients.join("\n") + "\n");
     data.add(AppLocalizations.of(context).how_to_do);
     data.add(recipe.instructions);
     return data.join("\n");

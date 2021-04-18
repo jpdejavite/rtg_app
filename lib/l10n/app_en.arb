@@ -169,5 +169,7 @@
   "marinate":"marinate",
   "fridge":"fridge",
   "freezer":"freezer",
+  "insert_category": "Insert category",
+  "new_category": "New category",
   "fill_this_required_field":"Fill this required field"
 }

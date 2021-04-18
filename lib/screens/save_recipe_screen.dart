@@ -8,6 +8,7 @@ import 'package:rtg_app/bloc/save_recipe/events.dart';
 import 'package:rtg_app/bloc/save_recipe/save_recipe_bloc.dart';
 import 'package:rtg_app/bloc/save_recipe/states.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
+import 'package:rtg_app/icons/rtg_icons.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
@@ -43,9 +44,11 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   TextEditingController _sourceController;
   TextEditingController _instructionsController;
   TextEditingController _portionsController;
-  List<FocusNode> focusNodes;
-  List<String> ingredients;
-  int textFieldToFocus;
+  List<TextFormFieldInfo> ingredientsFields;
+  List<TextFormFieldInfo> labelsFields;
+  Map<int, int> labelMap;
+  FocusNode textFieldToFocus;
+  int selectAllInputFromLabel;
   RecipePreparationTimeDetails preparationTimeDetails;
 
   @override
@@ -64,19 +67,32 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
                 ? ''
                 : widget.editRecipe.portions.toString()
             : '');
+    labelMap = Map();
+    selectAllInputFromLabel = -1;
+    labelsFields = [];
     if (widget.editRecipe == null) {
-      ingredients = [''];
-      focusNodes = [FocusNode()];
+      ingredientsFields = [
+        TextFormFieldInfo('', FocusNode(), TextEditingController())
+      ];
     } else {
-      ingredients = [];
-      focusNodes = [];
+      ingredientsFields = [];
       widget.editRecipe.ingredients.forEach((ingredient) {
-        ingredients.add(ingredient.originalName);
-        focusNodes.add(FocusNode());
+        ingredientsFields.add(TextFormFieldInfo(
+            ingredient.originalName, FocusNode(), TextEditingController()));
+        if (ingredient.label != null) {
+          final TextFormFieldInfo labelField =
+              TextFormFieldInfo(ingredient.label, null, null);
+          if (!labelsFields.contains(labelField)) {
+            labelsFields.add(TextFormFieldInfo(
+                ingredient.label, FocusNode(), TextEditingController()));
+          }
+          labelMap[ingredientsFields.length - 1] =
+              labelsFields.indexOf(labelField);
+        }
       });
       preparationTimeDetails = widget.editRecipe.preparationTimeDetails;
     }
-    textFieldToFocus = -1;
+    textFieldToFocus = null;
   }
 
   @override
@@ -85,8 +101,13 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     _instructionsController.dispose();
     _sourceController.dispose();
     _portionsController.dispose();
-    focusNodes.forEach((focus) {
-      focus.dispose();
+    ingredientsFields.forEach((field) {
+      field.focusNode.dispose();
+      field.textEditingController.dispose();
+    });
+    labelsFields.forEach((field) {
+      field.focusNode.dispose();
+      field.textEditingController.dispose();
     });
     super.dispose();
   }
@@ -191,6 +212,22 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     });
   }
 
+  void addNewIngredientField(int index, int labelIndex, bool requestFocus) {
+    if (ingredientsFields.length > index + 1) {
+      for (int i = ingredientsFields.length; i > index; i--) {
+        labelMap[i] = labelMap[i - 1];
+      }
+    }
+    labelMap[index + 1] = labelIndex;
+    ingredientsFields.insert(
+        index + 1, TextFormFieldInfo('', FocusNode(), TextEditingController()));
+
+    if (requestFocus) {
+      textFieldToFocus = ingredientsFields[index + 1].focusNode;
+    }
+    setState(() {});
+  }
+
   Widget buildForm(BuildContext context) {
     List<Widget> fields = [
       TextFormSectionLabelFields(AppLocalizations.of(context).general_data),
@@ -248,50 +285,143 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ...buildPreparationTimeFields(),
       TextFormSectionLabelFields(
         AppLocalizations.of(context).ingredients,
-        iconTooltip: AppLocalizations.of(context).paste_multiple_ingredients,
-        icon: Icons.playlist_add,
-        onIconPressed: () async {
-          ClipboardData data = await Clipboard.getData('text/plain');
-          if (data.text != null && data.text != "") {
-            data.text.split('\n').forEach((line) {
-              ingredients.add(line);
-              focusNodes.add(FocusNode());
-            });
-            setState(() {});
-          }
-        },
+        paddingTop: 0,
+        icons: [
+          TextFormSectionLabelIcon(
+            key: Key(Keys.saveRecipeNewLabelAction),
+            tooltip: AppLocalizations.of(context).insert_category,
+            icon: RtgAppIcons.new_label,
+            onPressed: () {
+              labelsFields.add(TextFormFieldInfo(
+                  AppLocalizations.of(context).new_category,
+                  FocusNode(),
+                  TextEditingController()));
+              textFieldToFocus =
+                  labelsFields[labelsFields.length - 1].focusNode;
+              selectAllInputFromLabel = labelsFields.length - 1;
+              if (labelsFields.length == 1) {
+                ingredientsFields.asMap().forEach((index, value) {
+                  labelMap[index] = 0;
+                });
+                setState(() {});
+                return;
+              }
+
+              addNewIngredientField(
+                  ingredientsFields.length - 1, labelsFields.length - 1, false);
+            },
+          ),
+          TextFormSectionLabelIcon(
+            tooltip: AppLocalizations.of(context).paste_multiple_ingredients,
+            icon: Icons.playlist_add,
+            onPressed: () async {
+              ClipboardData data = await Clipboard.getData('text/plain');
+              if (data.text != null && data.text != "") {
+                data.text.split('\n').forEach((line) {
+                  ingredientsFields.add(TextFormFieldInfo(
+                      line, FocusNode(), TextEditingController()));
+                });
+                setState(() {});
+              }
+            },
+          )
+        ],
       ),
     ];
 
-    ingredients.asMap().forEach((index, value) {
-      fields.add(TextFormListFields(
-        index: index,
-        initValue: ingredients[index],
-        hintText: AppLocalizations.of(context).type_in_ingredient_with_quantity,
-        canBeRemoved: ingredients.length == 1,
-        onChanged: (i, v) {
-          ingredients[i] = v;
-        },
-        onAddNewField: (i) {
-          ingredients.insert(i + 1, '');
-          focusNodes.insert(i + 1, FocusNode());
-          textFieldToFocus = i + 1;
-          setState(() {});
-        },
-        onRemoveField: (i) {
-          ingredients.removeAt(i);
-          focusNodes[i].unfocus();
-          focusNodes.removeAt(i);
+    (labelsFields.length > 0
+            ? labelsFields
+            : [TextFormFieldInfo('', null, null)])
+        .asMap()
+        .forEach((labelIndex, labelField) {
+      if (labelField.text != '') {
+        labelField.textEditingController.text = labelField.text;
+        if (selectAllInputFromLabel == labelIndex) {
+          selectAllInputFromLabel = -1;
+          labelField.textEditingController.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: labelField.text.length,
+          );
+        }
+        fields.add(TextFormListFields(
+          textKey: Key(Keys.saveRecipeLabelField + labelIndex.toString()),
+          iconKey: Key(Keys.saveRecipeLabelRemoveIcon + labelIndex.toString()),
+          initValue: labelField.text,
+          textEditingController: labelField.textEditingController,
+          hintText:
+              AppLocalizations.of(context).type_in_ingredient_with_quantity,
+          hasLabel: false,
+          isLabel: true,
+          onChanged: (v) {
+            labelsFields[labelIndex].text = v;
+          },
+          onRemoveField: () {
+            if (labelsFields.length == 1) {
+              labelMap.forEach((key, value) {
+                labelMap[key] = null;
+              });
+            } else {
+              labelMap.forEach((key, value) {
+                if (value == labelIndex) {
+                  labelMap[key] = labelIndex > 0 ? labelIndex - 1 : 0;
+                } else if (value > labelIndex) {
+                  labelMap[key] = value - 1;
+                }
+              });
+            }
 
-          textFieldToFocus = -1;
-          setState(() {});
-        },
-        focusNode: focusNodes[index],
-      ));
+            labelsFields[labelIndex].focusNode.unfocus();
+            labelsFields.removeAt(labelIndex);
+            textFieldToFocus = null;
+            setState(() {});
+          },
+          focusNode: labelsFields[labelIndex].focusNode,
+        ));
+      }
+
+      ingredientsFields.asMap().forEach((index, ingredientField) {
+        if (labelMap[index] != null && labelMap[index] != labelIndex) {
+          return;
+        }
+
+        ingredientField.textEditingController.text = ingredientField.text;
+        fields.add(TextFormListFields(
+          textKey: Key(Keys.saveRecipeIngredientField + index.toString()),
+          iconKey: Key(Keys.saveRecipeIngredientRemoveIcon + index.toString()),
+          initValue: ingredientField.text,
+          textEditingController: ingredientField.textEditingController,
+          hintText:
+              AppLocalizations.of(context).type_in_ingredient_with_quantity,
+          canBeRemoved: ingredientsFields.length != 1,
+          hasLabel: labelMap[index] != null &&
+              labelsFields[labelMap[index]].text != '',
+          isLabel: false,
+          onChanged: (v) {
+            ingredientsFields[index].text = v;
+          },
+          onAddNewField: () {
+            addNewIngredientField(index, labelMap[index], true);
+          },
+          onRemoveField: () {
+            if (ingredientsFields.length - 1 != index) {
+              for (int i = index; i < ingredientsFields.length - 1; i++) {
+                labelMap[i] = labelMap[i + 1];
+              }
+            }
+
+            ingredientsFields[index].focusNode.unfocus();
+            ingredientsFields.removeAt(index);
+
+            textFieldToFocus = null;
+            setState(() {});
+          },
+          focusNode: ingredientsFields[index].focusNode,
+        ));
+      });
     });
 
-    if (textFieldToFocus != -1) {
-      focusNodes[textFieldToFocus].requestFocus();
+    if (textFieldToFocus != null) {
+      textFieldToFocus.requestFocus();
     }
 
     fields.addAll([
@@ -333,9 +463,13 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
 
   Recipe getRecipeFromInputs() {
     List<RecipeIngredient> recipeIngredients = [];
-    ingredients.forEach((i) {
-      if (i != null && i != "") {
-        recipeIngredients.add(RecipeIngredient.fromInput(i));
+    ingredientsFields.asMap().forEach((index, field) {
+      if (field != null && field.text != "") {
+        recipeIngredients.add(RecipeIngredient.fromInput(
+            field.text,
+            labelMap[index] == null
+                ? null
+                : labelsFields[labelMap[index]].text));
       }
     });
 
@@ -356,4 +490,27 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       ingredients: recipeIngredients,
     );
   }
+}
+
+class TextFormFieldInfo {
+  FocusNode focusNode;
+  String text;
+  TextEditingController textEditingController;
+
+  TextFormFieldInfo(this.text, this.focusNode, this.textEditingController);
+
+  @override
+  bool operator ==(other) {
+    if (other == null) {
+      return false;
+    }
+    if (!(other is TextFormFieldInfo)) {
+      return false;
+    }
+
+    return text == other.text;
+  }
+
+  @override
+  int get hashCode => toString().hashCode;
 }

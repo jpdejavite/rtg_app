@@ -18,6 +18,7 @@ class RecipesBloc
     if (event is StartFetchRecipesEvent) {
       _recipesCollection =
           await recipesRepository.search(searchParams: event.searchParams);
+      _recipesCollection.recipes.forEach((element) {});
       yield RecipesLoaded(recipesCollection: _recipesCollection);
     } else if (event is FetchRecipesEvent) {
       RecipesCollection recipesCollection =

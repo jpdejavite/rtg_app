@@ -83,6 +83,12 @@ class Keys {
       'save-recipe-preparation-time-action';
   static const String saveRecipeIngredientField =
       'save-recipe-ingredient-field';
+  static const String saveRecipeIngredientRemoveIcon =
+      'save-recipe-ingredient-remove-icon';
+  static const String saveRecipeLabelField = 'save-recipe-label-field';
+  static const String saveRecipeLabelRemoveIcon =
+      'save-recipe-label-remove-icon';
+  static const String saveRecipeNewLabelAction = 'save-recipe-new-label-action';
   static const String saveRecipeInstructionsField =
       'save-recipe-instructions-field';
   static const String saveRecipeFloatingActionSaveButton =
@@ -132,6 +138,8 @@ class Keys {
   static const String viewRecipePreparationTimeDetailsText =
       'view-recipe-preparation-time-details-text';
   static const String viewRecipeIngredientText = 'view-recipe-ingredient-text';
+  static const String viewRecipeIngredientLabelText =
+      'view-recipe-ingredient-label-text';
   static const String viewRecipeInstructionText =
       'view-recipe-instructions-text';
   static const String viewRecipeFloatingActionEditButton =

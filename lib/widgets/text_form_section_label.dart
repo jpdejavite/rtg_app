@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
+class TextFormSectionLabelIcon {
+  final Key key;
+  final IconData icon;
+  final String tooltip;
+  final Function onPressed;
+
+  TextFormSectionLabelIcon({this.key, this.icon, this.tooltip, this.onPressed});
+}
+
 class TextFormSectionLabelFields extends StatelessWidget {
   final String text;
-  final IconData icon;
-  final String iconTooltip;
-  final Function onIconPressed;
+  final double paddingTop;
+  final List<TextFormSectionLabelIcon> icons;
 
-  TextFormSectionLabelFields(this.text,
-      {this.icon, this.iconTooltip, this.onIconPressed});
+  TextFormSectionLabelFields(this.text, {this.icons, this.paddingTop});
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +28,20 @@ class TextFormSectionLabelFields extends StatelessWidget {
     );
 
     Row textWithIcon = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [textWidget],
+      children: [Expanded(child: textWidget)],
     );
-    if (icon != null) {
-      textWithIcon.children.add(IconButton(
-          icon: Icon(icon), tooltip: iconTooltip, onPressed: onIconPressed));
+    if (icons != null) {
+      icons.forEach((icon) {
+        textWithIcon.children.add(IconButton(
+            key: icon.key,
+            icon: Icon(icon.icon),
+            tooltip: icon.tooltip,
+            onPressed: icon.onPressed));
+      });
     }
     return Padding(
-      padding: EdgeInsets.only(top: 20),
-      child: icon == null ? textWidget : textWithIcon,
+      padding: EdgeInsets.only(top: paddingTop ?? 20),
+      child: textWithIcon,
     );
   }
 }

@@ -27,12 +27,22 @@ void main() {
         find.byValueKey(Keys.homeFloatingActionNewGroceryListButton);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
+    final saveRecipeLabelField0 =
+        find.byValueKey(Keys.saveRecipeLabelField + "0");
+    final saveRecipeLabelRemoveIcon1 =
+        find.byValueKey(Keys.saveRecipeLabelRemoveIcon + "1");
+    final saveRecipeIngredientField2 =
+        find.byValueKey(Keys.saveRecipeIngredientField + "2");
+    final saveRecipeIngredientRemoveIcon3 =
+        find.byValueKey(Keys.saveRecipeIngredientRemoveIcon + "3");
     final saveRecipeFloatingActionSaveButton =
         find.byValueKey(Keys.saveRecipeFloatingActionSaveButton);
     final recipeListRowTitleText0 =
         find.byValueKey(Keys.recipeListRowTitleText + "0");
     final recipeListRowTitleText1 =
         find.byValueKey(Keys.recipeListRowTitleText + "1");
+    final recipeListRowTitleText2 =
+        find.byValueKey(Keys.recipeListRowTitleText + "2");
     final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
     final viewRecipePreparationTimeDetailsText =
         find.byValueKey(Keys.viewRecipePreparationTimeDetailsText);
@@ -40,6 +50,20 @@ void main() {
         find.byValueKey(Keys.viewRecipeIngredientText + "0");
     final viewRecipeIngredientText1 =
         find.byValueKey(Keys.viewRecipeIngredientText + "1");
+    final viewRecipeIngredientText2 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "2");
+    final viewRecipeIngredientText3 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "3");
+    final viewRecipeIngredientText4 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "4");
+    final viewRecipeIngredientText5 =
+        find.byValueKey(Keys.viewRecipeIngredientText + "5");
+    final viewRecipeIngredientLabelText0 =
+        find.byValueKey(Keys.viewRecipeIngredientLabelText + "0");
+    final viewRecipeIngredientLabelText1 =
+        find.byValueKey(Keys.viewRecipeIngredientLabelText + "1");
+    final viewRecipeIngredientLabelText2 =
+        find.byValueKey(Keys.viewRecipeIngredientLabelText + "2");
     final viewRecipeAddToGroceryListAction1 =
         find.byValueKey(Keys.viewRecipeAddToGroceryListAction + "1");
     final viewRecipeInstructionText =
@@ -111,6 +135,21 @@ void main() {
     final String ingredient22 = '1 1/2 colher de chá de açucar';
     final String instructions2 = 'Vamos preparar minha segunda receita\n\\o/';
 
+    final String recipeName3 = 'Minha terceira receita';
+    final String portion3 = '4,00';
+    final Map<int, String> labels3 = const {
+      0: 'molho',
+      3: 'macarrao',
+      4: 'servir'
+    };
+    final String ingredient30 = '1 kg tomate';
+    final String ingredient31 = '1 cebola';
+    final String ingredient32 = '1 pitada de sal';
+    final String ingredient33 = '500 g penne';
+    final String ingredient34 = '100 g queijo parmessao';
+    final String ingredient35 = 'algumas folhas de manjericão';
+    final String instructions3 = 'Vamos preparar minha terceira receita\n\\o/';
+
     FlutterDriver driver;
 
     // Connect to the Flutter driver before running any tests.
@@ -180,8 +219,14 @@ void main() {
     });
 
     test('insert first recipe', () async {
-      await Helper.addRecipe(driver, recipeName1, portion1,
-          preparationTimeDetails1, [ingredient10, ingredient11], instructions1);
+      await Helper.addRecipe(
+          driver,
+          recipeName1,
+          portion1,
+          preparationTimeDetails1,
+          null,
+          [ingredient10, ingredient11],
+          instructions1);
 
       expect(await driver.getText(recipeListRowTitleText0), recipeName1);
 
@@ -203,7 +248,7 @@ void main() {
     });
 
     test('insert second recipe', () async {
-      await Helper.addRecipe(driver, recipeName2, portion2, null,
+      await Helper.addRecipe(driver, recipeName2, portion2, null, null,
           [ingredient20, ingredient21, ingredient22], instructions2);
 
       expect(await driver.getText(recipeListRowTitleText1), recipeName2);
@@ -212,6 +257,186 @@ void main() {
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsNotification), driver),
           true);
+    });
+
+    test('insert third recipe', () async {
+      await Helper.addRecipe(
+          driver,
+          recipeName3,
+          portion3,
+          null,
+          labels3,
+          [
+            ingredient30,
+            ingredient31,
+            ingredient32,
+            ingredient33,
+            ingredient34,
+            ingredient35
+          ],
+          instructions3);
+
+      expect(await driver.getText(recipeListRowTitleText2), recipeName3);
+    });
+
+    test('view third recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText2);
+
+      expect(await driver.getText(viewRecipeTitle), recipeName3);
+      expect(await driver.getText(viewRecipeIngredientLabelText0), labels3[0]);
+      expect(await driver.getText(viewRecipeIngredientText0),
+          "    • " + ingredient30);
+      expect(await driver.getText(viewRecipeIngredientText1),
+          "    • " + ingredient31);
+      expect(await driver.getText(viewRecipeIngredientText2),
+          "    • " + ingredient32);
+      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[3]);
+      expect(await driver.getText(viewRecipeIngredientText3),
+          "    • " + ingredient33);
+      expect(await driver.getText(viewRecipeIngredientLabelText2), labels3[4]);
+      expect(await driver.getText(viewRecipeIngredientText4),
+          "    • " + ingredient34);
+      expect(await driver.getText(viewRecipeIngredientText5),
+          "    • " + ingredient35);
+
+      expect(await driver.getText(viewRecipeInstructionText), instructions3);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('remove label third recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText2);
+
+      await driver.tap(viewRecipeFloatingActionEditButton);
+
+      await driver.scrollIntoView(saveRecipeLabelRemoveIcon1);
+
+      await driver.tap(saveRecipeLabelRemoveIcon1);
+      await Future.delayed(Duration(seconds: 1));
+
+      await driver.tap(saveRecipeFloatingActionSaveButton);
+
+      expect(await driver.getText(viewRecipeIngredientLabelText0), labels3[0]);
+      expect(await driver.getText(viewRecipeIngredientText0),
+          "    • " + ingredient30);
+      expect(await driver.getText(viewRecipeIngredientText1),
+          "    • " + ingredient31);
+      expect(await driver.getText(viewRecipeIngredientText2),
+          "    • " + ingredient32);
+      expect(await driver.getText(viewRecipeIngredientText3),
+          "    • " + ingredient33);
+      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
+      expect(await driver.getText(viewRecipeIngredientText4),
+          "    • " + ingredient34);
+      expect(await driver.getText(viewRecipeIngredientText5),
+          "    • " + ingredient35);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit label third recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText2);
+
+      await driver.tap(viewRecipeFloatingActionEditButton);
+
+      await driver.scrollIntoView(saveRecipeLabelField0);
+
+      await driver.tap(saveRecipeLabelField0);
+      await driver.enterText(labels3[0] + " editado");
+
+      await driver.tap(saveRecipeFloatingActionSaveButton);
+
+      expect(await driver.getText(viewRecipeIngredientLabelText0),
+          labels3[0] + " editado");
+      expect(await driver.getText(viewRecipeIngredientText0),
+          "    • " + ingredient30);
+      expect(await driver.getText(viewRecipeIngredientText1),
+          "    • " + ingredient31);
+      expect(await driver.getText(viewRecipeIngredientText2),
+          "    • " + ingredient32);
+      expect(await driver.getText(viewRecipeIngredientText3),
+          "    • " + ingredient33);
+      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
+      expect(await driver.getText(viewRecipeIngredientText4),
+          "    • " + ingredient34);
+      expect(await driver.getText(viewRecipeIngredientText5),
+          "    • " + ingredient35);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('edit ingredient third recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText2);
+
+      await driver.tap(viewRecipeFloatingActionEditButton);
+
+      await driver.scrollIntoView(saveRecipeIngredientField2);
+
+      await driver.tap(saveRecipeIngredientField2);
+      await driver.enterText(ingredient32 + " editado");
+
+      await driver.tap(saveRecipeFloatingActionSaveButton);
+
+      expect(await driver.getText(viewRecipeIngredientLabelText0),
+          labels3[0] + " editado");
+      expect(await driver.getText(viewRecipeIngredientText0),
+          "    • " + ingredient30);
+      expect(await driver.getText(viewRecipeIngredientText1),
+          "    • " + ingredient31);
+      expect(await driver.getText(viewRecipeIngredientText2),
+          "    • " + ingredient32 + " editado");
+      expect(await driver.getText(viewRecipeIngredientText3),
+          "    • " + ingredient33);
+      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
+      expect(await driver.getText(viewRecipeIngredientText4),
+          "    • " + ingredient34);
+      expect(await driver.getText(viewRecipeIngredientText5),
+          "    • " + ingredient35);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('remove ingredient third recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText2);
+
+      await driver.tap(viewRecipeFloatingActionEditButton);
+
+      await driver.scrollIntoView(saveRecipeIngredientRemoveIcon3);
+
+      await driver.tap(saveRecipeIngredientRemoveIcon3);
+
+      await driver.tap(saveRecipeFloatingActionSaveButton);
+
+      expect(await driver.getText(viewRecipeIngredientLabelText0),
+          labels3[0] + " editado");
+      expect(await driver.getText(viewRecipeIngredientText0),
+          "    • " + ingredient30);
+      expect(await driver.getText(viewRecipeIngredientText1),
+          "    • " + ingredient31);
+      expect(await driver.getText(viewRecipeIngredientText2),
+          "    • " + ingredient32 + " editado");
+      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
+      expect(await driver.getText(viewRecipeIngredientText3),
+          "    • " + ingredient34);
+      expect(await driver.getText(viewRecipeIngredientText4),
+          "    • " + ingredient35);
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
     });
 
     test('view recipe', () async {
@@ -432,8 +657,8 @@ void main() {
 
       await driver.tap(groceryListRowShowRecipes0);
 
-      expect(
-          await driver.getText(groceryListRecipesDialogRecipe0), recipeName1);
+      expect(await driver.getText(groceryListRecipesDialogRecipe0),
+          recipeName1 + " editado");
 
       expect(
           await driver.getText(groceryListRecipesDialogRecipe1), recipeName2);

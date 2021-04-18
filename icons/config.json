@@ -1,0 +1,24 @@
+{
+  "name": "",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "d00d49213e165522a2bc21c19e3281cb",
+      "css": "new_label",
+      "code": 59392,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M875 500L692.9 756.7C677.5 778.3 652.1 791.7 625 791.7H500L500 708.3H625L772.9 500 625 291.7H208.3V416.7H125V291.7C125 245.8 162.5 208.3 208.3 208.3H625C652.1 208.3 677.5 221.2 692.9 243.3L875 500ZM416.7 625H291.7V500H208.3V625H83.3V708.3H208.3V833.3H291.7V708.3H416.7V625Z",
+        "width": 1000
+      },
+      "search": [
+        "new_label_black_24dp"
+      ]
+    }
+  ]
+}

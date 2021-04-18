@@ -1,84 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:rtg_app/keys/keys.dart';
 
-class TextFormListFields extends StatefulWidget {
-  final int index;
+class TextFormListFields extends StatelessWidget {
+  final Key textKey;
+  final Key iconKey;
+  final TextEditingController textEditingController;
   final String initValue;
   final String hintText;
   final bool canBeRemoved;
-  final void Function(int index, String value) onChanged;
-  final void Function(int index) onAddNewField;
-  final void Function(int index) onRemoveField;
+  final bool hasLabel;
+  final bool isLabel;
+  final void Function(String value) onChanged;
+  final void Function() onAddNewField;
+  final void Function() onRemoveField;
   final FocusNode focusNode;
 
   TextFormListFields({
-    this.index,
+    this.textKey,
+    this.iconKey,
+    this.textEditingController,
     this.initValue,
     this.hintText,
-    this.canBeRemoved,
+    this.canBeRemoved = true,
+    this.hasLabel,
+    this.isLabel,
     this.onChanged,
     this.onAddNewField,
     this.onRemoveField,
     this.focusNode,
   });
-  @override
-  _TextFormListFieldsState createState() => _TextFormListFieldsState();
-}
-
-class _TextFormListFieldsState extends State<TextFormListFields> {
-  TextEditingController _nameController;
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _nameController.text = widget.initValue;
-    });
-    return TextFormField(
-      key: Key(Keys.saveRecipeIngredientField + widget.index.toString()),
-      controller: _nameController,
-      textInputAction: TextInputAction.newline,
-      maxLines: null,
-      focusNode: widget.focusNode,
-      onChanged: (v) {
-        if (v.contains("\n")) {
-          _nameController.text = v.replaceAll("\n", "");
-          widget.onAddNewField(widget.index);
-          return;
-        }
-        widget.onChanged(widget.index, v);
-      },
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        suffixIcon: widget.canBeRemoved
-            ? null
-            : IconButton(
-                onPressed: () {
-                  widget.onRemoveField(widget.index);
-                },
-                icon: Icon(Icons.clear),
-              ),
+    List<Widget> children = [
+      Expanded(
+          child: TextFormField(
+        key: textKey,
+        controller: textEditingController,
+        textInputAction: onAddNewField == null
+            ? TextInputAction.next
+            : TextInputAction.newline,
+        maxLines: onAddNewField == null ? 1 : null,
+        focusNode: focusNode,
+        onChanged: (v) {
+          if (v.contains("\n")) {
+            textEditingController.text = v.replaceAll("\n", "");
+            if (onAddNewField != null) {
+              onAddNewField();
+            }
+            return;
+          }
+          onChanged(v);
+        },
+        style: TextStyle(fontWeight: isLabel ? FontWeight.bold : null),
+        decoration: InputDecoration(hintText: hintText),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return AppLocalizations.of(context).fill_this_required_field;
+          }
+          if (value.length < 3) {
+            return AppLocalizations.of(context).type_in_3_chars;
+          }
+          return null;
+        },
+      )),
+    ];
+
+    if (canBeRemoved) {
+      children.add(IconButton(
+        key: iconKey,
+        onPressed: () {
+          onRemoveField();
+        },
+        icon: Icon(
+          Icons.clear,
+          color: Colors.grey,
+        ),
+      ));
+    }
+    return Padding(
+      padding: EdgeInsets.only(left: hasLabel ? 15 : 0),
+      child: Row(
+        children: children,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return AppLocalizations.of(context).fill_this_required_field;
-        }
-        if (value.length < 3) {
-          return AppLocalizations.of(context).type_in_3_chars;
-        }
-        return null;
-      },
     );
   }
 }

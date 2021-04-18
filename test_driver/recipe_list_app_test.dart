@@ -118,7 +118,7 @@ void main() {
       for (int i = 0; i < recipeInputs.length; i++) {
         RecipeInput input = recipeInputs[i];
         await Helper.addRecipe(driver, input.name, input.portion,
-            input.preparationTime, input.ingredients, input.instructions);
+            input.preparationTime, null, input.ingredients, input.instructions);
       }
     });
 

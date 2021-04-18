@@ -7,25 +7,28 @@ class RecipeIngredient {
     this.measureId,
     this.name,
     this.originalName,
+    this.label,
   });
 
   double quantity;
   IngredientMeasureId measureId;
   String name;
   String originalName;
+  String label;
 
   @override
   String toString() {
-    return '$quantity $measureId $name $originalName';
+    return '$quantity $measureId $name $originalName $label';
   }
 
-  static RecipeIngredient fromInput(String originalText) {
+  static RecipeIngredient fromInput(String originalText, String label) {
     IngredientParseResult result = IngredientParser.fromInput(originalText);
     return RecipeIngredient(
       originalName: result.originalName,
       name: result.name,
       quantity: result.quantity,
       measureId: result.measureId,
+      label: label,
     );
   }
 
@@ -52,6 +55,7 @@ class RecipeIngredient {
       measureId: IngredientMeasureId.values[record["measureId"] as int],
       name: record["name"],
       originalName: record["originalName"],
+      label: record['label'],
     );
   }
 
@@ -67,6 +71,7 @@ class RecipeIngredient {
         'measureId': i.measureId.index,
         'name': i.name,
         'originalName': i.originalName,
+        'label': i.label,
       });
     });
 
@@ -85,7 +90,8 @@ class RecipeIngredient {
     return quantity == other.quantity &&
         measureId == other.measureId &&
         name == other.name &&
-        originalName == other.originalName;
+        originalName == other.originalName &&
+        label == other.label;
   }
 
   @override

@@ -286,7 +286,6 @@ class _HomeScreenState extends State<HomeScreen> {
       cards.add(HomeCard(
         cardKey: Key(Keys.homeCardLastGroceryListUsed),
         actionKey: Key(Keys.homeCardLastGroceryListUsedAction),
-        icon: Icons.list,
         title: AppLocalizations.of(context).last_grocery_list_used,
         lastUsedGroceryList: showHomeInfo.lastUsedGroceryList,
         lastUsedGroceryListRecipes: showHomeInfo.lastUsedGroceryListRecipes,

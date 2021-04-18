@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fraction/fraction.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 
 class HomeCard extends StatelessWidget {
   final Key cardKey;
@@ -60,46 +63,144 @@ class HomeCard extends StatelessWidget {
       ]);
     }
 
-    List<Widget> lastUsedGroceryListWidgets = [];
+    List<Widget> children = <Widget>[
+      ListTile(
+        leading: icon == null ? null : Icon(icon, color: iconColor),
+        title: Text(title),
+        subtitle: subtitle != null ? Text(subtitle) : null,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: buttons,
+      ),
+    ];
 
+    List<Widget> lastUsedGroceryListWidgets = [];
     if (lastUsedGroceryList != null) {
+      int itensChecked = 0;
+      lastUsedGroceryList.groceries.forEach((grocery) {
+        if (grocery.checked) {
+          itensChecked++;
+          return;
+        }
+      });
       lastUsedGroceryListWidgets.addAll([
-        Padding(
-          child: TextButton(
-            key: actionKey,
-            child: Text(lastUsedGroceryList.title),
-            onPressed: onAction,
+        TextButton(
+          key: actionKey,
+          child: Text(
+            lastUsedGroceryList.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          padding: EdgeInsets.only(left: 70),
+          onPressed: onAction,
         ),
-        const SizedBox(width: 8),
+        Padding(
+          child: Row(
+            children: [
+              Icon(
+                Icons.format_list_bulleted,
+                size: 16,
+                color: Theme.of(context).textTheme.headline1.color,
+              ),
+              SizedBox(width: 4),
+              Text(
+                itensChecked > 0
+                    ? '${lastUsedGroceryList.groceries.length - itensChecked}/${lastUsedGroceryList.groceries.length}'
+                    : lastUsedGroceryList.groceries.length.toString(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Theme.of(context).textTheme.headline1.color),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.only(left: 8),
+        ),
+        const SizedBox(height: 8),
       ]);
 
       if (lastUsedGroceryListRecipes != null) {
         lastUsedGroceryListWidgets.addAll([
-          const SizedBox(width: 8),
+          const SizedBox(height: 8),
           Padding(
             child: Text(AppLocalizations.of(context).recipes),
-            padding: EdgeInsets.only(left: 76),
+            padding: EdgeInsets.only(left: 8),
           ),
         ]);
 
         lastUsedGroceryListRecipes.asMap().forEach((index, recipe) {
-          lastUsedGroceryListWidgets.addAll([
-            Padding(
-              child: TextButton(
-                key: Key('${Keys.homeCardRecipeButton}-$index'),
-                child: Text(recipe.title),
-                onPressed: () {
-                  onTapRecipe(recipe);
-                },
-              ),
-              padding: EdgeInsets.only(left: 70),
+          String portionsToShow = recipe.portions.toInt().toString();
+          if (recipe.portions % 1 != 0) {
+            portionsToShow = recipe.portions.toMixedFraction().toString();
+          }
+
+          List<Widget> detailsWidgets = [
+            Icon(
+              Icons.fastfood,
+              size: 16,
+              color: Theme.of(context).textTheme.headline1.color,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 4),
+            Text(
+              portionsToShow,
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(color: Theme.of(context).textTheme.headline1.color),
+            ),
+          ];
+
+          if (recipe.totalPreparationTime != null &&
+              recipe.totalPreparationTime > 0) {
+            detailsWidgets.addAll([
+              SizedBox(width: 16),
+              Icon(
+                Icons.schedule,
+                size: 16,
+                color: Theme.of(context).textTheme.caption.color,
+              ),
+              SizedBox(width: 4),
+              Text(
+                PreparationTimeLabelText.getPreparationTimeText(
+                    recipe.totalPreparationTime, true, context),
+                style: Theme.of(context).textTheme.caption,
+              )
+            ]);
+          }
+
+          lastUsedGroceryListWidgets.addAll([
+            TextButton(
+              key: Key('${Keys.homeCardRecipeButton}-$index'),
+              child: Text(
+                recipe.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              onPressed: () {
+                onTapRecipe(recipe);
+              },
+            ),
+            Padding(
+              child: Row(
+                children: detailsWidgets,
+              ),
+              padding: EdgeInsets.only(left: 8),
+            ),
+            const SizedBox(height: 8),
           ]);
         });
       }
+
+      children.add(
+        Padding(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: lastUsedGroceryListWidgets,
+          ),
+          padding: EdgeInsets.only(left: 8),
+        ),
+      );
     }
 
     return Card(
@@ -107,18 +208,7 @@ class HomeCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(icon, color: iconColor),
-            title: Text(title),
-            subtitle: subtitle != null ? Text(subtitle) : null,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: buttons,
-          ),
-          ...lastUsedGroceryListWidgets,
-        ],
+        children: children,
       ),
     );
   }

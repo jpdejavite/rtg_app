@@ -23,6 +23,7 @@ class GroceryList {
     this.title,
     this.groceries,
     this.recipes,
+    this.recipesPortions,
     this.status,
   });
 
@@ -32,6 +33,7 @@ class GroceryList {
   String title;
   List<GroceryListItem> groceries;
   List<String> recipes;
+  Map<String, double> recipesPortions;
   GroceryListStatus status;
 
   bool hasId() {
@@ -57,6 +59,7 @@ class GroceryList {
       status: GroceryListStatus.active,
       title: title,
       recipes: [recipe.id],
+      recipesPortions: {recipe.id: portions},
       groceries: GroceryListItem.addRecipeToItems(recipe, [], portions),
     );
   }
@@ -76,12 +79,21 @@ class GroceryList {
         recipes.add(el.toString());
       });
     }
+
+    Map<String, double> recipesPortions = Map<String, double>();
+    if (record['recipesPortions'] is Map<String, Object>) {
+      (record['recipesPortions'] as Map<String, Object>).forEach((key, index) {
+        recipesPortions[key] = index;
+      });
+    }
+
     return GroceryList(
       id: id.toString(),
       createdAt: record["createdAt"],
       updatedAt: record["updatedAt"],
       title: record["title"],
       recipes: recipes,
+      recipesPortions: recipesPortions,
       status: GroceryListStatus.values[record["status"] as int],
       groceries: GroceryListItem.fromObject(record["groceries"]),
     );
@@ -93,6 +105,7 @@ class GroceryList {
       'updatedAt': this.updatedAt,
       'title': this.title,
       'recipes': this.recipes,
+      'recipesPortions': this.recipesPortions,
       'status': this.status.index,
       'groceries': GroceryListItem.toRecords(this.groceries),
     };

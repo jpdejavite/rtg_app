@@ -38,6 +38,11 @@ abstract class AddRecipeToGroceryListBloc<Event, State>
 
       groceryList.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
       groceryList.recipes.add(recipe.id);
+      if (groceryList.recipesPortions == null) {
+        groceryList.recipesPortions = {recipe.id: portions};
+      } else {
+        groceryList.recipesPortions[recipe.id] = portions;
+      }
       groceryList.groceries = GroceryListItem.addRecipeToItems(
           recipe, groceryList.groceries, portions);
 

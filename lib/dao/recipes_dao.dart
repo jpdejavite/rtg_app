@@ -150,7 +150,7 @@ class RecipesDao {
 
       var finder = Finder(
         limit: 1,
-        sortOrders: [SortOrder('updatedAt')],
+        sortOrders: [SortOrder('updatedAt', false)],
       );
       var records = await store.find(db, finder: finder);
       if (records != null && records.length > 0) {

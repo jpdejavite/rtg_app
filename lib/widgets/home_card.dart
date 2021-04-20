@@ -84,6 +84,19 @@ class HomeCard extends StatelessWidget {
           return;
         }
       });
+
+      double totalPortions = 0;
+      if (lastUsedGroceryList.recipesPortions != null) {
+        lastUsedGroceryList.recipesPortions.forEach((key, value) {
+          totalPortions += value;
+        });
+      }
+
+      String portionsToShow = totalPortions.toInt().toString();
+      if (totalPortions % 1 != 0) {
+        portionsToShow = totalPortions.toMixedFraction().toString();
+      }
+
       lastUsedGroceryListWidgets.addAll([
         TextButton(
           key: actionKey,
@@ -109,6 +122,18 @@ class HomeCard extends StatelessWidget {
                     : lastUsedGroceryList.groceries.length.toString(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Theme.of(context).textTheme.headline1.color),
+              ),
+              SizedBox(width: 16),
+              Icon(
+                Icons.fastfood,
+                size: 16,
+                color: Theme.of(context).textTheme.headline1.color,
+              ),
+              SizedBox(width: 4),
+              Text(
+                portionsToShow,
                 style: Theme.of(context).textTheme.caption.copyWith(
                     color: Theme.of(context).textTheme.headline1.color),
               ),
@@ -164,7 +189,17 @@ class HomeCard extends StatelessWidget {
                 PreparationTimeLabelText.getPreparationTimeText(
                     recipe.totalPreparationTime, true, context),
                 style: Theme.of(context).textTheme.caption,
-              )
+              ),
+              SizedBox(width: 4),
+              Expanded(
+                  child: Text(
+                recipe.preparationTimeDetails
+                    .getPreparationTimeDetails(context),
+                key: Key(Keys.viewRecipePreparationTimeDetailsText),
+                style: Theme.of(context).textTheme.caption,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ))
             ]);
           }
 

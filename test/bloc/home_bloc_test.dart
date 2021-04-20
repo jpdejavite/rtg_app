@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:googleapis/drive/v3.dart' as drive;
 
 import 'package:mockito/mockito.dart';
 import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
+import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
+import 'package:rtg_app/model/data_summary.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
@@ -332,5 +338,166 @@ void main() {
     });
 
     homeBloc.add(SaveNewGroceryList("title"));
+  });
+
+  test('check and do backup: backup type none', () async {
+    Backup backup = Backup(type: BackupType.none);
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+  });
+
+  test('check and do backup: lastestBackupAt null and no file at backup',
+      () async {
+    Backup backup = Backup(type: BackupType.drive);
+
+    drive.File newDriveFile = drive.File();
+    newDriveFile.id = 'new-drive-file-id';
+
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.getBackupOnDrive()).thenAnswer((_) => Future.value(null));
+    when(googleApi.doBackupOnDrive())
+        .thenAnswer((_) => Future.value(newDriveFile));
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+
+    expect(backup.updatedAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupStatus, BackupStatus.done);
+    expect(backup.fileId, newDriveFile.id);
+    expect(backup.error, null);
+  });
+
+  test(
+      'check and do backup: lastestBackupAt null and no file at backup with error',
+      () async {
+    Backup backup = Backup(type: BackupType.drive);
+    Error e = GenericError("my generic error");
+
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.getBackupOnDrive()).thenAnswer((_) => Future.value(null));
+    when(googleApi.doBackupOnDrive()).thenAnswer((_) => throw e);
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+
+    expect(backup.updatedAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupAt, null);
+    expect(backup.lastestBackupStatus, BackupStatus.error);
+    expect(backup.fileId, null);
+    expect(backup.error, e.toString());
+  });
+
+  test('check and do backup: lastestBackupAt lower than recipe last updated at',
+      () async {
+    drive.File driveFile = drive.File();
+    driveFile.id = 'new-drive-file-id';
+    File backupFile = File('');
+
+    Backup backup = Backup(
+      type: BackupType.drive,
+      lastestBackupAt: 9,
+      fileId: driveFile.id,
+    );
+
+    DataSummary recipeSummary = DataSummary(lastUpdated: 11);
+    DataSummary groceryListSummary = DataSummary(lastUpdated: 7);
+    when(recipesRepository.getSummary())
+        .thenAnswer((_) => Future.value(recipeSummary));
+    when(groceryListsRepository.getSummary())
+        .thenAnswer((_) => Future.value(groceryListSummary));
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.getBackupOnDrive())
+        .thenAnswer((_) => Future.value(driveFile));
+    when(googleApi.downloadBackupFromDrive(driveFile.id))
+        .thenAnswer((_) => Future.value(backupFile));
+    when(recipesRepository.mergeFromBackup(file: backupFile))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.updateBackupOnDrive(driveFile.id))
+        .thenAnswer((_) => Future.value(null));
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+
+    expect(backup.updatedAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupStatus, BackupStatus.done);
+    expect(backup.fileId, driveFile.id);
+    expect(backup.error, null);
+  });
+
+  test(
+      'check and do backup: lastestBackupAt lower than grocery list last updated at',
+      () async {
+    drive.File driveFile = drive.File();
+    driveFile.id = 'new-drive-file-id';
+    File backupFile = File('');
+    Error e = GenericError("my generic error");
+
+    Backup backup = Backup(
+      type: BackupType.drive,
+      lastestBackupAt: 10,
+      fileId: driveFile.id,
+    );
+
+    DataSummary recipeSummary = DataSummary(lastUpdated: 9);
+    DataSummary groceryListSummary = DataSummary(lastUpdated: 12);
+    when(recipesRepository.getSummary())
+        .thenAnswer((_) => Future.value(recipeSummary));
+    when(groceryListsRepository.getSummary())
+        .thenAnswer((_) => Future.value(groceryListSummary));
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.getBackupOnDrive())
+        .thenAnswer((_) => Future.value(driveFile));
+    when(googleApi.downloadBackupFromDrive(driveFile.id))
+        .thenAnswer((_) => Future.value(backupFile));
+    when(recipesRepository.mergeFromBackup(file: backupFile))
+        .thenAnswer((_) => Future.value(null));
+    when(googleApi.updateBackupOnDrive(driveFile.id))
+        .thenAnswer((_) => throw e);
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+
+    expect(backup.updatedAt, customTime.millisecondsSinceEpoch);
+    expect(backup.lastestBackupAt, 10);
+    expect(backup.lastestBackupStatus, BackupStatus.error);
+    expect(backup.fileId, driveFile.id);
+    expect(backup.error, e.toString());
+  });
+
+  test('check and do backup: lastestBackupAt greater than all', () async {
+    Backup backup = Backup(
+      type: BackupType.drive,
+      lastestBackupStatus: BackupStatus.pending,
+      lastestBackupAt: 10,
+    );
+
+    DataSummary recipeSummary = DataSummary(lastUpdated: 9);
+    DataSummary groceryListSummary = DataSummary(lastUpdated: 2);
+    when(recipesRepository.getSummary())
+        .thenAnswer((_) => Future.value(recipeSummary));
+    when(groceryListsRepository.getSummary())
+        .thenAnswer((_) => Future.value(groceryListSummary));
+
+    final ShowHomeInfo input = ShowHomeInfo(backup: backup);
+
+    await homeBloc.checkAndDoBackup(input);
+
+    expect(backup.updatedAt, null);
+    expect(backup.lastestBackupAt, 10);
+    expect(backup.lastestBackupStatus, BackupStatus.pending);
+    expect(backup.fileId, null);
+    expect(backup.error, null);
   });
 }

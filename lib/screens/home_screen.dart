@@ -5,6 +5,7 @@ import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
+import 'package:rtg_app/helper/log_helper.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
@@ -55,6 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backupNotConfigured: false,
         backupOk: false,
         showRecipeTutorial: false);
+    if (Foundation.kDebugMode) {
+      LogHelper.printAll();
+    }
   }
 
   ShowHomeInfo showHomeInfo;

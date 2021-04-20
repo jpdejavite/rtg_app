@@ -4,6 +4,7 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:fraction/fraction.dart';
 
 class GroceryListListRow extends StatelessWidget {
   final GroceryList groceryList;
@@ -49,6 +50,46 @@ class GroceryListListRow extends StatelessWidget {
 
     if (maxItensShown < 0) {
       groceries.add(Text('...'));
+    }
+
+    List<Widget> titleWidgets = [
+      Expanded(
+        child: Text(
+          groceryList.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          key: Key(Keys.groceryListRowTitleText + index.toString()),
+        ),
+      ),
+    ];
+    if (groceryList.recipesPortions != null) {
+      double totalPortions = 0;
+      groceryList.recipesPortions.forEach((key, value) {
+        totalPortions += value;
+      });
+
+      if (totalPortions != 0) {
+        String portionsToShow = totalPortions.toInt().toString();
+        if (totalPortions % 1 != 0) {
+          portionsToShow = totalPortions.toMixedFraction().toString();
+        }
+        titleWidgets.addAll([
+          SizedBox(width: 16),
+          Icon(
+            Icons.fastfood,
+            size: 16,
+            color: Theme.of(context).textTheme.headline1.color,
+          ),
+          SizedBox(width: 4),
+          Text(
+            portionsToShow,
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                .copyWith(color: Theme.of(context).textTheme.headline1.color),
+          ),
+        ]);
+      }
     }
 
     List<Widget> bottomRowItems = [
@@ -97,11 +138,9 @@ class GroceryListListRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              title: Text(
-                groceryList.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                key: Key(Keys.groceryListRowTitleText + index.toString()),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: titleWidgets,
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

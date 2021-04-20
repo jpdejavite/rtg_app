@@ -196,6 +196,7 @@ void main() {
 
       expect(groceryList.updatedAt, customTime.millisecondsSinceEpoch);
       expect(groceryList.recipes, [recipe.id]);
+      expect(groceryList.recipesPortions, {recipe.id: portions});
       expect(groceryList.groceries, [
         GroceryListItem(
           ingredientName: ingredient.name,

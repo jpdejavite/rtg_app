@@ -3,6 +3,7 @@ import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:fraction/fraction.dart';
 
@@ -21,6 +22,7 @@ class RecipeListRow extends StatelessWidget {
           recipe.title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headline6,
           key: Key(Keys.recipeListRowTitleText + index.toString()),
         ),
       ),
@@ -31,7 +33,7 @@ class RecipeListRow extends StatelessWidget {
         Icon(
           Icons.schedule,
           size: 16,
-          color: Theme.of(context).textTheme.caption.color,
+          color: CustomColors.detailsIconColor,
         ),
         SizedBox(width: 4),
         Text(
@@ -52,15 +54,12 @@ class RecipeListRow extends StatelessWidget {
       Icon(
         Icons.fastfood,
         size: 16,
-        color: Theme.of(context).textTheme.headline1.color,
+        color: CustomColors.detailsIconColor,
       ),
       SizedBox(width: 4),
       Text(
         portionsToShow,
-        style: Theme.of(context)
-            .textTheme
-            .caption
-            .copyWith(color: Theme.of(context).textTheme.headline1.color),
+        style: Theme.of(context).textTheme.caption,
       ),
     ];
 
@@ -70,16 +69,13 @@ class RecipeListRow extends StatelessWidget {
         Icon(
           Icons.calendar_today,
           size: 16,
-          color: Theme.of(context).textTheme.headline1.color,
+          color: CustomColors.detailsIconColor,
         ),
         SizedBox(width: 4),
         Text(
           DateFormatter.formatDateInMili(
               recipe.lastUsed, AppLocalizations.of(context).last_used_format),
-          style: Theme.of(context)
-              .textTheme
-              .caption
-              .copyWith(color: Theme.of(context).textTheme.headline1.color),
+          style: Theme.of(context).textTheme.caption,
         ),
       ]);
     }

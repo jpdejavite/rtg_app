@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 
 class TextFormListFields extends StatelessWidget {
   final Key textKey;
@@ -74,7 +75,7 @@ class TextFormListFields extends StatelessWidget {
         },
         icon: Icon(
           Icons.clear,
-          color: Colors.grey,
+          color: CustomColors.primaryColor,
         ),
       ));
     }

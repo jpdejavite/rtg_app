@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 
 class ViewRecipeLabel extends StatelessWidget {
   final String label;
@@ -12,10 +13,8 @@ class ViewRecipeLabel extends StatelessWidget {
     List<Widget> children = [
       Text(
         label + ": ",
-        style: Theme.of(context)
-            .textTheme
-            .bodyText1
-            .copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.bodyText1.copyWith(
+            fontWeight: FontWeight.bold, color: CustomColors.primaryColor),
       )
     ];
 

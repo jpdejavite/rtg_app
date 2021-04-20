@@ -3,6 +3,7 @@ import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:fraction/fraction.dart';
 
@@ -34,12 +35,14 @@ class GroceryListListRow extends StatelessWidget {
             Icon(
               Icons.check_box_outline_blank,
               size: 16,
+              color: Theme.of(context).textTheme.caption.color,
             ),
             SizedBox(width: 4),
             Text(
               grocery.getName(context),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.caption,
             )
           ],
         ));
@@ -58,6 +61,7 @@ class GroceryListListRow extends StatelessWidget {
           groceryList.title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headline6,
           key: Key(Keys.groceryListRowTitleText + index.toString()),
         ),
       ),
@@ -78,15 +82,12 @@ class GroceryListListRow extends StatelessWidget {
           Icon(
             Icons.fastfood,
             size: 16,
-            color: Theme.of(context).textTheme.headline1.color,
+            color: CustomColors.detailsIconColor,
           ),
           SizedBox(width: 4),
           Text(
             portionsToShow,
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                .copyWith(color: Theme.of(context).textTheme.headline1.color),
+            style: Theme.of(context).textTheme.caption,
           ),
         ]);
       }
@@ -97,17 +98,14 @@ class GroceryListListRow extends StatelessWidget {
       Icon(
         Icons.format_list_bulleted,
         size: 16,
-        color: Theme.of(context).textTheme.headline1.color,
+        color: CustomColors.detailsIconColor,
       ),
       SizedBox(width: 4),
       Text(
         itensChecked > 0
             ? '${groceryList.groceries.length - itensChecked}/${groceryList.groceries.length}'
             : groceryList.groceries.length.toString(),
-        style: Theme.of(context)
-            .textTheme
-            .caption
-            .copyWith(color: Theme.of(context).textTheme.headline1.color),
+        style: Theme.of(context).textTheme.caption,
       ),
       Expanded(
         child: Text(

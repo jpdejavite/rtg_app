@@ -95,7 +95,6 @@ class _GroceryItemState extends State<GroceryItem> {
           ),
         ),
         Checkbox(
-          activeColor: Colors.lightBlueAccent,
           key: Key(Keys.groceryItemCheckBox + widget.index.toString()),
           value: widget.groceryListItem.checked ?? false,
           onChanged: (checked) {

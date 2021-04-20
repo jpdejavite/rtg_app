@@ -14,10 +14,7 @@ class ViewRecipeTitle extends StatelessWidget {
         text,
         key: Key(Keys.viewRecipeTitle),
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(context).textTheme.headline4,
       ),
     );
   }

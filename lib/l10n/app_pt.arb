@@ -171,5 +171,6 @@
   "freezer":"freezer",
   "insert_category": "Inserir categoria",
   "new_category": "Nova categoria",
+  "list_recipes": "Receitas da lista",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

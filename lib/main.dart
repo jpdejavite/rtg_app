@@ -11,6 +11,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:rtg_app/theme/custom_theme_data.dart';
 
 import 'model/grocery_list.dart';
 import 'model/recipe.dart';
@@ -34,7 +35,7 @@ class RtgApp extends StatelessWidget {
         const Locale('en', ''),
         const Locale('pt', 'BR'),
       ],
-      theme: ThemeData.light(),
+      theme: CustomThemeData.lightTheme,
       initialRoute: HomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) {

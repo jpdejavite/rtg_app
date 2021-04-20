@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 
 class HomeCard extends StatelessWidget {
@@ -66,7 +67,7 @@ class HomeCard extends StatelessWidget {
     List<Widget> children = <Widget>[
       ListTile(
         leading: icon == null ? null : Icon(icon, color: iconColor),
-        title: Text(title),
+        title: Text(title, style: Theme.of(context).textTheme.headline5),
         subtitle: subtitle != null ? Text(subtitle) : null,
       ),
       Row(
@@ -113,7 +114,7 @@ class HomeCard extends StatelessWidget {
               Icon(
                 Icons.format_list_bulleted,
                 size: 16,
-                color: Theme.of(context).textTheme.headline1.color,
+                color: CustomColors.detailsIconColor,
               ),
               SizedBox(width: 4),
               Text(
@@ -122,20 +123,18 @@ class HomeCard extends StatelessWidget {
                     : lastUsedGroceryList.groceries.length.toString(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.caption.copyWith(
-                    color: Theme.of(context).textTheme.headline1.color),
+                style: Theme.of(context).textTheme.caption,
               ),
               SizedBox(width: 16),
               Icon(
                 Icons.fastfood,
                 size: 16,
-                color: Theme.of(context).textTheme.headline1.color,
+                color: CustomColors.detailsIconColor,
               ),
               SizedBox(width: 4),
               Text(
                 portionsToShow,
-                style: Theme.of(context).textTheme.caption.copyWith(
-                    color: Theme.of(context).textTheme.headline1.color),
+                style: Theme.of(context).textTheme.caption,
               ),
             ],
           ),
@@ -148,7 +147,7 @@ class HomeCard extends StatelessWidget {
         lastUsedGroceryListWidgets.addAll([
           const SizedBox(height: 8),
           Padding(
-            child: Text(AppLocalizations.of(context).recipes),
+            child: Text(AppLocalizations.of(context).list_recipes),
             padding: EdgeInsets.only(left: 8),
           ),
         ]);
@@ -163,15 +162,12 @@ class HomeCard extends StatelessWidget {
             Icon(
               Icons.fastfood,
               size: 16,
-              color: Theme.of(context).textTheme.headline1.color,
+              color: CustomColors.detailsIconColor,
             ),
             SizedBox(width: 4),
             Text(
               portionsToShow,
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(color: Theme.of(context).textTheme.headline1.color),
+              style: Theme.of(context).textTheme.caption,
             ),
           ];
 
@@ -182,7 +178,7 @@ class HomeCard extends StatelessWidget {
               Icon(
                 Icons.schedule,
                 size: 16,
-                color: Theme.of(context).textTheme.caption.color,
+                color: CustomColors.detailsIconColor,
               ),
               SizedBox(width: 4),
               Text(

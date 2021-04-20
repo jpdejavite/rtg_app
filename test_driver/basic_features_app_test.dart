@@ -116,8 +116,6 @@ void main() {
     final ingredientRecipeSourceDialogRecipeIngredientQuantity0 =
         find.byValueKey(
             Keys.ingredientRecipeSourceDialogRecipeIngredientQuantity + "0");
-    final ingredientRecipeSourceDialogRecipeIngredientLabel0 = find.byValueKey(
-        Keys.ingredientRecipeSourceDialogRecipeIngredientLabel + "0");
     final ingredientRecipeSourceDialogCloseButton =
         find.byValueKey(Keys.ingredientRecipeSourceDialogCloseButton);
     final saveGroceryListArchiveAction =

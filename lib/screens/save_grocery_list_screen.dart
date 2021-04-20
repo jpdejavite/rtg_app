@@ -12,6 +12,7 @@ import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/grocery_item.dart';
 import 'package:sprintf/sprintf.dart';
@@ -407,7 +408,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
           ),
           flex: 1,
         ),
-        Divider(height: 1, thickness: 1, color: Colors.grey),
+        Divider(height: 1, thickness: 1, color: CustomColors.primaryColor),
         buildBottombar(),
       ],
     );

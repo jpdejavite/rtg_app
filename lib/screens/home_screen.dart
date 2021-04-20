@@ -16,6 +16,7 @@ import 'package:rtg_app/repository/user_data_repository.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/grocery_lists_widget.dart';
 import 'package:rtg_app/widgets/home_card.dart';
@@ -252,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
       cards.add(HomeCard(
         cardKey: Key(Keys.homeCardConfigureBackup),
         icon: Icons.warning,
-        iconColor: Colors.yellowAccent,
+        iconColor: CustomColors.darkRed,
         dimissKey: Key(Keys.homeCardConfigureBackupDismiss),
         actionKey: Key(Keys.homeCardConfigureBackupAction),
         title: AppLocalizations.of(context).no_backup_yet,

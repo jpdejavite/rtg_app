@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 
 class TextFormSectionLabelIcon {
   final Key key;
@@ -23,7 +24,7 @@ class TextFormSectionLabelFields extends StatelessWidget {
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 16,
-        color: Theme.of(context).textTheme.caption.color,
+        color: CustomColors.primaryColor,
       ),
     );
 

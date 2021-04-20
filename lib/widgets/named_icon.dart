@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/theme/custom_colors.dart';
 
 class NamedIcon extends StatelessWidget {
   final IconData iconData;
@@ -47,7 +48,8 @@ class NamedIcon extends StatelessWidget {
         right: isClickable ? 8 : 0,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle, color: CustomColors.secondary),
           alignment: Alignment.center,
           child: Text(text),
         ),

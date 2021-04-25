@@ -172,5 +172,10 @@
   "insert_category": "Insert category",
   "new_category": "New category",
   "list_recipes": "List recipes",
+  "tutorial_create_recipe_title": "How to add a recipe",
+  "tutorial_create_recipe_explanation_1": "1 - Click in the option 'Recipes' in bottom bar\n2 - Click on '+'",
+  "exit": "exit",
+  "previous": "previous",
+  "next": "next",
   "fill_this_required_field":"Fill this required field"
 }

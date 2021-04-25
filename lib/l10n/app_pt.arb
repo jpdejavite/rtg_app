@@ -172,5 +172,10 @@
   "insert_category": "Inserir categoria",
   "new_category": "Nova categoria",
   "list_recipes": "Receitas da lista",
+  "tutorial_create_recipe_title": "Como adicionar uma receita",
+  "tutorial_create_recipe_explanation_1": "1 - Clique na opção 'Receitas' na barra inferior\n2 - Clique no botão '+'",
+  "exit": "sair",
+  "previous": "anterior",
+  "next": "próximo",
   "fill_this_required_field":"Preencha este campo obrigatório"
 }

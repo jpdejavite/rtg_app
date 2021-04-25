@@ -15,6 +15,7 @@ import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
+import 'package:rtg_app/screens/tutorial_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -277,11 +278,11 @@ class _HomeScreenState extends State<HomeScreen> {
           context.read<HomeBloc>().add(DismissRecipeTutorial());
         },
         action: AppLocalizations.of(context).see_tutorial,
-        onAction: () {
-          CustomToast.showToast(
-            text: 'TODO',
-            context: context,
-            time: CustomToast.timeShort,
+        onAction: () async {
+          await Navigator.pushNamed(
+            context,
+            TutorialScreen.id,
+            arguments: TutorialData.createRecipe(context),
           );
         },
       ));

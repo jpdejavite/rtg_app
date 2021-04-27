@@ -16,7 +16,9 @@ class TutorialData {
         'assets/images/create_recipe_tutorial_2.png',
         'assets/images/create_recipe_tutorial_3.png',
       ], [
-        AppLocalizations.of(context).tutorial_create_recipe_explanation_1
+        AppLocalizations.of(context).tutorial_create_recipe_explanation_1,
+        AppLocalizations.of(context).tutorial_create_recipe_explanation_2,
+        AppLocalizations.of(context).tutorial_create_recipe_explanation_3,
       ]);
 }
 
@@ -81,14 +83,15 @@ class _TutorialState extends State<TutorialScreen> {
                   }),
             ),
           ),
-          SizedBox(
-            height: 8,
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: Text(
+                widget.tutorialData.descriptions.length > selected
+                    ? widget.tutorialData.descriptions[selected]
+                    : '',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyText2),
           ),
-          Text(
-              widget.tutorialData.descriptions.length > selected
-                  ? widget.tutorialData.descriptions[selected]
-                  : '',
-              style: Theme.of(context).textTheme.bodyText2),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -19,7 +19,7 @@ class GoogleApi {
   static GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
-      drive.DriveApi.driveScope,
+      drive.DriveApi.driveAppdataScope,
     ],
   );
 
@@ -51,7 +51,10 @@ class GoogleApi {
     final driveApi = drive.DriveApi(authenticateClient);
 
     drive.File file;
-    drive.FileList files = await driveApi.files.list();
+    drive.FileList files = await driveApi.files.list(
+      spaces: 'appDataFolder',
+      orderBy: 'createdTime asc',
+    );
     files.files.forEach((f) {
       if (f.name == backupFileName) {
         file = f;
@@ -64,14 +67,14 @@ class GoogleApi {
   Future<drive.File> doBackupOnDrive() async {
     final driveApi = await getDriveApi();
     final result = await driveApi.files
-        .create(buildDriveFile(), uploadMedia: await buildDriveMedia());
+        .create(buildDriveFile(true), uploadMedia: await buildDriveMedia());
     return result;
   }
 
   Future<drive.File> updateBackupOnDrive(String fileId) async {
     final driveApi = await getDriveApi();
-    final result = await driveApi.files
-        .update(buildDriveFile(), fileId, uploadMedia: await buildDriveMedia());
+    final result = await driveApi.files.update(buildDriveFile(false), fileId,
+        uploadMedia: await buildDriveMedia());
     return result;
   }
 
@@ -102,10 +105,13 @@ class GoogleApi {
     return new drive.Media(uploadFile.openRead(), uploadFile.lengthSync());
   }
 
-  drive.File buildDriveFile() {
+  drive.File buildDriveFile(bool newFile) {
     var driveFile = new drive.File();
     driveFile.name = backupFileName;
     driveFile.description = 'Arquivo de backup do app rtg';
+    if (newFile) {
+      driveFile.parents = ['appDataFolder'];
+    }
     return driveFile;
   }
 
@@ -124,6 +130,7 @@ class GoogleApi {
       _currentUser = account;
       return null;
     } catch (e) {
+      print('signIn $e');
       return e;
     }
   }

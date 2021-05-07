@@ -87,6 +87,10 @@ class RecipesListState extends State<RecipesList> {
   Widget body() {
     return BlocBuilder<RecipesBloc, RecipesState>(
         builder: (BuildContext context, RecipesState state) {
+      if (!(state is ChooseGroceryListToRecipeEvent)) {
+        hasShowChooseGroceryListToRecipeDialog = false;
+      }
+
       EasyLoading.dismiss();
       if (state is AddedRecipeToGroceryListEvent) {
         String text = AppLocalizations.of(context).recipe_added_to_grocery_list;
@@ -117,11 +121,10 @@ class RecipesListState extends State<RecipesList> {
                   maskType: EasyLoadingMaskType.black,
                   status: AppLocalizations.of(context).saving_recipe,
                 );
-                hasShowChooseGroceryListToRecipeDialog = false;
               },
             );
+            hasShowChooseGroceryListToRecipeDialog = true;
           }
-          hasShowChooseGroceryListToRecipeDialog = true;
         });
       } else if (state is RecipesListError) {
         final error = state.error;
@@ -258,7 +261,6 @@ class RecipesListState extends State<RecipesList> {
                 widget.onTapRecipe(recipe);
               },
               onAddToGroceryList: () {
-                hasShowChooseGroceryListToRecipeDialog = true;
                 AddRecipeToGroceryListDialog.showChooseGroceryListToRecipeEvent(
                     context: context,
                     recipe: recipe,

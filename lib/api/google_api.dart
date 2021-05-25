@@ -46,7 +46,13 @@ class GoogleApi {
   }
 
   Future<drive.File> getBackupOnDrive() async {
+    if (_currentUser == null) {
+      return null;
+    }
     final authHeaders = await _currentUser.authHeaders;
+    if (authHeaders == null) {
+      return null;
+    }
     final authenticateClient = GoogleAuthClient(authHeaders);
     final driveApi = drive.DriveApi(authenticateClient);
 
@@ -66,6 +72,9 @@ class GoogleApi {
 
   Future<drive.File> doBackupOnDrive() async {
     final driveApi = await getDriveApi();
+    if (driveApi == null) {
+      return null;
+    }
     final result = await driveApi.files
         .create(buildDriveFile(true), uploadMedia: await buildDriveMedia());
     return result;
@@ -80,6 +89,9 @@ class GoogleApi {
 
   Future<File> downloadBackupFromDrive(String fileId) async {
     final driveApi = await getDriveApi();
+    if (driveApi == null) {
+      return null;
+    }
     drive.Media driveFile = await driveApi.files
         .get(fileId, downloadOptions: drive.DownloadOptions.fullMedia);
 
@@ -116,6 +128,9 @@ class GoogleApi {
   }
 
   Future<drive.DriveApi> getDriveApi() async {
+    if (_currentUser == null) {
+      return null;
+    }
     final authHeaders = await _currentUser.authHeaders;
     final authenticateClient = GoogleAuthClient(authHeaders);
     return drive.DriveApi(authenticateClient);

@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
+import 'package:rtg_app/helper/date_helper.dart';
 import 'package:rtg_app/helper/log_helper.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/data_summary.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
+import 'package:rtg_app/model/menu_planning.dart';
+import 'package:rtg_app/model/menu_planning_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
@@ -16,6 +19,7 @@ import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:rtg_app/repository/user_data_repository.dart';
@@ -29,12 +33,14 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   final GroceryListsRepository groceryListsRepository;
   final UserDataRepository userDataRepository;
   final GoogleApi googleApi;
+  final MenuPlanningRepository menuPlanningRepository;
   HomeBloc({
     @required this.backupRepository,
     @required this.recipesRepository,
     @required this.googleApi,
     @required this.groceryListsRepository,
     @required this.userDataRepository,
+    @required this.menuPlanningRepository,
   }) : super(HomeInitState());
   @override
   Stream<HomeState> mapEventToState(HomeEvents event) async* {
@@ -55,6 +61,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       await groceryListsRepository.deleteAll();
       await googleApi.logout();
       await userDataRepository.deleteAll();
+      await menuPlanningRepository.deleteAll();
       yield AllDataDeleted();
     } else if (event is SaveNewGroceryList) {
       SaveGroceryListResponse response = await groceryListsRepository
@@ -68,6 +75,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     UserData userData,
     RecipesCollection recipesCollection,
     GroceryListsCollection groceriesCollection,
+    MenuPlanningCollection menuPlanningCollection,
   }) async {
     bool backupHasError = false;
     bool backupNotConfigured = false;
@@ -75,6 +83,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     bool showRecipeTutorial = false;
     GroceryList lastUsedGroceryList;
     List<Recipe> lastUsedGroceryListRecipes;
+    Map<MenuPlanning, List<Recipe>> menuPlanningsRecipes = Map();
     if (backup == null) {
       backup = await backupRepository.getBackup();
     }
@@ -87,6 +96,21 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     if (groceriesCollection == null) {
       groceriesCollection =
           await groceryListsRepository.fetch(limit: 1, offset: 0);
+    }
+    if (menuPlanningCollection == null) {
+      menuPlanningCollection = await menuPlanningRepository.fetch(limit: 2);
+      if (menuPlanningCollection != null &&
+          menuPlanningCollection.menuPlannings != null) {
+        for (MenuPlanning menuPlanning
+            in menuPlanningCollection.menuPlannings) {
+          List<String> recipeIds = menuPlanning.recipeIds();
+          if (recipeIds != null && recipeIds.length > 0) {
+            RecipesCollection recipesCollection = await recipesRepository
+                .search(searchParams: SearchRecipesParams(ids: recipeIds));
+            menuPlanningsRecipes[menuPlanning] = recipesCollection.recipes;
+          }
+        }
+      }
     }
 
     if (recipesCollection.total == 0) {
@@ -116,6 +140,12 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       }
     }
 
+    MenuPlanning oldMenuPlanning = getOldMenuPlanning(menuPlanningCollection);
+    MenuPlanning currentMenuPlanning =
+        getCurrentMenuPlanning(menuPlanningCollection);
+    MenuPlanning futureMenuPlanning =
+        getFutureMenuPlanning(menuPlanningCollection);
+
     return ShowHomeInfo(
       backupHasError: backupHasError,
       backupNotConfigured: backupNotConfigured,
@@ -124,7 +154,69 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       showRecipeTutorial: showRecipeTutorial,
       lastUsedGroceryList: lastUsedGroceryList,
       lastUsedGroceryListRecipes: lastUsedGroceryListRecipes,
+      oldMenuPlanning: oldMenuPlanning,
+      oldMenuPlanningRecipes: oldMenuPlanning == null
+          ? null
+          : menuPlanningsRecipes[oldMenuPlanning],
+      currentMenuPlanning: currentMenuPlanning,
+      currentMenuPlanningRecipes: currentMenuPlanning == null
+          ? null
+          : menuPlanningsRecipes[currentMenuPlanning],
+      futureMenuPlanning: futureMenuPlanning,
+      futureMenuPlanningRecipes: futureMenuPlanning == null
+          ? null
+          : menuPlanningsRecipes[futureMenuPlanning],
     );
+  }
+
+  static MenuPlanning getOldMenuPlanning(
+      MenuPlanningCollection menuPlanningCollection) {
+    if (menuPlanningCollection == null ||
+        menuPlanningCollection.menuPlannings == null ||
+        menuPlanningCollection.menuPlannings.length < 1) {
+      return null;
+    }
+
+    return menuPlanningCollection.menuPlannings.firstWhere((menu) {
+      DateTime endAt = DateHelper.endOfDay(DateTime.parse(menu.endAt));
+      return CustomDateTime.current.microsecondsSinceEpoch >
+          endAt.microsecondsSinceEpoch;
+    }, orElse: () => null);
+  }
+
+  static MenuPlanning getCurrentMenuPlanning(
+      MenuPlanningCollection menuPlanningCollection) {
+    if (menuPlanningCollection == null ||
+        menuPlanningCollection.menuPlannings == null ||
+        menuPlanningCollection.menuPlannings.length < 1) {
+      return null;
+    }
+
+    return menuPlanningCollection.menuPlannings.firstWhere((menu) {
+      DateTime endAt = DateHelper.endOfDay(DateTime.parse(menu.endAt));
+      DateTime startAt = DateHelper.beginOfDay(DateTime.parse(menu.startAt));
+
+      return CustomDateTime.current.microsecondsSinceEpoch >=
+              startAt.microsecondsSinceEpoch &&
+          CustomDateTime.current.microsecondsSinceEpoch <=
+              endAt.microsecondsSinceEpoch;
+    }, orElse: () => null);
+  }
+
+  static MenuPlanning getFutureMenuPlanning(
+      MenuPlanningCollection menuPlanningCollection) {
+    if (menuPlanningCollection == null ||
+        menuPlanningCollection.menuPlannings == null ||
+        menuPlanningCollection.menuPlannings.length < 1) {
+      return null;
+    }
+
+    return menuPlanningCollection.menuPlannings.firstWhere((menu) {
+      DateTime startAt = DateHelper.beginOfDay(DateTime.parse(menu.startAt));
+
+      return CustomDateTime.current.microsecondsSinceEpoch <=
+          startAt.microsecondsSinceEpoch;
+    }, orElse: () => null);
   }
 
   Future<void> checkAndDoBackup(ShowHomeInfo showHomeInfo) async {

@@ -24,7 +24,7 @@ class CustomThemeData {
       ),
     ),
     textTheme: ThemeData.light().textTheme.copyWith(
-       headline4: ThemeData.light().textTheme.headline5.copyWith(
+          headline4: ThemeData.light().textTheme.headline5.copyWith(
                 fontSize: 22,
                 color: CustomColors.darkRed,
                 fontWeight: FontWeight.w700,
@@ -40,20 +40,20 @@ class CustomThemeData {
                 fontWeight: FontWeight.w500,
               ),
         ),
-    colorScheme: ColorScheme(
-      primary: CustomColors.primaryColor,
-      primaryVariant: Color(0xffc40007),
-      secondary: CustomColors.secondary,
-      secondaryVariant: Color(0xff008f5d),
-      surface: Colors.purple,
-      background: Color(0xfffbe9e7),
-      error: ThemeData.light().errorColor,
-      onPrimary: Colors.white,
-      onSecondary: Colors.white,
-      onSurface: Colors.white,
-      onBackground: Colors.black,
-      onError: Colors.white,
-      brightness: Brightness.light,
-    ),
+    colorScheme: ThemeData.light().colorScheme.copyWith(
+          primary: CustomColors.primaryColor,
+          primaryVariant: Color(0xffc40007),
+          secondary: CustomColors.secondary,
+          secondaryVariant: Color(0xff008f5d),
+          surface: Color(0xffc40007),
+          background: Color(0xfffbe9e7),
+          error: ThemeData.light().errorColor,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onSurface: Colors.grey[700],
+          onBackground: Colors.black,
+          onError: Colors.white,
+          brightness: Brightness.light,
+        ),
   );
 }

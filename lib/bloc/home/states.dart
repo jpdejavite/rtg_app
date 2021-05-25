@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/model/grocery_list.dart';
+import 'package:rtg_app/model/menu_planning.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 
@@ -29,6 +30,13 @@ class ShowHomeInfo extends HomeState {
   final bool showRecipeTutorial;
   final GroceryList lastUsedGroceryList;
   final List<Recipe> lastUsedGroceryListRecipes;
+  final MenuPlanning oldMenuPlanning;
+  final List<Recipe> oldMenuPlanningRecipes;
+  final MenuPlanning currentMenuPlanning;
+  final List<Recipe> currentMenuPlanningRecipes;
+  final MenuPlanning futureMenuPlanning;
+  final List<Recipe> futureMenuPlanningRecipes;
+
   ShowHomeInfo({
     this.backupHasError,
     this.backupNotConfigured,
@@ -37,6 +45,12 @@ class ShowHomeInfo extends HomeState {
     this.showRecipeTutorial,
     this.lastUsedGroceryList,
     this.lastUsedGroceryListRecipes,
+    this.oldMenuPlanning,
+    this.oldMenuPlanningRecipes,
+    this.currentMenuPlanning,
+    this.currentMenuPlanningRecipes,
+    this.futureMenuPlanning,
+    this.futureMenuPlanningRecipes,
   });
   @override
   List<Object> get props => [
@@ -45,5 +59,13 @@ class ShowHomeInfo extends HomeState {
         backupOk,
         backup,
         showRecipeTutorial,
+        lastUsedGroceryList,
+        lastUsedGroceryListRecipes,
+        oldMenuPlanning,
+        oldMenuPlanningRecipes,
+        currentMenuPlanning,
+        currentMenuPlanningRecipes,
+        futureMenuPlanning,
+        futureMenuPlanningRecipes,
       ];
 }

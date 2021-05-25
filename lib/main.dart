@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rtg_app/screens/choose_recipe_screen.dart';
 import 'package:rtg_app/screens/edit_recipe_preparation_time_details_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
+import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
@@ -82,6 +84,24 @@ class RtgApp extends StatelessWidget {
             tutorialData = args;
           }
           return TutorialScreen(tutorialData);
+        },
+        SaveMenuPlanningScreen.id: (context) {
+          var args = ModalRoute.of(context).settings.arguments;
+          SaveMenuPlanningArguments saveArgs;
+          if (args != null && args is SaveMenuPlanningArguments) {
+            saveArgs = args;
+          } else {
+            saveArgs = SaveMenuPlanningArguments(null, null, null);
+          }
+          return SaveMenuPlanningScreen.newSaveMenuPlanningBloc(saveArgs);
+        },
+        ChooseRecipeScreen.id: (context) {
+          var args = ModalRoute.of(context).settings.arguments;
+          List<Recipe> lastUsedRecipes;
+          if (args != null && args is List<Recipe>) {
+            lastUsedRecipes = args;
+          }
+          return ChooseRecipeScreen.newChooseRecipeBloc(lastUsedRecipes);
         },
       },
       builder: EasyLoading.init(),

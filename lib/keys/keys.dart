@@ -28,6 +28,12 @@ class Keys {
       'home-card-last-grocery-list-used';
   static const String homeCardLastGroceryListUsedAction =
       'home-card-last-grocery-list-used-action';
+  static const String homeCardFirstMenuPlanning =
+      'home-card-first-menu-planning';
+  static const String homeCardDoMenuPlanning =
+      'home-card-do-menu-planning-action';
+  static const String homeCardShowMenuPlanning = 'home-card-show-menu-planning';
+  static const String homeCardSeeMenuPlanning = 'home-card-see-menu-planning';
 
   // home card
   static const String homeCardRecipeButton = 'home-card-recipe-button';
@@ -93,6 +99,21 @@ class Keys {
       'save-recipe-instructions-field';
   static const String saveRecipeFloatingActionSaveButton =
       'save-recipe-floating-action-save-button';
+
+  // save menu planning
+  static const String saveMenuPlanningStartAtText =
+      'save-menu-planning-start-at-text';
+  static const String saveMenuPlanningStartAtIcon =
+      'save-menu-planning-start-at-icon';
+  static const String saveMenuPlanningEndAtText =
+      'save-menu-planning-end-at-text';
+  static const String saveMenuPlanningFloatingActionSaveButton =
+      'save-menu-planning-floating-action-save-button';
+
+  // menu planning day
+  static const String menuPlanningDayText = 'menu-planning-day-text';
+  static const String menuPlanningDayAddMealButton =
+      'menu-planning-day-add-meal-button';
 
   // edit recipe preparation time details
   static const String editRecipePreparationTimeDetailsPreparationField =

@@ -11,9 +11,11 @@ import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
+import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
@@ -39,6 +41,7 @@ class HomeScreen extends StatefulWidget {
         googleApi: GoogleApi.getGoogleApi(),
         groceryListsRepository: GroceryListsRepository(),
         userDataRepository: UserDataRepository(),
+        menuPlanningRepository: MenuPlanningRepository(),
       ),
       child: HomeScreen(),
     );
@@ -288,7 +291,44 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
     }
 
+    if (showHomeInfo.currentMenuPlanning != null) {
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardShowMenuPlanning),
+        icon: Icons.info,
+        actionKey: Key(Keys.homeCardSeeMenuPlanning),
+        title: AppLocalizations.of(context).current_menu_planning,
+        subtitle: AppLocalizations.of(context).current_menu_planning_details,
+        action: AppLocalizations.of(context).see_planning,
+        onAction: () async {
+          await Navigator.pushNamed(context, SaveMenuPlanningScreen.id,
+              arguments: SaveMenuPlanningArguments(
+                  showHomeInfo.currentMenuPlanning,
+                  showHomeInfo.currentMenuPlanningRecipes,
+                  showHomeInfo.lastUsedGroceryListRecipes));
+          refreshData();
+        },
+      ));
+    }
+
     if (showHomeInfo.lastUsedGroceryList != null) {
+      if (showHomeInfo.currentMenuPlanning == null &&
+          showHomeInfo.futureMenuPlanning == null) {
+        cards.add(HomeCard(
+          cardKey: Key(Keys.homeCardFirstMenuPlanning),
+          icon: Icons.info,
+          actionKey: Key(Keys.homeCardDoMenuPlanning),
+          title: AppLocalizations.of(context).new_menu_planning_question,
+          subtitle:
+              AppLocalizations.of(context).first_menu_planning_explanation,
+          action: AppLocalizations.of(context).do_planning,
+          onAction: () async {
+            await Navigator.pushNamed(context, SaveMenuPlanningScreen.id,
+                arguments: SaveMenuPlanningArguments(
+                    null, null, showHomeInfo.lastUsedGroceryListRecipes));
+            refreshData();
+          },
+        ));
+      }
       cards.add(HomeCard(
         cardKey: Key(Keys.homeCardLastGroceryListUsed),
         actionKey: Key(Keys.homeCardLastGroceryListUsedAction),

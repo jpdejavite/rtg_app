@@ -7,6 +7,7 @@ import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
+import 'package:rtg_app/screens/view_menu_planning_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/screens/welcome_screen.dart';
 
@@ -102,6 +103,16 @@ class RtgApp extends StatelessWidget {
             lastUsedRecipes = args;
           }
           return ChooseRecipeScreen.newChooseRecipeBloc(lastUsedRecipes);
+        },
+        ViewMenuPlanningScreen.id: (context) {
+          var args = ModalRoute.of(context).settings.arguments;
+          ViewMenuPlanningArguments viewArgs;
+          if (args != null && args is ViewMenuPlanningArguments) {
+            viewArgs = args;
+          } else {
+            viewArgs = ViewMenuPlanningArguments(null, null);
+          }
+          return ViewMenuPlanningScreen(viewArgs);
         },
       },
       builder: EasyLoading.init(),

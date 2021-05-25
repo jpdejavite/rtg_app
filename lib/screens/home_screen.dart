@@ -18,6 +18,7 @@ import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
+import 'package:rtg_app/screens/view_menu_planning_screen.dart';
 import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -294,17 +295,16 @@ class _HomeScreenState extends State<HomeScreen> {
     if (showHomeInfo.currentMenuPlanning != null) {
       cards.add(HomeCard(
         cardKey: Key(Keys.homeCardShowMenuPlanning),
-        icon: Icons.info,
         actionKey: Key(Keys.homeCardSeeMenuPlanning),
         title: AppLocalizations.of(context).current_menu_planning,
-        subtitle: AppLocalizations.of(context).current_menu_planning_details,
+        currentMenuPlanning: showHomeInfo.currentMenuPlanning,
+        currentMenuPlanningRecipes: showHomeInfo.currentMenuPlanningRecipes,
         action: AppLocalizations.of(context).see_planning,
         onAction: () async {
-          await Navigator.pushNamed(context, SaveMenuPlanningScreen.id,
-              arguments: SaveMenuPlanningArguments(
+          await Navigator.pushNamed(context, ViewMenuPlanningScreen.id,
+              arguments: ViewMenuPlanningArguments(
                   showHomeInfo.currentMenuPlanning,
-                  showHomeInfo.currentMenuPlanningRecipes,
-                  showHomeInfo.lastUsedGroceryListRecipes));
+                  showHomeInfo.currentMenuPlanningRecipes));
           refreshData();
         },
       ));

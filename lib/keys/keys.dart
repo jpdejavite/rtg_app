@@ -110,6 +110,25 @@ class Keys {
   static const String saveMenuPlanningFloatingActionSaveButton =
       'save-menu-planning-floating-action-save-button';
 
+  // view menu planning
+  static const String viewMenuPlanningStartAtLabelText =
+      'view-menu-planning-start-at-label-text';
+  static const String viewMenuPlanningEndAtLabelText =
+      'view-menu-planning-end-at-label-text';
+  static const String viewMenuPlanningFloatingActionEditButton =
+      'view-menu-planning-floating-action-edit-button';
+
+  // menu plannig days
+  static const String menuPlanningDaysDayLabelText =
+      'menu-planning-days-day-label-text';
+  static const String menuPlanningDaysMealText = 'menu-planning-days-meal-text';
+  static const String menuPlanningDaysMealDescriptionText =
+      'menu-planning-days-meal-description-text';
+  static const String menuPlanningDaysMealTextButton =
+      'menu-planning-days-meal-text-button';
+  static const String menuPlanningDaysMealRecipeText =
+      'menu-planning-days-meal-recipe-text';
+
   // menu planning day
   static const String menuPlanningDayText = 'menu-planning-day-text';
   static const String menuPlanningDayAddMealButton =

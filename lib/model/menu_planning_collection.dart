@@ -1,12 +1,16 @@
+import 'package:rtg_app/model/recipe.dart';
+
 import 'menu_planning.dart';
 
 class MenuPlanningCollection {
   MenuPlanningCollection({
     this.menuPlannings,
+    this.menuPlanningsRecipes,
     this.total,
   });
 
   List<MenuPlanning> menuPlannings;
+  Map<MenuPlanning, List<Recipe>> menuPlanningsRecipes;
   int total;
 
   @override

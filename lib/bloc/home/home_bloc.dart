@@ -15,6 +15,7 @@ import 'package:rtg_app/model/menu_planning_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
+import 'package:rtg_app/model/search_menu_plannings_params.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
@@ -83,7 +84,6 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     bool showRecipeTutorial = false;
     GroceryList lastUsedGroceryList;
     List<Recipe> lastUsedGroceryListRecipes;
-    Map<MenuPlanning, List<Recipe>> menuPlanningsRecipes = Map();
     if (backup == null) {
       backup = await backupRepository.getBackup();
     }
@@ -98,19 +98,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           await groceryListsRepository.fetch(limit: 1, offset: 0);
     }
     if (menuPlanningCollection == null) {
-      menuPlanningCollection = await menuPlanningRepository.fetch(limit: 2);
-      if (menuPlanningCollection != null &&
-          menuPlanningCollection.menuPlannings != null) {
-        for (MenuPlanning menuPlanning
-            in menuPlanningCollection.menuPlannings) {
-          List<String> recipeIds = menuPlanning.recipeIds();
-          if (recipeIds != null && recipeIds.length > 0) {
-            RecipesCollection recipesCollection = await recipesRepository
-                .search(searchParams: SearchRecipesParams(ids: recipeIds));
-            menuPlanningsRecipes[menuPlanning] = recipesCollection.recipes;
-          }
-        }
-      }
+      menuPlanningCollection = await menuPlanningRepository
+          .fetch(SearchMenuPlanningParams(limit: 2));
     }
 
     if (recipesCollection.total == 0) {
@@ -157,15 +146,15 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       oldMenuPlanning: oldMenuPlanning,
       oldMenuPlanningRecipes: oldMenuPlanning == null
           ? null
-          : menuPlanningsRecipes[oldMenuPlanning],
+          : menuPlanningCollection.menuPlanningsRecipes[oldMenuPlanning],
       currentMenuPlanning: currentMenuPlanning,
       currentMenuPlanningRecipes: currentMenuPlanning == null
           ? null
-          : menuPlanningsRecipes[currentMenuPlanning],
+          : menuPlanningCollection.menuPlanningsRecipes[currentMenuPlanning],
       futureMenuPlanning: futureMenuPlanning,
       futureMenuPlanningRecipes: futureMenuPlanning == null
           ? null
-          : menuPlanningsRecipes[futureMenuPlanning],
+          : menuPlanningCollection.menuPlanningsRecipes[futureMenuPlanning],
     );
   }
 

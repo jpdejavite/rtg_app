@@ -1,22 +1,30 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:rtg_app/dao/recipes_dao.dart';
 import 'package:rtg_app/database/sembast_database.dart';
 import 'package:rtg_app/model/data_summary.dart';
 import 'package:rtg_app/model/menu_planning.dart';
 import 'package:rtg_app/model/menu_planning_collection.dart';
+import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_menu_planning_response.dart';
+import 'package:rtg_app/model/search_menu_plannings_params.dart';
+import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:sembast/sembast.dart';
 
 class MenuPlanningDao {
   final dbProvider = SembastDatabaseProvider.dbProvider;
   final String storeName = 'menuPlannings';
+  final recipesDao = RecipesDao();
 
-  Future<MenuPlanningCollection> fetch({int limit}) async {
+  Future<MenuPlanningCollection> fetch(
+      SearchMenuPlanningParams searchParams) async {
     var store = intMapStoreFactory.store(storeName);
     var db = await dbProvider.database;
 
     var finder = Finder(
-      limit: limit,
+      limit: searchParams.limit,
+      offset: searchParams.offset,
       sortOrders: [
         SortOrder('endAt', false),
       ],
@@ -26,7 +34,22 @@ class MenuPlanningDao {
     var total = await store.count(db);
 
     List<MenuPlanning> menuPlannings = menuPlanningsFromRecords(records);
-    return MenuPlanningCollection(menuPlannings: menuPlannings, total: total);
+    Map<MenuPlanning, List<Recipe>> menuPlanningsRecipes = Map();
+
+    if (menuPlannings != null) {
+      for (MenuPlanning menuPlanning in menuPlannings) {
+        List<String> recipeIds = menuPlanning.recipeIds();
+        if (recipeIds != null && recipeIds.length > 0) {
+          RecipesCollection recipesCollection = await recipesDao.searchRecipes(
+              searchParams: SearchRecipesParams(ids: recipeIds));
+          menuPlanningsRecipes[menuPlanning] = recipesCollection.recipes;
+        }
+      }
+    }
+    return MenuPlanningCollection(
+        menuPlannings: menuPlannings,
+        menuPlanningsRecipes: menuPlanningsRecipes,
+        total: total);
   }
 
   Future deleteAll() async {

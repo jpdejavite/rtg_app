@@ -29,6 +29,7 @@ import 'package:rtg_app/widgets/named_icon.dart';
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'menu_planning_history_screen.dart';
 import 'save_recipe_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -310,12 +311,31 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
     }
 
+    if (showHomeInfo.currentMenuPlanning == null &&
+        showHomeInfo.futureMenuPlanning != null) {
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardShowMenuPlanning),
+        actionKey: Key(Keys.homeCardSeeMenuPlanning),
+        title: AppLocalizations.of(context).next_menu_planning,
+        currentMenuPlanning: showHomeInfo.futureMenuPlanning,
+        currentMenuPlanningRecipes: showHomeInfo.futureMenuPlanningRecipes,
+        action: AppLocalizations.of(context).see_planning,
+        onAction: () async {
+          await Navigator.pushNamed(context, ViewMenuPlanningScreen.id,
+              arguments: ViewMenuPlanningArguments(
+                  showHomeInfo.futureMenuPlanning,
+                  showHomeInfo.futureMenuPlanningRecipes));
+          refreshData();
+        },
+      ));
+    }
+
     if (showHomeInfo.lastUsedGroceryList != null) {
       if (showHomeInfo.currentMenuPlanning == null &&
           showHomeInfo.futureMenuPlanning == null) {
         cards.add(HomeCard(
           cardKey: Key(Keys.homeCardFirstMenuPlanning),
-          icon: Icons.info,
+          icon: Icons.restaurant_menu,
           actionKey: Key(Keys.homeCardDoMenuPlanning),
           title: AppLocalizations.of(context).new_menu_planning_question,
           subtitle:
@@ -338,6 +358,22 @@ class _HomeScreenState extends State<HomeScreen> {
         onTapRecipe: onTapRecipe,
         onAction: () {
           onTapGroceryList(showHomeInfo.lastUsedGroceryList);
+        },
+      ));
+    }
+
+    if (showHomeInfo.oldMenuPlanning != null) {
+      cards.add(HomeCard(
+        cardKey: Key(Keys.homeCardOldMenuPlanning),
+        icon: Icons.history,
+        actionKey: Key(Keys.homeCardMenuPlanningHistory),
+        title: AppLocalizations.of(context).old_menu_plannings,
+        subtitle:
+            AppLocalizations.of(context).see_menu_planning_history_explanation,
+        action: AppLocalizations.of(context).see_history,
+        onAction: () async {
+          await Navigator.pushNamed(context, MenuPlanningHistoryScreen.id);
+          refreshData();
         },
       ));
     }

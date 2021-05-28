@@ -20,6 +20,7 @@ import 'package:rtg_app/model/menu_planning_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
+import 'package:rtg_app/model/search_menu_plannings_params.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
@@ -294,8 +295,9 @@ void main() {
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
     when(groceryListsRepository.fetch(limit: 1, offset: 0))
         .thenAnswer((_) => Future.value(GroceryListsCollection(total: 0)));
-    when(menuPlanningRepository.fetch(limit: 2)).thenAnswer((_) =>
-        Future.value(MenuPlanningCollection(menuPlannings: [old1, old2])));
+    when(menuPlanningRepository.fetch(SearchMenuPlanningParams(limit: 2)))
+        .thenAnswer((_) => Future.value(MenuPlanningCollection(
+            menuPlannings: [old1, old2], menuPlanningsRecipes: Map())));
 
     expectLater(
       homeBloc,
@@ -327,8 +329,9 @@ void main() {
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
     when(groceryListsRepository.fetch(limit: 1, offset: 0))
         .thenAnswer((_) => Future.value(GroceryListsCollection(total: 0)));
-    when(menuPlanningRepository.fetch(limit: 2)).thenAnswer((_) =>
-        Future.value(MenuPlanningCollection(menuPlannings: [current, old1])));
+    when(menuPlanningRepository.fetch(SearchMenuPlanningParams(limit: 2)))
+        .thenAnswer((_) => Future.value(MenuPlanningCollection(
+            menuPlannings: [current, old1], menuPlanningsRecipes: Map())));
 
     expectLater(
       homeBloc,
@@ -360,8 +363,9 @@ void main() {
         .thenAnswer((_) => Future.value(RecipesCollection(total: 1)));
     when(groceryListsRepository.fetch(limit: 1, offset: 0))
         .thenAnswer((_) => Future.value(GroceryListsCollection(total: 0)));
-    when(menuPlanningRepository.fetch(limit: 2)).thenAnswer((_) =>
-        Future.value(MenuPlanningCollection(menuPlannings: [future, current])));
+    when(menuPlanningRepository.fetch(SearchMenuPlanningParams(limit: 2)))
+        .thenAnswer((_) => Future.value(MenuPlanningCollection(
+            menuPlannings: [future, current], menuPlanningsRecipes: Map())));
 
     expectLater(
       homeBloc,

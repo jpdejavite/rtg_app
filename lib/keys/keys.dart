@@ -34,6 +34,9 @@ class Keys {
       'home-card-do-menu-planning-action';
   static const String homeCardShowMenuPlanning = 'home-card-show-menu-planning';
   static const String homeCardSeeMenuPlanning = 'home-card-see-menu-planning';
+  static const String homeCardOldMenuPlanning = 'home-card-old-menu-planning';
+  static const String homeCardMenuPlanningHistory =
+      'home-card-menu-planning-history';
 
   // home card
   static const String homeCardRecipeButton = 'home-card-recipe-button';
@@ -45,6 +48,9 @@ class Keys {
   static const String recipesListSort = 'recipes-list-sort';
   static const String recipesListSortNotification =
       'recipes-list-sort-notification';
+  // menu planning history
+  static const String menuPlanningHistoryListEmptyText =
+      'menu-planning-history-list-empy-text';
 
   // choose recipe sort dialog
   static const String chooseRecipeSortDialogNewestRadio =

@@ -39,3 +39,9 @@ build-android-release-apk:
 	sed -i 's/com\.rtg_app/com.example.rtg_app/g' android/app/src/main/kotlin/com/example/rtg_app/MainActivity.kt && \
 	sed -i 's/com\.rtg_app/com.example.rtg_app/g' android/app/src/profile/AndroidManifest.xml
 
+increase-version:
+	sed -i 's/version.*$$/version: $(VERSION_NAME)\+$(VERSION_CODE)/g' pubspec.yaml
+	git add pubspec.yaml
+	git commit -m "chore: release v$(VERSION_NAME) ($(VERSION_CODE))"
+	git tag v$(VERSION_NAME)
+	git push origin v$(VERSION_NAME)

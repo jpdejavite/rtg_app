@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' as Foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/bloc/home/events.dart';
 import 'package:rtg_app/bloc/home/home_bloc.dart';
 import 'package:rtg_app/bloc/home/states.dart';
@@ -40,7 +39,6 @@ class HomeScreen extends StatefulWidget {
       create: (context) => HomeBloc(
         backupRepository: BackupRepository(),
         recipesRepository: RecipesRepository(),
-        googleApi: GoogleApi.getGoogleApi(),
         groceryListsRepository: GroceryListsRepository(),
         userDataRepository: UserDataRepository(),
         menuPlanningRepository: MenuPlanningRepository(),

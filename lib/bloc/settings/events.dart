@@ -7,15 +7,6 @@ abstract class SettingsEvents extends Equatable {
 
 class GetBackupEvent extends SettingsEvents {}
 
-class ConfigureDriveBackupEvent extends SettingsEvents {}
-
-class DoDriveBackupEvent extends SettingsEvents {}
-
-class DriveBackupChoosenEvent extends SettingsEvents {
-  final bool useLocal;
-  DriveBackupChoosenEvent(this.useLocal);
-}
-
 class ConfigureLocalBackupEvent extends SettingsEvents {}
 
 class DoLocalBackupEvent extends SettingsEvents {}

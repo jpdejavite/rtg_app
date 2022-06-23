@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rtg_app/api/google_api.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/helper/date_helper.dart';
 import 'package:rtg_app/helper/log_helper.dart';
 import 'package:rtg_app/model/backup.dart';
-import 'package:rtg_app/model/data_summary.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/menu_planning.dart';
@@ -22,7 +18,6 @@ import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
-import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:rtg_app/repository/user_data_repository.dart';
 
 import 'events.dart';
@@ -33,12 +28,10 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   final RecipesRepository recipesRepository;
   final GroceryListsRepository groceryListsRepository;
   final UserDataRepository userDataRepository;
-  final GoogleApi googleApi;
   final MenuPlanningRepository menuPlanningRepository;
   HomeBloc({
     @required this.backupRepository,
     @required this.recipesRepository,
-    @required this.googleApi,
     @required this.groceryListsRepository,
     @required this.userDataRepository,
     @required this.menuPlanningRepository,
@@ -60,7 +53,6 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       await backupRepository.deleteAll();
       await recipesRepository.deleteAll();
       await groceryListsRepository.deleteAll();
-      await googleApi.logout();
       await userDataRepository.deleteAll();
       await menuPlanningRepository.deleteAll();
       yield AllDataDeleted();
@@ -215,53 +207,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     }
 
     if (showHomeInfo.backup.type == BackupType.drive) {
-      if (showHomeInfo.backup.lastestBackupAt == null) {
-        await doBackupOnDrive(showHomeInfo.backup);
-        return;
-      }
-      DataSummary recipeSummary = await recipesRepository.getSummary();
-      DataSummary groceryListSummary =
-          await groceryListsRepository.getSummary();
-
-      if ((recipeSummary.lastUpdated > showHomeInfo.backup.lastestBackupAt) ||
-          (groceryListSummary.lastUpdated >
-              showHomeInfo.backup.lastestBackupAt)) {
-        await doBackupOnDrive(showHomeInfo.backup);
-        return;
-      }
-    }
-  }
-
-  Future<void> doBackupOnDrive(Backup backup) async {
-    try {
-      bool hasDoneBackup = false;
-      drive.File file = await googleApi.getBackupOnDrive();
-      if (file == null) {
-        file = await googleApi.doBackupOnDrive();
-        hasDoneBackup = true;
-      } else if (backup.fileId == file.id) {
-        File backupFile = await googleApi.downloadBackupFromDrive(file.id);
-        await recipesRepository.mergeFromBackup(file: backupFile);
-        await googleApi.updateBackupOnDrive(file.id);
-        hasDoneBackup = true;
-      }
-
-      if (hasDoneBackup) {
-        backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.lastestBackupAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.lastestBackupStatus = BackupStatus.done;
-        backup.fileId = file.id;
-        backup.error = null;
-        await backupRepository.save(backup: backup);
-        await LogHelper.log('backup done');
-      }
-    } catch (e) {
-      backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
-      backup.lastestBackupStatus = BackupStatus.error;
-      backup.error = e.toString();
-      await backupRepository.save(backup: backup);
-
-      await LogHelper.log('backup error: $e');
+      // do cloud backup
     }
   }
 }

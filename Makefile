@@ -2,6 +2,9 @@
 tests:
 	flutter test
 
+tests-with-coverage:
+	flutter test --coverage
+
 integration-tests:
 	flutter drive \
 	--driver=test_driver/app.dart \

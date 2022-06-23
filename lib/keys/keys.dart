@@ -198,8 +198,11 @@ class Keys {
       'view-recipe-create-new-grocery-list-action';
 
   // settings screen
+  static const String settingsConfiguredAtText = 'settings-configured-at-text';
+  static const String settingsDoBackupButton = 'settings-do-backup-button';
   static const String settingsGoogleDriveButtton =
-      'setting-google-drive-button';
+      'settings-google-drive-button';
+  static const String settingsLocalButtton = 'settings-local-button';
 
   // add recipe to grocery list dialog
   static const String addRecipeToGroceryListDialogConfirmButton =

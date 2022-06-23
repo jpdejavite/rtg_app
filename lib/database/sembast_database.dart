@@ -11,6 +11,7 @@ class SembastDatabaseProvider {
 
   // File path to a file in the current directory
   String _dbKey = 'main_sembast.db';
+  String _dbBackupKey = 'roma_backup.db';
   DatabaseFactory dbFactory = databaseFactoryIo;
 
   var _database;
@@ -31,5 +32,11 @@ class SembastDatabaseProvider {
     final appDocDir = await getApplicationDocumentsDirectory();
     await appDocDir.create(recursive: true);
     return p.join(appDocDir.path, _dbKey);
+  }
+
+  Future<String> getDatabaseBackupFilePath() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    await appDocDir.create(recursive: true);
+    return p.join(appDocDir.path, _dbBackupKey);
   }
 }

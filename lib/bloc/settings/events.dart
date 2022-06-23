@@ -15,3 +15,7 @@ class DriveBackupChoosenEvent extends SettingsEvents {
   final bool useLocal;
   DriveBackupChoosenEvent(this.useLocal);
 }
+
+class ConfigureLocalBackupEvent extends SettingsEvents {}
+
+class DoLocalBackupEvent extends SettingsEvents {}

@@ -15,7 +15,10 @@ import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
+
+import '../helper/env_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'settings_screen';
@@ -35,23 +38,50 @@ class SettingsScreen extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
 
+class BackupDetails {
+  String configuredAtText;
+  String doBackupText;
+
+  BackupDetails({this.configuredAtText, this.doBackupText});
+}
+
 class _SettingsState extends State<SettingsScreen> {
+  static Map<BackupType, BackupDetails> _backupDetails = new Map();
+
   @override
   void initState() {
     super.initState();
     context.read<SettingsBloc>().add(GetBackupEvent());
   }
 
-  Backup getBackupFromEvent(SettingsState state) {
+  void buildBackupDetailsMap() {
+    _backupDetails[BackupType.drive] = BackupDetails(
+      configuredAtText: AppLocalizations.of(context).google_drive,
+      doBackupText: AppLocalizations.of(context).do_backup,
+    );
+    _backupDetails[BackupType.local] = BackupDetails(
+      configuredAtText: AppLocalizations.of(context).local,
+      doBackupText: AppLocalizations.of(context).generate_local_file,
+    );
+  }
+
+  Backup getBackupFromState(SettingsState state) {
     if (state is BackupLoaded) {
       return state.backup;
     }
     return null;
   }
 
-  String getAccountNameFromEvent(SettingsState state) {
+  String getAccountNameFromState(SettingsState state) {
     if (state is BackupLoaded) {
       return state.accountName;
+    }
+    return null;
+  }
+
+  String getFilePathFromState(SettingsState state) {
+    if (state is LocalBackupDone) {
+      return state.filePath;
     }
     return null;
   }
@@ -190,6 +220,8 @@ class _SettingsState extends State<SettingsScreen> {
   }
 
   List<Widget> buildBackupSection(BuildContext context, SettingsState state) {
+    buildBackupDetailsMap();
+
     List<Widget> children = [
       Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -206,10 +238,9 @@ class _SettingsState extends State<SettingsScreen> {
 
     showChooseDriveBackup(context, state);
 
-    Backup backup = getBackupFromEvent(state);
-    String accountName = getAccountNameFromEvent(state);
-    if (backup != null && backup.type == BackupType.drive) {
-      children.addAll(buildBackupDriveFields(backup, accountName));
+    Backup backup = getBackupFromState(state);
+    if (backup != null && backup.type != BackupType.none) {
+      children.addAll(buildBackupFields(backup, state));
     } else {
       children.addAll(buildConfigureBackupFields());
     }
@@ -232,21 +263,33 @@ class _SettingsState extends State<SettingsScreen> {
         onPressed: () {
           context.read<SettingsBloc>().add(ConfigureDriveBackupEvent());
         },
+      ),
+      ElevatedButton(
+        key: Key(Keys.settingsLocalButtton),
+        child: Text(AppLocalizations.of(context).generate_local_file),
+        onPressed: () {
+          context.read<SettingsBloc>().add(ConfigureLocalBackupEvent());
+        },
       )
     ];
   }
 
-  List<Widget> buildBackupDriveFields(Backup backup, String accountName) {
+  List<Widget> buildBackupFields(Backup backup, SettingsState state) {
+    String accountName = getAccountNameFromState(state);
+
     List<Widget> children = [
       ViewRecipeLabelText(
+        keyString: Keys.settingsConfiguredAtText,
         label: AppLocalizations.of(context).configured_at,
-        text: AppLocalizations.of(context).google_drive,
-      ),
-      ViewRecipeLabelText(
-        label: AppLocalizations.of(context).account,
-        text: accountName,
+        text: _backupDetails[backup.type].configuredAtText,
       ),
     ];
+    if (accountName != null) {
+      children.add(ViewRecipeLabelText(
+        label: AppLocalizations.of(context).account,
+        text: accountName,
+      ));
+    }
 
     if (backup.lastestBackupStatus == BackupStatus.pending ||
         backup.lastestBackupStatus == BackupStatus.error) {
@@ -274,10 +317,21 @@ class _SettingsState extends State<SettingsScreen> {
       ));
     }
 
+    String filePath = getFilePathFromState(state);
+    if (filePath != null) {
+      if (EnvHelper.isShareBackupFileEnabled()) {
+        Share.shareFiles([filePath],
+            text: AppLocalizations.of(context).backup_file_name);
+      }
+    }
+
     children.add(ElevatedButton(
-      child: Text(AppLocalizations.of(context).do_backup),
+      key: Key(Keys.settingsDoBackupButton),
+      child: Text(_backupDetails[backup.type].doBackupText),
       onPressed: () {
-        context.read<SettingsBloc>().add(DoDriveBackupEvent());
+        context.read<SettingsBloc>().add(backup.type == BackupType.drive
+            ? DoDriveBackupEvent()
+            : DoLocalBackupEvent());
       },
     ));
     return children;

@@ -35,6 +35,11 @@ class DriveBackupDone extends BackupLoaded {
       : super(backup: backup, accountName: accountName);
 }
 
+class LocalBackupDone extends BackupLoaded {
+  final String filePath;
+  LocalBackupDone({this.filePath, backup}) : super(backup: backup);
+}
+
 class ChooseDriveBackup extends BackupLoaded {
   final DatabaseSummary localSummary;
   final DatabaseSummary remoteSummary;

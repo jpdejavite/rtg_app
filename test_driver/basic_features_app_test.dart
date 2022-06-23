@@ -26,6 +26,7 @@ void main() {
     final homeFloatingActionNewGroceryListButton =
         find.byValueKey(Keys.homeFloatingActionNewGroceryListButton);
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
+    final homeActionSettingsIcon = find.byValueKey(Keys.homeActionSettingsIcon);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipeLabelField0 =
         find.byValueKey(Keys.saveRecipeLabelField + "0");
@@ -122,6 +123,10 @@ void main() {
         find.byValueKey(Keys.saveGroceryListArchiveAction);
     final saveGroceryListArchiveConfirm =
         find.byValueKey(Keys.saveGroceryListArchiveConfirm);
+    final settingsLocalButtton = find.byValueKey(Keys.settingsLocalButtton);
+    final settingsConfiguredAtText =
+        find.byValueKey(Keys.settingsConfiguredAtText);
+    final settingsDoBackupButton = find.byValueKey(Keys.settingsDoBackupButton);
 
     final String recipeName1 = 'Minha primeira receita!';
     final String portion1 = '1.00';
@@ -176,10 +181,7 @@ void main() {
               find.byValueKey(Keys.homeCardRecipeTutorial), driver),
           true);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeActionSettingsIcon), driver),
-          true);
+      expect(await Helper.isPresent(homeActionSettingsIcon, driver), true);
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsNotification), driver),
@@ -215,10 +217,7 @@ void main() {
               find.byValueKey(Keys.homeBottomBarHomeText), driver),
           true);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeActionSettingsIcon), driver),
-          true);
+      expect(await Helper.isPresent(homeActionSettingsIcon, driver), true);
     });
 
     test('insert first recipe', () async {
@@ -637,7 +636,7 @@ void main() {
       expect(
           await driver
               .getText(ingredientRecipeSourceDialogRecipeIngredientQuantity0),
-          "1 colher de chá");
+          "1 1/2 colheres de chá");
 
       await driver.tap(ingredientRecipeSourceDialogCloseButton);
 
@@ -715,13 +714,34 @@ void main() {
       await driver.tap(backButtonFinder);
     });
 
-    // TODO: implement backup
-    // test('do backup', () async {
-    //   await driver.tap(homeActionSettingsIcon);
+    test('configure local backup', () async {
+      await driver.tap(homeBottomBarHomeIcon);
 
-    //   await driver.tap(settingsGoogleDriveButtton);
+      expect(await Helper.isPresent(homeCardConfigureBackup, driver), true);
 
-    //   await driver.tap(find.text(newUserGoogleAccountEmail));
-    // });
+      await driver.tap(homeCardConfigureBackupAction);
+
+      await driver.tap(settingsLocalButtton);
+
+      expect(await driver.getText(settingsConfiguredAtText),
+          'Configurado em: Local');
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('do local backup again', () async {
+      await driver.tap(homeBottomBarHomeIcon);
+
+      await driver.tap(homeActionSettingsIcon);
+
+      await driver.tap(settingsDoBackupButton);
+
+      expect(await driver.getText(settingsConfiguredAtText),
+          'Configurado em: Local');
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
   });
 }

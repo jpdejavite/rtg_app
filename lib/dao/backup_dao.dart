@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:rtg_app/database/sembast_database.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/backup.dart';
@@ -65,5 +66,12 @@ class BackupDao {
 
     Backup backup = Backup.fromRecord(record);
     return backup;
+  }
+
+  Future<String> getBackupDbFilePath() async {
+    File file = new File(await dbProvider.getDatabaseFilePath());
+    File copiedFile =
+        await file.copy(await dbProvider.getDatabaseBackupFilePath());
+    return copiedFile.path;
   }
 }

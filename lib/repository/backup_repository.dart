@@ -11,4 +11,6 @@ class BackupRepository {
       backupDao.save(backup: backup);
 
   Future deleteAll() => backupDao.deleteAll();
+
+  Future<String> getBackupDbFilePath() => backupDao.getBackupDbFilePath();
 }

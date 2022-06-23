@@ -1,7 +1,8 @@
-enum BackupType { drive, none }
+enum BackupType { local, drive, none }
 enum BackupStatus { error, pending, done }
 
 class Backup {
+
   Backup({
     this.createdAt,
     this.updatedAt,

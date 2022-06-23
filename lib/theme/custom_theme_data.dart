@@ -10,7 +10,6 @@ class CustomThemeData {
       ThemeData.light().iconTheme.copyWith(color: Color(0xff04E9C6));
 
   static final lightTheme = ThemeData.light().copyWith(
-    accentColor: CustomColors.primaryColor,
     iconTheme: iconTheme,
     primaryColor: CustomColors.primaryColor,
     checkboxTheme: CheckboxThemeData(
@@ -39,12 +38,9 @@ class CustomThemeData {
                 color: CustomColors.darkRed,
                 fontWeight: FontWeight.w500,
               ),
-        ),
-    colorScheme: ThemeData.light().colorScheme.copyWith(
+        ), colorScheme: ThemeData.light().colorScheme.copyWith(
           primary: CustomColors.primaryColor,
-          primaryVariant: Color(0xffc40007),
           secondary: CustomColors.secondary,
-          secondaryVariant: Color(0xff008f5d),
           surface: Color(0xffc40007),
           background: Color(0xfffbe9e7),
           error: ThemeData.light().errorColor,
@@ -54,6 +50,6 @@ class CustomThemeData {
           onBackground: Colors.black,
           onError: Colors.white,
           brightness: Brightness.light,
-        ),
+        ).copyWith(secondary: CustomColors.primaryColor),
   );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rtg_app/screens/choose_recipe_screen.dart';
 import 'package:rtg_app/screens/edit_recipe_preparation_time_details_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
@@ -22,7 +23,8 @@ import 'model/grocery_list.dart';
 import 'model/recipe.dart';
 import 'model/recipe_preparation_time_details.dart';
 
-void main() {
+void main({String fileName = 'assets/.env'}) async {
+  await dotenv.load(fileName: fileName);
   runApp(RtgApp());
 }
 

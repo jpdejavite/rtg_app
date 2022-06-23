@@ -134,7 +134,7 @@ class _EditPreparationTimeDetailsScreenState
                   AppLocalizations.of(context).preparation_time_details_info,
                   style: Theme.of(context).textTheme.caption.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       )),
             ),
             buildTextFormField(

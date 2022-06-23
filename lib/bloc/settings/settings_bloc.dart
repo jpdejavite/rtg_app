@@ -25,28 +25,15 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   }) : super(SettingsInitState());
   @override
   Stream<SettingsState> mapEventToState(SettingsEvents event) async* {
-    Backup backup = await backupRepository.getBackup();
     if (event is GetBackupEvent) {
-      if (backup.type == BackupType.drive) {
-        String accountName = googleApi.getAccountName();
-        yield BackupLoaded(backup: backup, accountName: accountName);
-      } else {
-        yield BackupLoaded(backup: backup);
-      }
+      yield await getBackupEvent(event);
       return;
     }
 
     if (event is ConfigureDriveBackupEvent) {
-      Error e = await googleApi.signIn();
-      if (e == null) {
-        backup.type = BackupType.drive;
-        backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.error = null;
-        await backupRepository.save(backup: backup);
-      } else {
-        String accountName = googleApi.getAccountName();
-        yield ConfigureDriveBackupError(
-            backup: backup, accountName: accountName, error: e);
+      ConfigureDriveBackupError response = await configureDriveBackup();
+      if (response != null) {
+        yield response;
         return;
       }
     }
@@ -54,59 +41,118 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     if (event is DoDriveBackupEvent ||
         event is ConfigureDriveBackupEvent ||
         event is DriveBackupChoosenEvent) {
+      Backup backup = await backupRepository.getBackup();
       String accountName = googleApi.getAccountName();
       yield DoingDriveBackup(backup: backup, accountName: accountName);
-      try {
-        drive.File file = await googleApi.getBackupOnDrive();
-        if (file == null) {
-          file = await googleApi.doBackupOnDrive();
-        } else {
-          if (backup.fileId == file.id) {
+      yield await doDriveBackup(event, backup, accountName);
+      return;
+    }
+
+    if (event is ConfigureLocalBackupEvent) {
+      await configureLocalBackup();
+    }
+
+    if (event is DoLocalBackupEvent || event is ConfigureLocalBackupEvent) {
+      yield await doLocalBackup();
+      return;
+    }
+  }
+
+  Future<BackupLoaded> getBackupEvent(SettingsEvents event) async {
+    Backup backup = await backupRepository.getBackup();
+    if (backup.type == BackupType.drive) {
+      String accountName = googleApi.getAccountName();
+      return BackupLoaded(backup: backup, accountName: accountName);
+    }
+    return BackupLoaded(backup: backup);
+  }
+
+  Future<ConfigureDriveBackupError> configureDriveBackup() async {
+    Backup backup = await backupRepository.getBackup();
+    Error e = await googleApi.signIn();
+    if (e != null) {
+      String accountName = googleApi.getAccountName();
+      return ConfigureDriveBackupError(
+          backup: backup, accountName: accountName, error: e);
+    }
+    backup.type = BackupType.drive;
+    backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
+    backup.error = null;
+    await backupRepository.save(backup: backup);
+    return null;
+  }
+
+  Future<SettingsState> doDriveBackup(
+      SettingsEvents event, Backup backup, String accountName) async {
+    try {
+      drive.File file = await googleApi.getBackupOnDrive();
+      if (file == null) {
+        file = await googleApi.doBackupOnDrive();
+      } else {
+        if (backup.fileId == file.id) {
+          File backupFile = await googleApi.downloadBackupFromDrive(file.id);
+          await recipesRepository.mergeFromBackup(file: backupFile);
+          await googleApi.updateBackupOnDrive(file.id);
+        } else if (event is DriveBackupChoosenEvent) {
+          if (event.useLocal) {
+            await googleApi.deleteBackupFromDrive(file.id);
+            file = await googleApi.doBackupOnDrive();
+          } else {
+            await recipesRepository.deleteAll();
+
             File backupFile = await googleApi.downloadBackupFromDrive(file.id);
             await recipesRepository.mergeFromBackup(file: backupFile);
-            await googleApi.updateBackupOnDrive(file.id);
-          } else if (event is DriveBackupChoosenEvent) {
-            if (event.useLocal) {
-              await googleApi.deleteBackupFromDrive(file.id);
-              file = await googleApi.doBackupOnDrive();
-            } else {
-              await recipesRepository.deleteAll();
-
-              File backupFile =
-                  await googleApi.downloadBackupFromDrive(file.id);
-              await recipesRepository.mergeFromBackup(file: backupFile);
-            }
-          } else {
-            File backupFile = await googleApi.downloadBackupFromDrive(file.id);
-            DataSummary localRecipes = await recipesRepository.getSummary();
-            DataSummary remoteRecipes =
-                await recipesRepository.getSummary(file: backupFile);
-            yield ChooseDriveBackup(
-              backup: backup,
-              accountName: accountName,
-              localSummary: DatabaseSummary(recipes: localRecipes),
-              remoteSummary: DatabaseSummary(recipes: remoteRecipes),
-            );
-            return;
           }
+        } else {
+          File backupFile = await googleApi.downloadBackupFromDrive(file.id);
+          DataSummary localRecipes = await recipesRepository.getSummary();
+          DataSummary remoteRecipes =
+              await recipesRepository.getSummary(file: backupFile);
+          return ChooseDriveBackup(
+            backup: backup,
+            accountName: accountName,
+            localSummary: DatabaseSummary(recipes: localRecipes),
+            remoteSummary: DatabaseSummary(recipes: remoteRecipes),
+          );
         }
-
-        backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.lastestBackupAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.lastestBackupStatus = BackupStatus.done;
-        backup.fileId = file.id;
-        backup.error = null;
-        await backupRepository.save(backup: backup);
-
-        yield DriveBackupDone(backup: backup, accountName: accountName);
-      } catch (e) {
-        backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
-        backup.lastestBackupStatus = BackupStatus.error;
-        backup.error = e.toString();
-        await backupRepository.save(backup: backup);
-
-        yield DriveBackupDone(backup: backup, accountName: accountName);
       }
+
+      backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
+      backup.lastestBackupAt = CustomDateTime.current.millisecondsSinceEpoch;
+      backup.lastestBackupStatus = BackupStatus.done;
+      backup.fileId = file.id;
+      backup.error = null;
+      await backupRepository.save(backup: backup);
+
+      return DriveBackupDone(backup: backup, accountName: accountName);
+    } catch (e) {
+      backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
+      backup.lastestBackupStatus = BackupStatus.error;
+      backup.error = e.toString();
+      await backupRepository.save(backup: backup);
+
+      return DriveBackupDone(backup: backup, accountName: accountName);
     }
+  }
+
+  Future<void> configureLocalBackup() async {
+    Backup backup = await backupRepository.getBackup();
+    backup.type = BackupType.local;
+    backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
+    backup.error = null;
+    await backupRepository.save(backup: backup);
+  }
+
+  Future<SettingsState> doLocalBackup() async {
+    Backup backup = await backupRepository.getBackup();
+    String filePath = await backupRepository.getBackupDbFilePath();
+
+    backup.updatedAt = CustomDateTime.current.millisecondsSinceEpoch;
+    backup.lastestBackupAt = CustomDateTime.current.millisecondsSinceEpoch;
+    backup.lastestBackupStatus = BackupStatus.done;
+    backup.error = null;
+    await backupRepository.save(backup: backup);
+
+    return LocalBackupDone(backup: backup, filePath: filePath);
   }
 }

@@ -50,8 +50,8 @@ void main() {
     expect(settingsBloc.state, SettingsInitState());
   });
 
-  test('get backup from type none', () {
-    Backup backup = Backup(type: BackupType.none);
+  test('get backup from type local', () {
+    Backup backup = Backup(type: BackupType.local);
 
     final expectedResponse = [
       BackupLoaded(backup: backup),
@@ -389,5 +389,33 @@ void main() {
     });
 
     settingsBloc.add(DriveBackupChoosenEvent(false));
+  });
+
+  test('configure backup in local file', () {
+    Backup backup = Backup(type: BackupType.local);
+    String filePath = 'my file path';
+
+    final expectedResponse = [
+      LocalBackupDone(backup: backup, filePath: filePath),
+    ];
+
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+    when(backupRepository.getBackup()).thenAnswer((_) => Future.value(backup));
+    when(backupRepository.getBackupDbFilePath())
+        .thenAnswer((_) => Future.value(filePath));
+    when(backupRepository.save(backup: backup))
+        .thenAnswer((_) => Future.value(null));
+
+    expectLater(
+      settingsBloc,
+      emitsInOrder(expectedResponse),
+    ).then((_) {
+      expect(settingsBloc.state,
+          LocalBackupDone(backup: backup, filePath: filePath));
+    });
+
+    settingsBloc.add(ConfigureLocalBackupEvent());
   });
 }

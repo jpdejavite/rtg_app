@@ -130,6 +130,7 @@
   "item_recipes": "Receitas do item",
   "updated_at_date": "Atualizado em %s",
   "archive_grocery_list": "Arquivar Lista de Compras",
+  "copy_all_items": "Copiar todos os itens",
   "archive_grocery_list_explanation": "Deseja realmente arquivar essa lista de compras?",
   "unit":"unidade",
   "units":"unidades",

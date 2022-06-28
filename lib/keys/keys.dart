@@ -165,6 +165,8 @@ class Keys {
       'save-grocery-list-title-field';
   static const String saveGroceryListArchiveAction =
       'save-grocery-list-archive-action';
+      static const String saveGroceryListCopyItemsAction =
+      'save-grocery-list-copy-items-action';
   static const String saveGroceryListArchiveConfirm =
       'save-grocery-list-archive-confirm';
   static const String saveGroceryListArchiveCancel =

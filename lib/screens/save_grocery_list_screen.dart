@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -132,17 +133,34 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
         title: Text(AppLocalizations.of(context).edit_grocery_list),
         actions: [
           IconButton(
+            key: Key(Keys.saveGroceryListCopyItemsAction),
+            icon: Icon(Icons.content_copy),
+            tooltip: AppLocalizations.of(context).copy_all_items,
+            onPressed: () {
+              Clipboard.setData(
+                  new ClipboardData(text: getGroceryListAsData()));
+            },
+          ),
+          IconButton(
             key: Key(Keys.saveGroceryListArchiveAction),
             icon: Icon(Icons.archive),
             tooltip: AppLocalizations.of(context).archive_grocery_list,
             onPressed: () {
               showArchiveGroceryListDialog(context);
             },
-          )
+          ),
         ],
       ),
       body: buildBody(),
     );
+  }
+
+  String getGroceryListAsData() {
+    List<String> data = [];
+    editGroceryList.groceries.forEach((grocery) {
+      data.add(grocery.getName(context));
+    });
+    return data.join("\n");
   }
 
   Future<void> showArchiveGroceryListDialog(BuildContext ctx) {

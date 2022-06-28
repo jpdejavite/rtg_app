@@ -45,9 +45,6 @@ class RtgApp extends StatelessWidget {
       theme: CustomThemeData.lightTheme,
       initialRoute: HomeScreen.id,
       routes: {
-        WelcomeScreen.id: (context) {
-          return WelcomeScreen();
-        },
         HomeScreen.id: (context) {
           return HomeScreen.newHomeBloc();
         },

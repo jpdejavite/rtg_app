@@ -72,6 +72,14 @@ void main() {
     SerializableFinder backButtonFinder = find.byTooltip("Voltar");
     final viewRecipeFloatingActionEditButton =
         find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
+    final viewRecipeShareRecipeAction =
+        find.byValueKey(Keys.viewRecipeShareRecipeAction);
+    final viewRecipeCopyContentToClipboardAction =
+        find.byValueKey(Keys.viewRecipeCopyContentToClipboardAction);
+    final viewRecipeShareAsImagesAction =
+        find.byValueKey(Keys.viewRecipeShareAsImagesAction);
+    final viewRecipeShareAsPdfAction =
+        find.byValueKey(Keys.viewRecipeShareAsPdfAction);
     final viewRecipeAddToGroceryListAction =
         find.byValueKey(Keys.viewRecipeAddToGroceryListAction);
     final viewRecipeGroceryListToSelect0 =
@@ -473,6 +481,27 @@ void main() {
       await driver.tap(saveRecipeFloatingActionSaveButton);
 
       expect(await driver.getText(viewRecipeTitle), recipeName1 + " editado");
+
+      await driver.waitFor(backButtonFinder);
+      await driver.tap(backButtonFinder);
+    });
+
+    test('share recipe', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await driver.tap(recipeListRowTitleText0);
+
+      await driver.tap(viewRecipeShareRecipeAction);
+
+      await driver.tap(viewRecipeCopyContentToClipboardAction);
+
+      await driver.tap(viewRecipeShareRecipeAction);
+
+      await driver.tap(viewRecipeShareAsImagesAction);
+
+      await driver.tap(viewRecipeShareRecipeAction);
+
+      await driver.tap(viewRecipeShareAsPdfAction);
 
       await driver.waitFor(backButtonFinder);
       await driver.tap(backButtonFinder);

@@ -165,7 +165,7 @@ class Keys {
       'save-grocery-list-title-field';
   static const String saveGroceryListArchiveAction =
       'save-grocery-list-archive-action';
-      static const String saveGroceryListCopyItemsAction =
+  static const String saveGroceryListCopyItemsAction =
       'save-grocery-list-copy-items-action';
   static const String saveGroceryListArchiveConfirm =
       'save-grocery-list-archive-confirm';
@@ -194,6 +194,14 @@ class Keys {
       'view-recipe-floating-action-edit-button';
   static const String viewRecipeAddToGroceryListAction =
       'view-recipe-add-to-grocery-list-action';
+  static const String viewRecipeShareRecipeAction =
+      'view-recipe-share-recipe-action';
+  static const String viewRecipeCopyContentToClipboardAction =
+      'view-recipe-copy-content-toclipboard-action';
+  static const String viewRecipeShareAsImagesAction =
+      'view-recipe-share-as-images-action';
+  static const String viewRecipeShareAsPdfAction =
+      'view-recipe-share-as-pdf-action';
   static const String viewRecipeGroceryListToSelect =
       'view-recipe-grocery-list-to-select';
   static const String viewRecipeCreateNewGroceryListAction =

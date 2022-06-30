@@ -72,9 +72,9 @@ class IngredientParser {
     measureId = im.id;
     if (im.hasMatch()) {
       text = text.substring(im.textMatch.length).trim();
-      text = StringHelper.removeLeadingPropostion(text);
+      text = StringHelper.removeLeadingPrepostion(text);
       formattedText = formattedText.substring(im.textMatch.length).trim();
-      formattedText = StringHelper.removeLeadingPropostion(formattedText);
+      formattedText = StringHelper.removeLeadingPrepostion(formattedText);
     }
 
     return IngredientParseResult(

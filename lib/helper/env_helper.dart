@@ -9,4 +9,24 @@ class EnvHelper {
 
     return disableShareBackupFileFlag != "true";
   }
+
+  static bool isShareRecipeAsImageEnabled() {
+    String disableShareRecipeAsImageFlag =
+        dotenv.get('DISABLE_SHARE_RECIPE_AS_IMAGE');
+    if (disableShareRecipeAsImageFlag == null) {
+      return true;
+    }
+
+    return disableShareRecipeAsImageFlag != "true";
+  }
+
+  static bool isShareRecipeAsPdfEnabled() {
+    String disableShareRecipeAsPdfFlag =
+        dotenv.get('DISABLE_SHARE_RECIPE_AS_PDF');
+    if (disableShareRecipeAsPdfFlag == null) {
+      return true;
+    }
+
+    return disableShareRecipeAsPdfFlag != "true";
+  }
 }

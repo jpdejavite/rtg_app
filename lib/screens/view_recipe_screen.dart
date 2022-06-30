@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rtg_app/helper/pdf_localization_map.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/widgets/choose_grocery_list_to_recipe_dialog.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -23,6 +25,9 @@ import 'package:rtg_app/widgets/view_recipe_label.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
 import 'package:rtg_app/widgets/view_recipe_title.dart';
+
+import '../helper/env_helper.dart';
+import '../helper/pdf_export.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   static String id = 'view_recipe_screen';
@@ -114,10 +119,11 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
   List<Widget> buildActions() {
     return [
       IconButton(
-        icon: Icon(Icons.copy),
-        tooltip: AppLocalizations.of(context).copy_to_clipboard,
+        key: Key(Keys.viewRecipeShareRecipeAction),
+        icon: Icon(Icons.share),
+        tooltip: AppLocalizations.of(context).share_recipe,
         onPressed: () {
-          Clipboard.setData(new ClipboardData(text: getRecipeAsData()));
+          showChooseShareFileDialog(context);
         },
       ),
       IconButton(
@@ -311,5 +317,84 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
     data.add(AppLocalizations.of(context).how_to_do);
     data.add(recipe.instructions);
     return data.join("\n");
+  }
+
+  PdfExporter buildPdfExporter() {
+    return PdfExporter(
+        recipe,
+        PdfLocalizationMap.build(
+            context,
+            PreparationTimeLabelText.getPreparationTimeText(
+                recipe.totalPreparationTime, true, context),
+            recipe.preparationTimeDetails == null
+                ? ""
+                : recipe.preparationTimeDetails
+                    .getPreparationTimeDetails(context)));
+  }
+
+  Future<void> showChooseShareFileDialog(BuildContext ctx) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context).share_recipe),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                TextButton(
+                    key: Key(Keys.viewRecipeCopyContentToClipboardAction),
+                    onPressed: () async {
+                      await Clipboard.setData(
+                          new ClipboardData(text: getRecipeAsData()));
+                      Navigator.of(context).pop();
+                      CustomToast.showToast(
+                        text: AppLocalizations.of(context).copied_to_clipboard,
+                        context: context,
+                      );
+                    },
+                    child: Text(
+                      AppLocalizations.of(context).copy_to_clipboard,
+                    )),
+                TextButton(
+                    key: Key(Keys.viewRecipeShareAsImagesAction),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final filePaths =
+                          await buildPdfExporter().makePdfAsImages();
+                      if (EnvHelper.isShareRecipeAsImageEnabled()) {
+                        Share.shareFiles(filePaths, text: recipe.title);
+                      }
+                    },
+                    child: Text(
+                      AppLocalizations.of(context).generate_image,
+                    )),
+                TextButton(
+                    key: Key(Keys.viewRecipeShareAsPdfAction),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final filePath = await buildPdfExporter().makePdfFile();
+                      if (EnvHelper.isShareRecipeAsPdfEnabled()) {
+                        Share.shareFiles([filePath], text: recipe.title);
+                      }
+                    },
+                    child: Text(
+                      AppLocalizations.of(context).generate_pdf,
+                    )),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              key: Key(Keys.saveGroceryListArchiveCancel),
+              child: Text(AppLocalizations.of(context).close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

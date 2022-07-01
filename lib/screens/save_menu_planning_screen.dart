@@ -63,12 +63,14 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
     return DialogRoute<DateTime>(
       context: context,
       builder: (BuildContext context) {
+        DateTime initialDate =
+            DateTime.fromMillisecondsSinceEpoch(arguments as int);
         return DatePickerDialog(
           restorationId: 'date_picker_dialog',
           initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: DateTime.fromMillisecondsSinceEpoch(arguments as int),
-          firstDate: DateTime(2021, 1, 1),
-          lastDate: DateTime(2022, 1, 1),
+          initialDate: initialDate,
+          firstDate: initialDate.subtract(Duration(days: 365)),
+          lastDate: initialDate.add(Duration(days: 365)),
         );
       },
     );

@@ -17,10 +17,8 @@ class CustomThemeData {
       overlayColor: MaterialStateProperty.all<Color>(CustomColors.primaryColor),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      selectedItemColor: CustomColors.primaryColor,
       unselectedItemColor: CustomColors.ligthGrey,
-      unselectedLabelStyle: TextStyle(
-        color: CustomColors.ligthGrey,
-      ),
     ),
     textTheme: ThemeData.light().textTheme.copyWith(
           headline4: ThemeData.light().textTheme.headline5.copyWith(
@@ -38,7 +36,10 @@ class CustomThemeData {
                 color: CustomColors.darkRed,
                 fontWeight: FontWeight.w500,
               ),
-        ), colorScheme: ThemeData.light().colorScheme.copyWith(
+        ),
+    colorScheme: ThemeData.light()
+        .colorScheme
+        .copyWith(
           primary: CustomColors.primaryColor,
           secondary: CustomColors.secondary,
           surface: Color(0xffc40007),
@@ -50,6 +51,7 @@ class CustomThemeData {
           onBackground: Colors.black,
           onError: Colors.white,
           brightness: Brightness.light,
-        ).copyWith(secondary: CustomColors.primaryColor),
+        )
+        .copyWith(secondary: CustomColors.primaryColor),
   );
 }

@@ -60,6 +60,11 @@ class MenuPlanningDao {
 
   Future<SaveMenuPlanningResponse> save({MenuPlanning menuPlanning}) async {
     try {
+      menuPlanning.days.forEach((day, meals) {
+        meals.sort((m1, m2) {
+          return Comparable.compare(m1.type.index, m2.type.index);
+        });
+      });
       var store = intMapStoreFactory.store(storeName);
       var db = await dbProvider.database;
       if (!menuPlanning.hasId()) {

@@ -32,6 +32,8 @@ class Keys {
       'home-card-first-menu-planning';
   static const String homeCardDoMenuPlanning =
       'home-card-do-menu-planning-action';
+  static const String homeCardNewMenuPlanning =
+      'home-card-new-menu-planning-action';
   static const String homeCardShowMenuPlanning = 'home-card-show-menu-planning';
   static const String homeCardSeeMenuPlanning = 'home-card-see-menu-planning';
   static const String homeCardOldMenuPlanning = 'home-card-old-menu-planning';
@@ -139,6 +141,12 @@ class Keys {
   static const String menuPlanningDayText = 'menu-planning-day-text';
   static const String menuPlanningDayAddMealButton =
       'menu-planning-day-add-meal-button';
+  static const String menuPlanningDayPickRecipeTextButton =
+      'menu-planning-day-pick-recipe-text-button';
+  static const String menuPlanningWriteDetailsTextButton =
+      'menu-planning-day-write-details-text-button';
+  static const String menuPlanningWriteDetailsTextField =
+      'menu-planning-day-write-details-text-field';
 
   // edit recipe preparation time details
   static const String editRecipePreparationTimeDetailsPreparationField =

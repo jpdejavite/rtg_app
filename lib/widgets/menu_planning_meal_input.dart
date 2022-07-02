@@ -9,14 +9,14 @@ import 'package:rtg_app/screens/choose_recipe_screen.dart';
 
 class MenuPlanningMealInput extends StatefulWidget {
   final MenuPlanningMeal meal;
-  final int index;
+  final String uniqueIndex;
   final void Function() onRemove;
   final void Function(MenuPlanningMeal newMeal) onUpdate;
   final List<Recipe> lastUsedGroceryListRecipes;
   final List<Recipe> menuPlanningRecipes;
   MenuPlanningMealInput({
     this.meal,
-    this.index,
+    this.uniqueIndex,
     this.onRemove,
     this.onUpdate,
     this.lastUsedGroceryListRecipes,
@@ -101,7 +101,8 @@ class _MenuPlanningMealInputState extends State<MenuPlanningMealInput> {
     return [
       Expanded(
         child: TextFormField(
-          // key: Key(key),
+          key: Key(
+              '${Keys.menuPlanningWriteDetailsTextField}-${widget.uniqueIndex}'),
           controller: _detailsController,
           onChanged: (value) {
             widget.meal.description = value;
@@ -170,6 +171,8 @@ class _MenuPlanningMealInputState extends State<MenuPlanningMealInput> {
         widget.meal.preparation == MenuPlanningMealPreparation.leftovers) {
       return [
         TextButton(
+          key: Key(
+              '${Keys.menuPlanningDayPickRecipeTextButton}-${widget.uniqueIndex}'),
           child: Text(AppLocalizations.of(context).pick_recipe),
           onPressed: onChooseRecipe,
         ),
@@ -179,6 +182,8 @@ class _MenuPlanningMealInputState extends State<MenuPlanningMealInput> {
           ),
         ),
         TextButton(
+          key: Key(
+              '${Keys.menuPlanningWriteDetailsTextButton}-${widget.uniqueIndex}'),
           child: Text(AppLocalizations.of(context).write_details),
           onPressed: () {
             setState(() {
@@ -224,7 +229,8 @@ class _MenuPlanningMealInputState extends State<MenuPlanningMealInput> {
         ),
         IconButton(
           icon: Icon(Icons.close),
-          key: Key('${Keys.menuPlanningDayAddMealButton}-$widget.index'),
+          key:
+              Key('${Keys.menuPlanningDayAddMealButton}-${widget.uniqueIndex}'),
           onPressed: widget.onRemove,
         ),
       ],

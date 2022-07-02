@@ -17,13 +17,16 @@ class HomeCard extends StatelessWidget {
   final Key cardKey;
   final Key dimissKey;
   final Key actionKey;
+  final Key secundaryActionKey;
   final IconData icon;
   final Color iconColor;
   final String title;
   final String subtitle;
   final String action;
+  final String secundaryAction;
   final void Function() onDismiss;
   final void Function() onAction;
+  final void Function() onSecundaryAction;
   final GroceryList lastUsedGroceryList;
   final List<Recipe> lastUsedGroceryListRecipes;
   final void Function(Recipe recipe) onTapRecipe;
@@ -34,13 +37,16 @@ class HomeCard extends StatelessWidget {
     this.cardKey,
     this.dimissKey,
     this.actionKey,
+    this.secundaryActionKey,
     this.icon,
     this.iconColor,
     this.title,
     this.subtitle,
     this.onDismiss,
     this.action,
+    this.secundaryAction,
     this.onAction,
+    this.onSecundaryAction,
     this.lastUsedGroceryList,
     this.lastUsedGroceryListRecipes,
     this.onTapRecipe,
@@ -61,9 +67,22 @@ class HomeCard extends StatelessWidget {
       );
     }
 
+    if (onSecundaryAction != null) {
+      buttons.add(
+        TextButton(
+          key: secundaryActionKey,
+          child: Text(
+            secundaryAction,
+            style: TextStyle(color: CustomColors.ligthGrey),
+          ),
+          onPressed: onSecundaryAction,
+        ),
+      );
+    }
+
     if (action != null) {
       buttons.addAll([
-        const SizedBox(width: 8),
+        Expanded(child: SizedBox(width: 8)),
         TextButton(
           key: actionKey,
           child: Text(action),

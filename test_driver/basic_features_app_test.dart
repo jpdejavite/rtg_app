@@ -3,139 +3,11 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
+import 'constants.dart';
 import 'helper.dart';
 
 void main() {
   group('basic fetures app test', () {
-    final homeBottomBarHomeIcon = find.byValueKey(Keys.homeBottomBarHomeIcon);
-    final homeBottomBarRecipesIcon =
-        find.byValueKey(Keys.homeBottomBarRecipesIcon);
-    final homeBottomBarListsIcon = find.byValueKey(Keys.homeBottomBarListsIcon);
-    final homeCardRecipeTutorialDismiss =
-        find.byValueKey(Keys.homeCardRecipeTutorialDismiss);
-    final homeCardConfigureBackup =
-        find.byValueKey(Keys.homeCardConfigureBackup);
-    final homeCardConfigureBackupAction =
-        find.byValueKey(Keys.homeCardConfigureBackupAction);
-    final homeCardLastGroceryListUsed =
-        find.byValueKey(Keys.homeCardLastGroceryListUsed);
-    final homeCardLastGroceryListUsedAction =
-        find.byValueKey(Keys.homeCardLastGroceryListUsedAction);
-    final homeCardRecipeButton0 =
-        find.byValueKey('${Keys.homeCardRecipeButton}-0');
-    final homeFloatingActionNewGroceryListButton =
-        find.byValueKey(Keys.homeFloatingActionNewGroceryListButton);
-    final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
-    final homeActionSettingsIcon = find.byValueKey(Keys.homeActionSettingsIcon);
-    final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
-    final saveRecipeLabelField0 =
-        find.byValueKey(Keys.saveRecipeLabelField + "0");
-    final saveRecipeLabelRemoveIcon1 =
-        find.byValueKey(Keys.saveRecipeLabelRemoveIcon + "1");
-    final saveRecipeIngredientField2 =
-        find.byValueKey(Keys.saveRecipeIngredientField + "2");
-    final saveRecipeIngredientRemoveIcon3 =
-        find.byValueKey(Keys.saveRecipeIngredientRemoveIcon + "3");
-    final saveRecipeFloatingActionSaveButton =
-        find.byValueKey(Keys.saveRecipeFloatingActionSaveButton);
-    final recipeListRowTitleText0 =
-        find.byValueKey(Keys.recipeListRowTitleText + "0");
-    final recipeListRowTitleText1 =
-        find.byValueKey(Keys.recipeListRowTitleText + "1");
-    final recipeListRowTitleText2 =
-        find.byValueKey(Keys.recipeListRowTitleText + "2");
-    final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
-    final viewRecipePreparationTimeDetailsText =
-        find.byValueKey(Keys.viewRecipePreparationTimeDetailsText);
-    final viewRecipeIngredientText0 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "0");
-    final viewRecipeIngredientText1 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "1");
-    final viewRecipeIngredientText2 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "2");
-    final viewRecipeIngredientText3 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "3");
-    final viewRecipeIngredientText4 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "4");
-    final viewRecipeIngredientText5 =
-        find.byValueKey(Keys.viewRecipeIngredientText + "5");
-    final viewRecipeIngredientLabelText0 =
-        find.byValueKey(Keys.viewRecipeIngredientLabelText + "0");
-    final viewRecipeIngredientLabelText1 =
-        find.byValueKey(Keys.viewRecipeIngredientLabelText + "1");
-    final viewRecipeIngredientLabelText2 =
-        find.byValueKey(Keys.viewRecipeIngredientLabelText + "2");
-    final viewRecipeAddToGroceryListAction1 =
-        find.byValueKey(Keys.viewRecipeAddToGroceryListAction + "1");
-    final viewRecipeInstructionText =
-        find.byValueKey(Keys.viewRecipeInstructionText);
-    SerializableFinder backButtonFinder = find.byTooltip("Voltar");
-    final viewRecipeFloatingActionEditButton =
-        find.byValueKey(Keys.viewRecipeFloatingActionEditButton);
-    final viewRecipeShareRecipeAction =
-        find.byValueKey(Keys.viewRecipeShareRecipeAction);
-    final viewRecipeCopyContentToClipboardAction =
-        find.byValueKey(Keys.viewRecipeCopyContentToClipboardAction);
-    final viewRecipeShareAsImagesAction =
-        find.byValueKey(Keys.viewRecipeShareAsImagesAction);
-    final viewRecipeShareAsPdfAction =
-        find.byValueKey(Keys.viewRecipeShareAsPdfAction);
-    final viewRecipeAddToGroceryListAction =
-        find.byValueKey(Keys.viewRecipeAddToGroceryListAction);
-    final viewRecipeGroceryListToSelect0 =
-        find.byValueKey(Keys.viewRecipeGroceryListToSelect + '0');
-    final viewRecipeCreateNewGroceryListAction =
-        find.byValueKey(Keys.viewRecipeCreateNewGroceryListAction);
-    final addRecipeToGroceryListDialogPortionTextField =
-        find.byValueKey(Keys.addRecipeToGroceryListDialogPortionTextField);
-    final addRecipeToGroceryListDialogConfirmButton =
-        find.byValueKey(Keys.addRecipeToGroceryListDialogConfirmButton);
-    final groceryListRowTitleText0 =
-        find.byValueKey(Keys.groceryListRowTitleText + "0");
-    final groceryListRowShowRecipes0 =
-        find.byValueKey(Keys.groceryListRowShowRecipes + "0");
-    final groceryListRowTitleText1 =
-        find.byValueKey(Keys.groceryListRowTitleText + "1");
-    final groceryListRecipesDialogRecipe0 =
-        find.byValueKey(Keys.groceryListRecipesDialogRecipe + "0");
-    final groceryListRecipesDialogRecipe1 =
-        find.byValueKey(Keys.groceryListRecipesDialogRecipe + "1");
-    final groceryListRecipesDialogCloseButton =
-        find.byValueKey(Keys.groceryListRecipesDialogCloseButton);
-    final groceryItemTextField0 =
-        find.byValueKey(Keys.groceryItemTextField + "0");
-    final groceryItemTextField1 =
-        find.byValueKey(Keys.groceryItemTextField + "1");
-    final groceryItemTextField2 =
-        find.byValueKey(Keys.groceryItemTextField + "2");
-    final groceryItemTextField3 =
-        find.byValueKey(Keys.groceryItemTextField + "3");
-    final groceryItemCheckBox1 =
-        find.byValueKey(Keys.groceryItemCheckBox + "1");
-    final saveGroceryListShowChecked =
-        find.byValueKey(Keys.saveGroceryListShowChecked);
-    final groceryItemActionIcon1 =
-        find.byValueKey(Keys.groceryItemActionIcon + "1");
-    final groceryItemActionIcon2 =
-        find.byValueKey(Keys.groceryItemActionIcon + "2");
-    final saveGroceryListBottomActionIcon =
-        find.byValueKey(Keys.saveGroceryListBottomActionIcon);
-    final ingredientRecipeSourceDialogRecipe0 =
-        find.byValueKey(Keys.ingredientRecipeSourceDialogRecipe + "0");
-    final ingredientRecipeSourceDialogRecipeIngredientQuantity0 =
-        find.byValueKey(
-            Keys.ingredientRecipeSourceDialogRecipeIngredientQuantity + "0");
-    final ingredientRecipeSourceDialogCloseButton =
-        find.byValueKey(Keys.ingredientRecipeSourceDialogCloseButton);
-    final saveGroceryListArchiveAction =
-        find.byValueKey(Keys.saveGroceryListArchiveAction);
-    final saveGroceryListArchiveConfirm =
-        find.byValueKey(Keys.saveGroceryListArchiveConfirm);
-    final settingsLocalButtton = find.byValueKey(Keys.settingsLocalButtton);
-    final settingsConfiguredAtText =
-        find.byValueKey(Keys.settingsConfiguredAtText);
-    final settingsDoBackupButton = find.byValueKey(Keys.settingsDoBackupButton);
-
     final String recipeName1 = 'Minha primeira receita!';
     final String portion1 = '1.00';
     final String ingredient10 = '1 chuchu';
@@ -171,7 +43,7 @@ void main() {
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
-      await driver.tap(actionDeleteAllIcon);
+      await driver.tap(Constants.actionDeleteAllIcon);
     });
 
     // Close the connection to the driver after the tests have completed.
@@ -182,14 +54,15 @@ void main() {
     });
 
     test('home inital screen', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeCardRecipeTutorial), driver),
           true);
 
-      expect(await Helper.isPresent(homeActionSettingsIcon, driver), true);
+      expect(await Helper.isPresent(Constants.homeActionSettingsIcon, driver),
+          true);
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeActionSettingsNotification), driver),
@@ -197,7 +70,7 @@ void main() {
     });
 
     test('recipes initial screen', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
       expect(
           await Helper.isPresent(
@@ -207,7 +80,7 @@ void main() {
     });
 
     test('lists initial screen', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
       expect(
           await Helper.isPresent(
@@ -216,16 +89,17 @@ void main() {
     });
 
     test('dimiss recipe tutorial', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
-      await driver.tap(homeCardRecipeTutorialDismiss);
+      await driver.tap(Constants.homeCardRecipeTutorialDismiss);
 
       expect(
           await Helper.isPresent(
               find.byValueKey(Keys.homeBottomBarHomeText), driver),
           true);
 
-      expect(await Helper.isPresent(homeActionSettingsIcon, driver), true);
+      expect(await Helper.isPresent(Constants.homeActionSettingsIcon, driver),
+          true);
     });
 
     test('insert first recipe', () async {
@@ -238,7 +112,8 @@ void main() {
           [ingredient10, ingredient11],
           instructions1);
 
-      expect(await driver.getText(recipeListRowTitleText0), recipeName1);
+      expect(
+          await driver.getText(Constants.recipeListRowTitleText0), recipeName1);
 
       expect(
           await Helper.isPresent(
@@ -247,21 +122,23 @@ void main() {
     });
 
     test('check configure backup home action', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
-      expect(await Helper.isPresent(homeCardConfigureBackup, driver), true);
+      expect(await Helper.isPresent(Constants.homeCardConfigureBackup, driver),
+          true);
 
-      await driver.tap(homeCardConfigureBackupAction);
+      await driver.tap(Constants.homeCardConfigureBackupAction);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('insert second recipe', () async {
       await Helper.addRecipe(driver, recipeName2, portion2, null, null,
           [ingredient20, ingredient21, ingredient22], instructions2);
 
-      expect(await driver.getText(recipeListRowTitleText1), recipeName2);
+      expect(
+          await driver.getText(Constants.recipeListRowTitleText1), recipeName2);
 
       expect(
           await Helper.isPresent(
@@ -286,491 +163,605 @@ void main() {
           ],
           instructions3);
 
-      expect(await driver.getText(recipeListRowTitleText2), recipeName3);
+      expect(
+          await driver.getText(Constants.recipeListRowTitleText2), recipeName3);
     });
 
     test('view third recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText2);
+      await driver.tap(Constants.recipeListRowTitleText2);
 
-      expect(await driver.getText(viewRecipeTitle), recipeName3);
-      expect(await driver.getText(viewRecipeIngredientLabelText0), labels3[0]);
-      expect(await driver.getText(viewRecipeIngredientText0),
+      expect(await driver.getText(Constants.viewRecipeTitle), recipeName3);
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
+          labels3[0]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "    • " + ingredient30);
-      expect(await driver.getText(viewRecipeIngredientText1),
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "    • " + ingredient31);
-      expect(await driver.getText(viewRecipeIngredientText2),
+      expect(await driver.getText(Constants.viewRecipeIngredientText2),
           "    • " + ingredient32);
-      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[3]);
-      expect(await driver.getText(viewRecipeIngredientText3),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText1),
+          labels3[3]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText3),
           "    • " + ingredient33);
-      expect(await driver.getText(viewRecipeIngredientLabelText2), labels3[4]);
-      expect(await driver.getText(viewRecipeIngredientText4),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText2),
+          labels3[4]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient34);
-      expect(await driver.getText(viewRecipeIngredientText5),
+      expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      expect(await driver.getText(viewRecipeInstructionText), instructions3);
+      expect(await driver.getText(Constants.viewRecipeInstructionText),
+          instructions3);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('remove label third recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText2);
+      await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(viewRecipeFloatingActionEditButton);
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
 
-      await driver.scrollIntoView(saveRecipeLabelRemoveIcon1);
+      await driver.scrollIntoView(Constants.saveRecipeLabelRemoveIcon1);
 
-      await driver.tap(saveRecipeLabelRemoveIcon1);
+      await driver.tap(Constants.saveRecipeLabelRemoveIcon1);
       await Future.delayed(Duration(seconds: 1));
 
-      await driver.tap(saveRecipeFloatingActionSaveButton);
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeIngredientLabelText0), labels3[0]);
-      expect(await driver.getText(viewRecipeIngredientText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
+          labels3[0]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "    • " + ingredient30);
-      expect(await driver.getText(viewRecipeIngredientText1),
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "    • " + ingredient31);
-      expect(await driver.getText(viewRecipeIngredientText2),
+      expect(await driver.getText(Constants.viewRecipeIngredientText2),
           "    • " + ingredient32);
-      expect(await driver.getText(viewRecipeIngredientText3),
+      expect(await driver.getText(Constants.viewRecipeIngredientText3),
           "    • " + ingredient33);
-      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
-      expect(await driver.getText(viewRecipeIngredientText4),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText1),
+          labels3[4]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient34);
-      expect(await driver.getText(viewRecipeIngredientText5),
+      expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit label third recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText2);
+      await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(viewRecipeFloatingActionEditButton);
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
 
-      await driver.scrollIntoView(saveRecipeLabelField0);
+      await driver.scrollIntoView(Constants.saveRecipeLabelField0);
 
-      await driver.tap(saveRecipeLabelField0);
+      await driver.tap(Constants.saveRecipeLabelField0);
       await driver.enterText(labels3[0] + " editado");
 
-      await driver.tap(saveRecipeFloatingActionSaveButton);
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeIngredientLabelText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0] + " editado");
-      expect(await driver.getText(viewRecipeIngredientText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "    • " + ingredient30);
-      expect(await driver.getText(viewRecipeIngredientText1),
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "    • " + ingredient31);
-      expect(await driver.getText(viewRecipeIngredientText2),
+      expect(await driver.getText(Constants.viewRecipeIngredientText2),
           "    • " + ingredient32);
-      expect(await driver.getText(viewRecipeIngredientText3),
+      expect(await driver.getText(Constants.viewRecipeIngredientText3),
           "    • " + ingredient33);
-      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
-      expect(await driver.getText(viewRecipeIngredientText4),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText1),
+          labels3[4]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient34);
-      expect(await driver.getText(viewRecipeIngredientText5),
+      expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit ingredient third recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText2);
+      await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(viewRecipeFloatingActionEditButton);
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
 
-      await driver.scrollIntoView(saveRecipeIngredientField2);
+      await driver.scrollIntoView(Constants.saveRecipeIngredientField2);
 
-      await driver.tap(saveRecipeIngredientField2);
+      await driver.tap(Constants.saveRecipeIngredientField2);
       await driver.enterText(ingredient32 + " editado");
 
-      await driver.tap(saveRecipeFloatingActionSaveButton);
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeIngredientLabelText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0] + " editado");
-      expect(await driver.getText(viewRecipeIngredientText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "    • " + ingredient30);
-      expect(await driver.getText(viewRecipeIngredientText1),
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "    • " + ingredient31);
-      expect(await driver.getText(viewRecipeIngredientText2),
+      expect(await driver.getText(Constants.viewRecipeIngredientText2),
           "    • " + ingredient32 + " editado");
-      expect(await driver.getText(viewRecipeIngredientText3),
+      expect(await driver.getText(Constants.viewRecipeIngredientText3),
           "    • " + ingredient33);
-      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
-      expect(await driver.getText(viewRecipeIngredientText4),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText1),
+          labels3[4]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient34);
-      expect(await driver.getText(viewRecipeIngredientText5),
+      expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('remove ingredient third recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText2);
+      await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(viewRecipeFloatingActionEditButton);
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
 
-      await driver.scrollIntoView(saveRecipeIngredientRemoveIcon3);
+      await driver.scrollIntoView(Constants.saveRecipeIngredientRemoveIcon3);
 
-      await driver.tap(saveRecipeIngredientRemoveIcon3);
+      await driver.tap(Constants.saveRecipeIngredientRemoveIcon3);
 
-      await driver.tap(saveRecipeFloatingActionSaveButton);
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeIngredientLabelText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0] + " editado");
-      expect(await driver.getText(viewRecipeIngredientText0),
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "    • " + ingredient30);
-      expect(await driver.getText(viewRecipeIngredientText1),
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "    • " + ingredient31);
-      expect(await driver.getText(viewRecipeIngredientText2),
+      expect(await driver.getText(Constants.viewRecipeIngredientText2),
           "    • " + ingredient32 + " editado");
-      expect(await driver.getText(viewRecipeIngredientLabelText1), labels3[4]);
-      expect(await driver.getText(viewRecipeIngredientText3),
+      expect(await driver.getText(Constants.viewRecipeIngredientLabelText1),
+          labels3[4]);
+      expect(await driver.getText(Constants.viewRecipeIngredientText3),
           "    • " + ingredient34);
-      expect(await driver.getText(viewRecipeIngredientText4),
+      expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient35);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('view recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText0);
+      await driver.tap(Constants.recipeListRowTitleText0);
 
-      expect(await driver.getText(viewRecipeTitle), recipeName1);
+      expect(await driver.getText(Constants.viewRecipeTitle), recipeName1);
+      expect(await driver.getText(Constants.viewRecipeIngredientText0),
+          "• " + ingredient10);
+      expect(await driver.getText(Constants.viewRecipeIngredientText1),
+          "• " + ingredient11);
       expect(
-          await driver.getText(viewRecipeIngredientText0), "• " + ingredient10);
-      expect(
-          await driver.getText(viewRecipeIngredientText1), "• " + ingredient11);
-      expect(await driver.getText(viewRecipePreparationTimeDetailsText),
+          await driver.getText(Constants.viewRecipePreparationTimeDetailsText),
           '10 m preparo + 2 h cozimento');
 
-      expect(await driver.getText(viewRecipeInstructionText), instructions1);
+      expect(await driver.getText(Constants.viewRecipeInstructionText),
+          instructions1);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText0);
+      await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(viewRecipeFloatingActionEditButton);
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
 
-      await driver.tap(saveRecipeNameField);
+      await driver.tap(Constants.saveRecipeNameField);
       await driver.enterText(recipeName1 + " editado");
 
-      await driver.tap(saveRecipeFloatingActionSaveButton);
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(viewRecipeTitle), recipeName1 + " editado");
+      expect(await driver.getText(Constants.viewRecipeTitle),
+          recipeName1 + " editado");
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('share recipe', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText0);
+      await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(viewRecipeShareRecipeAction);
+      await driver.tap(Constants.viewRecipeShareRecipeAction);
 
-      await driver.tap(viewRecipeCopyContentToClipboardAction);
+      await driver.tap(Constants.viewRecipeCopyContentToClipboardAction);
 
-      await driver.tap(viewRecipeShareRecipeAction);
+      await driver.tap(Constants.viewRecipeShareRecipeAction);
 
-      await driver.tap(viewRecipeShareAsImagesAction);
+      await driver.tap(Constants.viewRecipeShareAsImagesAction);
 
-      await driver.tap(viewRecipeShareRecipeAction);
+      await driver.tap(Constants.viewRecipeShareRecipeAction);
 
-      await driver.tap(viewRecipeShareAsPdfAction);
+      await driver.tap(Constants.viewRecipeShareAsPdfAction);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('add first recipe to new grocery list', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText0);
+      await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(viewRecipeAddToGroceryListAction);
+      await driver.tap(Constants.viewRecipeAddToGroceryListAction);
 
-      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("2");
 
-      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
 
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
+      expect(await Helper.isPresent(Constants.groceryListRowTitleText0, driver),
+          true);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      expect(await driver.getText(groceryItemTextField0), "2 chuchu");
+      expect(await driver.getText(Constants.groceryItemTextField0), "2 chuchu");
 
-      expect(
-          await driver.getText(groceryItemTextField1), "2 colheres de chá sal");
+      expect(await driver.getText(Constants.groceryItemTextField1),
+          "2 colheres de chá sal");
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('check last used recipe on home', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
-      expect(await Helper.isPresent(homeCardLastGroceryListUsed, driver), true);
+      expect(
+          await Helper.isPresent(Constants.homeCardLastGroceryListUsed, driver),
+          true);
 
-      await driver.tap(homeCardLastGroceryListUsedAction);
+      await driver.tap(Constants.homeCardLastGroceryListUsedAction);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
 
-      await driver.tap(homeCardRecipeButton0);
+      await driver.tap(Constants.homeCardRecipeButton0);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('add second recipe to same grocery list', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(viewRecipeAddToGroceryListAction1);
+      await driver.tap(Constants.viewRecipeAddToGroceryListAction1);
 
-      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("9");
 
-      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
 
-      await driver.tap(viewRecipeGroceryListToSelect0);
+      await driver.tap(Constants.viewRecipeGroceryListToSelect0);
 
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      expect(await driver.getText(groceryItemTextField0), "2 chuchu");
+      expect(await driver.getText(Constants.groceryItemTextField0), "2 chuchu");
+
+      expect(await driver.getText(Constants.groceryItemTextField1),
+          "5 colheres de chá sal");
 
       expect(
-          await driver.getText(groceryItemTextField1), "5 colheres de chá sal");
+          await driver.getText(Constants.groceryItemTextField2), "3 beterraba");
 
-      expect(await driver.getText(groceryItemTextField2), "3 beterraba");
-
-      expect(await driver.getText(groceryItemTextField3),
+      expect(await driver.getText(Constants.groceryItemTextField3),
           "4 1/2 colheres de chá açucar");
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('add second recipe to new grocery list', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipeListRowTitleText1);
+      await driver.tap(Constants.recipeListRowTitleText1);
 
-      await driver.tap(viewRecipeAddToGroceryListAction);
+      await driver.tap(Constants.viewRecipeAddToGroceryListAction);
 
-      await driver.tap(addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("2");
 
-      await driver.tap(addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
 
-      await driver.tap(viewRecipeCreateNewGroceryListAction);
+      await driver.tap(Constants.viewRecipeCreateNewGroceryListAction);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
 
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      expect(await Helper.isPresent(groceryListRowTitleText1, driver), true);
+      expect(await Helper.isPresent(Constants.groceryListRowTitleText1, driver),
+          true);
     });
 
     test('edit grocery list item name', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(groceryItemTextField0);
+      await driver.tap(Constants.groceryItemTextField0);
       await driver.enterText("1 chuchu grande");
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      expect(await driver.getText(groceryItemTextField0), "1 chuchu grande");
+      expect(await driver.getText(Constants.groceryItemTextField0),
+          "1 chuchu grande");
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit grocery list drag item', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.scroll(
-          groceryItemActionIcon2, 0, -75, Duration(milliseconds: 3000));
+      await driver.scroll(Constants.groceryItemActionIcon2, 0, -75,
+          Duration(milliseconds: 3000));
 
       await Future.delayed(Duration(seconds: 2));
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit grocery list check item', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(groceryItemCheckBox1);
+      await driver.tap(Constants.groceryItemCheckBox1);
 
-      expect(await Helper.isPresent(saveGroceryListShowChecked, driver), true);
+      expect(
+          await Helper.isPresent(Constants.saveGroceryListShowChecked, driver),
+          true);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit grocery list show recipes', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(saveGroceryListBottomActionIcon);
+      await driver.tap(Constants.saveGroceryListBottomActionIcon);
 
-      await driver.tap(groceryItemActionIcon1);
+      await driver.tap(Constants.groceryItemActionIcon1);
 
-      expect(await driver.getText(ingredientRecipeSourceDialogRecipe0),
+      expect(
+          await driver.getText(Constants.ingredientRecipeSourceDialogRecipe0),
           recipeName2);
       expect(
-          await driver
-              .getText(ingredientRecipeSourceDialogRecipeIngredientQuantity0),
+          await driver.getText(
+              Constants.ingredientRecipeSourceDialogRecipeIngredientQuantity0),
           "1 1/2 colheres de chá");
 
-      await driver.tap(ingredientRecipeSourceDialogCloseButton);
+      await driver.tap(Constants.ingredientRecipeSourceDialogCloseButton);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('edit grocery list archive recipes', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(saveGroceryListArchiveAction);
+      await driver.tap(Constants.saveGroceryListArchiveAction);
 
-      await driver.tap(saveGroceryListArchiveConfirm);
+      await driver.tap(Constants.saveGroceryListArchiveConfirm);
 
-      expect(await Helper.isPresent(groceryListRowTitleText0, driver), true);
+      expect(await Helper.isPresent(Constants.groceryListRowTitleText0, driver),
+          true);
 
-      expect(await Helper.isPresent(groceryListRowTitleText1, driver), false);
+      expect(await Helper.isPresent(Constants.groceryListRowTitleText1, driver),
+          false);
     });
 
     test('show grocery list recipes', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowShowRecipes0);
+      await driver.tap(Constants.groceryListRowShowRecipes0);
 
-      expect(await driver.getText(groceryListRecipesDialogRecipe0),
+      expect(await driver.getText(Constants.groceryListRecipesDialogRecipe0),
           recipeName1 + " editado");
 
-      expect(
-          await driver.getText(groceryListRecipesDialogRecipe1), recipeName2);
+      expect(await driver.getText(Constants.groceryListRecipesDialogRecipe1),
+          recipeName2);
 
-      await driver.tap(groceryListRecipesDialogCloseButton);
+      await driver.tap(Constants.groceryListRecipesDialogCloseButton);
     });
 
     test('new grocery list', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(homeFloatingActionNewGroceryListButton);
+      await driver.tap(Constants.homeFloatingActionNewGroceryListButton);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('add items to new grocery list', () async {
-      await driver.tap(homeBottomBarListsIcon);
+      await driver.tap(Constants.homeBottomBarListsIcon);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
       String groceryItem0 = 'sabão em pó';
-      await driver.tap(groceryItemTextField0);
+      await driver.tap(Constants.groceryItemTextField0);
       await driver.enterText(groceryItem0);
       await driver.enterText("\n");
 
       String groceryItem1 = '1 colher de sopa de azeite';
-      await driver.tap(groceryItemTextField1);
+      await driver.tap(Constants.groceryItemTextField1);
       await driver.enterText(groceryItem1);
       await driver.enterText("\n");
 
       String groceryItem2 = '1 coca';
-      await driver.tap(groceryItemTextField2);
+      await driver.tap(Constants.groceryItemTextField2);
       await driver.enterText(groceryItem2);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
 
-      await driver.tap(groceryListRowTitleText0);
+      await driver.tap(Constants.groceryListRowTitleText0);
 
-      expect(await driver.getText(groceryItemTextField0), groceryItem0);
-      expect(await driver.getText(groceryItemTextField1),
+      expect(
+          await driver.getText(Constants.groceryItemTextField0), groceryItem0);
+      expect(await driver.getText(Constants.groceryItemTextField1),
           '1 colher de sopa azeite');
-      expect(await driver.getText(groceryItemTextField2), groceryItem2);
+      expect(
+          await driver.getText(Constants.groceryItemTextField2), groceryItem2);
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('configure local backup', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
-      expect(await Helper.isPresent(homeCardConfigureBackup, driver), true);
+      expect(await Helper.isPresent(Constants.homeCardConfigureBackup, driver),
+          true);
 
-      await driver.tap(homeCardConfigureBackupAction);
+      await driver.tap(Constants.homeCardConfigureBackupAction);
 
-      await driver.tap(settingsLocalButtton);
+      await driver.tap(Constants.settingsLocalButtton);
 
-      expect(await driver.getText(settingsConfiguredAtText),
+      expect(await driver.getText(Constants.settingsConfiguredAtText),
           'Configurado em: Local');
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
 
     test('do local backup again', () async {
-      await driver.tap(homeBottomBarHomeIcon);
+      await driver.tap(Constants.homeBottomBarHomeIcon);
 
-      await driver.tap(homeActionSettingsIcon);
+      await driver.tap(Constants.homeActionSettingsIcon);
 
-      await driver.tap(settingsDoBackupButton);
+      await driver.tap(Constants.settingsDoBackupButton);
 
-      expect(await driver.getText(settingsConfiguredAtText),
+      expect(await driver.getText(Constants.settingsConfiguredAtText),
           'Configurado em: Local');
 
-      await driver.waitFor(backButtonFinder);
-      await driver.tap(backButtonFinder);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+    });
+
+    test('do first menu planning', () async {
+      await driver.tap(Constants.homeBottomBarHomeIcon);
+
+      await driver.tap(Constants.homeCardDoMenuPlanning);
+
+      await driver.tap(Constants.menuPlanningDayAddMealButton0);
+
+      await driver.tap(Constants.menuPlanningDayPickRecipeTextButton00);
+
+      await driver.tap(Constants.recipesListFilter);
+      await driver.enterText(recipeName1);
+
+      await driver.tap(Constants.recipeListRowTitleText0);
+
+      await driver.tap(Constants.menuPlanningDayAddMealButton0);
+
+      await driver.tap(Constants.menuPlanningWriteDetailsTextButton01);
+
+      await driver.tap(Constants.menuPlanningWriteDetailsTextField01);
+      await driver.enterText("segredo");
+
+      await driver.tap(Constants.menuPlanningDayAddMealButton1);
+
+      await driver.tap(Constants.menuPlanningDayPickRecipeTextButton10);
+
+      await driver.tap(Constants.recipesListFilter);
+      await driver.enterText(recipeName2);
+
+      await driver.tap(Constants.recipeListRowTitleText0);
+
+      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText00),
+          "almoço: cozinhar");
+      await driver.tap(Constants.menuPlanningDaysMealTextButton00);
+      expect(await driver.getText(Constants.viewRecipeTitle),
+          recipeName1 + " editado");
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText01),
+          "jantar: cozinhar");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealDescriptionText01),
+          "segredo");
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
+          "almoço: cozinhar");
+      await driver.tap(Constants.menuPlanningDaysMealTextButton10);
+      expect(await driver.getText(Constants.viewRecipeTitle), recipeName2);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+    });
+
+    test('edit menu planning', () async {
+      await driver.tap(Constants.homeBottomBarHomeIcon);
+
+      await driver.tap(Constants.homeCardSeeMenuPlanning);
+
+      await driver.tap(Constants.viewMenuPlanningFloatingActionEditButton);
+
+      await driver.tap(Constants.menuPlanningWriteDetailsTextField01);
+      await driver.enterText("segredo editado");
+
+      await driver.tap(Constants.menuPlanningDayAddMealButton00);
+
+      await driver.tap(Constants.saveMenuPlanningStartAtIcon);
+
+      await driver.tap(find.text(DateTime.now().day.toString()));
+      await driver.tap(find.text('OK'));
+
+      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText00),
+          "jantar: cozinhar");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealDescriptionText00),
+          "segredo editado");
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
+          "almoço: cozinhar");
+      await driver.tap(Constants.menuPlanningDaysMealTextButton10);
+      expect(await driver.getText(Constants.viewRecipeTitle), recipeName2);
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
     });
   });
 }

@@ -302,7 +302,7 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
         fields.add(
           MenuPlanningMealInput(
             meal: meal,
-            index: i,
+            uniqueIndex: '$index-$i',
             onRemove: () {
               setState(() {
                 mealsMap[index].removeAt(i);

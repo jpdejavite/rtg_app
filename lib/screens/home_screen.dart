@@ -297,12 +297,20 @@ class _HomeScreenState extends State<HomeScreen> {
         title: AppLocalizations.of(context).current_menu_planning,
         currentMenuPlanning: showHomeInfo.currentMenuPlanning,
         currentMenuPlanningRecipes: showHomeInfo.currentMenuPlanningRecipes,
-        action: AppLocalizations.of(context).see_planning,
+        action: AppLocalizations.of(context).see_details,
         onAction: () async {
           await Navigator.pushNamed(context, ViewMenuPlanningScreen.id,
               arguments: ViewMenuPlanningArguments(
                   showHomeInfo.currentMenuPlanning,
                   showHomeInfo.currentMenuPlanningRecipes));
+          refreshData();
+        },
+        secundaryActionKey: Key(Keys.homeCardNewMenuPlanning),
+        secundaryAction: AppLocalizations.of(context).create_new,
+        onSecundaryAction: () async {
+          await Navigator.pushNamed(context, SaveMenuPlanningScreen.id,
+              arguments: SaveMenuPlanningArguments(
+                  null, null, showHomeInfo.lastUsedGroceryListRecipes));
           refreshData();
         },
       ));
@@ -316,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: AppLocalizations.of(context).next_menu_planning,
         currentMenuPlanning: showHomeInfo.futureMenuPlanning,
         currentMenuPlanningRecipes: showHomeInfo.futureMenuPlanningRecipes,
-        action: AppLocalizations.of(context).see_planning,
+        action: AppLocalizations.of(context).see_details,
         onAction: () async {
           await Navigator.pushNamed(context, ViewMenuPlanningScreen.id,
               arguments: ViewMenuPlanningArguments(
@@ -337,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: AppLocalizations.of(context).new_menu_planning_question,
           subtitle:
               AppLocalizations.of(context).first_menu_planning_explanation,
-          action: AppLocalizations.of(context).do_planning,
+          action: AppLocalizations.of(context).create_new,
           onAction: () async {
             await Navigator.pushNamed(context, SaveMenuPlanningScreen.id,
                 arguments: SaveMenuPlanningArguments(

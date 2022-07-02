@@ -310,7 +310,7 @@ void main() {
         '2 1 ingrediente');
   });
 
-  test('get name quantity as fraction', () {
+  test('get name quantity as mixed fraction', () {
     expect(
         GroceryListItem(
           ingredientName: 'ingrediente',
@@ -318,6 +318,16 @@ void main() {
           quantity: 2.75,
         ).getName(null),
         '2 3/4 1 ingrediente');
+  });
+
+  test('get name quantity as raw fraction', () {
+    expect(
+        GroceryListItem(
+          ingredientName: 'ingrediente',
+          measureId: IngredientMeasureId.kilograms,
+          quantity: 2.75,
+        ).getName(null),
+        '2.75 12 ingrediente');
   });
 
   test('fromInput has NOT parsed quantity', () {

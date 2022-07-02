@@ -53,7 +53,9 @@ class GroceryListItem {
     if (quantity % 1 == 0) {
       quantityToShow = quantity.toInt().toString();
     } else {
-      quantityToShow = quantity.toMixedFraction().toString();
+      quantityToShow = isMeasureDisplaiedInRawFractions()
+          ? quantity.toString()
+          : quantity.toMixedFraction().toString();
     }
 
     if (measureId == IngredientMeasureId.unit) {
@@ -61,6 +63,17 @@ class GroceryListItem {
     }
 
     return '$quantityToShow ${IngredientMeasure.i18nMeasure(measureId, quantity, context)} $ingredientName';
+  }
+
+  bool isMeasureDisplaiedInRawFractions() {
+    return measureId == IngredientMeasureId.pint ||
+        measureId == IngredientMeasureId.pint ||
+        measureId == IngredientMeasureId.ounce ||
+        measureId == IngredientMeasureId.pound ||
+        measureId == IngredientMeasureId.grams ||
+        measureId == IngredientMeasureId.kilograms ||
+        measureId == IngredientMeasureId.milliliters ||
+        measureId == IngredientMeasureId.liter;
   }
 
   static List<GroceryListItem> fromObject(Object object) {

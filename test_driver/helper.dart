@@ -18,6 +18,7 @@ class Helper {
       FlutterDriver driver,
       String recipeName,
       String portion,
+      String label,
       RecipePreparationTimeDetails preparationTimeDetails,
       Map<int, String> labels,
       List<String> ingredients,
@@ -28,6 +29,7 @@ class Helper {
         find.byValueKey(Keys.homeFloatingActionNewRecipeButton);
     final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
     final saveRecipePortionField = find.byValueKey(Keys.saveRecipePortionField);
+    final saveRecipeLabelField = find.byValueKey(Keys.saveRecipeLabelField);
     final saveRecipePreparationTimeAction =
         find.byValueKey(Keys.saveRecipePreparationTimeAction);
     final saveRecipeInstructionsField =
@@ -61,6 +63,12 @@ class Helper {
     await driver.scrollIntoView(saveRecipeNameField);
     await driver.tap(saveRecipePortionField);
     await driver.enterText(portion);
+
+    if (label != null) {
+      await driver.scrollIntoView(saveRecipeLabelField);
+      await driver.tap(saveRecipeLabelField);
+      await driver.enterText(label);
+    }
 
     if (preparationTimeDetails != null) {
       await driver.tap(saveRecipePreparationTimeAction);

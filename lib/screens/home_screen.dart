@@ -28,6 +28,7 @@ import 'package:rtg_app/widgets/named_icon.dart';
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../repository/recipe_label_repository.dart';
 import 'menu_planning_history_screen.dart';
 import 'save_recipe_screen.dart';
 
@@ -42,6 +43,7 @@ class HomeScreen extends StatefulWidget {
         groceryListsRepository: GroceryListsRepository(),
         userDataRepository: UserDataRepository(),
         menuPlanningRepository: MenuPlanningRepository(),
+        recipeLabelRepository: RecipeLabelRepository(),
       ),
       child: HomeScreen(),
     );

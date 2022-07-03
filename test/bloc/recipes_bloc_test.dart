@@ -12,10 +12,12 @@ import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
+import 'package:rtg_app/model/recipe_label.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,21 +28,26 @@ class MockRecipesRepo extends Mock implements RecipesRepository {}
 
 class MockUuid extends Mock implements Uuid {}
 
+class MockRecipeLabelRepository extends Mock implements RecipeLabelRepository {}
+
 void main() {
   RecipesBloc recipeBloc;
   MockGroceryListsRepository groceryListsRepository;
   MockRecipesRepo recipesRepository;
+  MockRecipeLabelRepository recipeLabelRepository;
   DateTime customTime = DateTime.parse("1969-07-20 20:18:04");
 
   setUp(() {
     recipesRepository = MockRecipesRepo();
     groceryListsRepository = MockGroceryListsRepository();
+    recipeLabelRepository = MockRecipeLabelRepository();
     CustomDateTime.customTime = customTime;
     IdGenerator.mock = MockUuid();
 
     recipeBloc = RecipesBloc(
       recipesRepository: recipesRepository,
       groceryListsRepository: groceryListsRepository,
+      recipeLabelRepository: recipeLabelRepository,
     );
   });
 
@@ -61,19 +68,25 @@ void main() {
     ];
     RecipesCollection recipesCollection =
         RecipesCollection(recipes: recipes, total: 2);
+    List<RecipeLabel> labels = [
+      RecipeLabel(title: "label 1"),
+      RecipeLabel(title: "label 2"),
+    ];
 
     final expectedResponse = [
-      RecipesLoaded(recipesCollection: recipesCollection),
+      RecipesLoaded(recipesCollection: recipesCollection, labels: labels),
     ];
     when(recipesRepository.search(searchParams: null))
         .thenAnswer((_) => Future.value(recipesCollection));
+    when(recipeLabelRepository.getAll())
+        .thenAnswer((_) => Future.value(labels));
 
     expectLater(
       recipeBloc,
       emitsInOrder(expectedResponse),
     ).then((_) {
       expect(recipeBloc.state,
-          RecipesLoaded(recipesCollection: recipesCollection));
+          RecipesLoaded(recipesCollection: recipesCollection, labels: labels));
     });
 
     recipeBloc.add(StartFetchRecipesEvent());
@@ -84,6 +97,10 @@ void main() {
       Recipe(title: "teste 3"),
       Recipe(title: "teste 4"),
     ];
+    List<RecipeLabel> labels = [
+      RecipeLabel(title: "label 1"),
+      RecipeLabel(title: "label 2"),
+    ];
     RecipesCollection moreRecipesCollection =
         RecipesCollection(recipes: moreRecipes, total: 2);
     SearchRecipesParams searchParams = SearchRecipesParams(offset: 2);
@@ -93,6 +110,8 @@ void main() {
 
     when(recipesRepository.search(searchParams: searchParams))
         .thenAnswer((_) => Future.value(moreRecipesCollection));
+    when(recipeLabelRepository.getAll())
+        .thenAnswer((_) => Future.value(labels));
 
     expectLater(
       recipeBloc,
@@ -107,6 +126,7 @@ void main() {
           moreRecipesCollection.recipes[0].id);
       expect(state.recipesCollection.recipes[1].id,
           moreRecipesCollection.recipes[1].id);
+      expect(state.labels, labels);
     });
 
     recipeBloc.add(FetchRecipesEvent(searchParams: searchParams));

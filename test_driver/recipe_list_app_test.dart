@@ -8,12 +8,13 @@ import 'helper.dart';
 class RecipeInput {
   final String name;
   final String portion;
+  final String label;
   final RecipePreparationTimeDetails preparationTime;
   final List<String> ingredients;
   final String instructions;
 
-  RecipeInput(this.name, this.portion, this.preparationTime, this.ingredients,
-      this.instructions);
+  RecipeInput(this.name, this.portion, this.label, this.preparationTime,
+      this.ingredients, this.instructions);
 }
 
 void main() {
@@ -24,6 +25,7 @@ void main() {
     final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
     final recipesListFilter = find.byValueKey(Keys.recipesListFilter);
     final recipesListSort = find.byValueKey(Keys.recipesListSort);
+    final recipesListLabelIcon = find.byValueKey(Keys.recipesListLabelIcon);
     final chooseRecipeSortDialogNewestRadio =
         find.byValueKey(Keys.chooseRecipeSortDialogNewestRadio);
     final chooseRecipeSortDialogOldesRadio =
@@ -38,17 +40,21 @@ void main() {
         find.byValueKey(Keys.chooseRecipeSortDialogTitleZaRadio);
     final chooseRecipeSortDialogClear =
         find.byValueKey(Keys.chooseRecipeSortDialogClear);
+    final chooseRecipeLabelDialogClear =
+        find.byValueKey(Keys.chooseRecipeLabelDialogClear);
 
     final List<RecipeInput> recipeInputs = [
       RecipeInput(
           'Minha primeira receita!',
           '1.00',
+          'label1',
           RecipePreparationTimeDetails(cooking: 90, preparation: 10),
           ['1 chuchu', '1 colher de chá de sal'],
           'Vamos preparar minha primeira receita\n\\o/'),
       RecipeInput(
           'Minha segunda receita!',
           '2.00',
+          null,
           RecipePreparationTimeDetails(preparation: 45),
           [
             '1 beterraba',
@@ -59,18 +65,21 @@ void main() {
       RecipeInput(
           'Terceira receita!',
           '3.00',
+          'label2',
           RecipePreparationTimeDetails(oven: 50, preparation: 4),
           ['1 colher de chá de sal', '1 1/2 colher de chá de açucar'],
           'Vamos preparar minha terceira receita\n\\o/'),
       RecipeInput(
           'Quarta receita lol!',
           '3.00',
+          'label4',
           RecipePreparationTimeDetails(preparation: 22),
           ['1 colher de chá de sal', '1 1/2 colher de chá de açucar'],
           'Vamos preparar minha receita\n\\o/'),
       RecipeInput(
           'Quinta receita lol!',
           '3.00',
+          'label3',
           RecipePreparationTimeDetails(cooking: 100, preparation: 9, oven: 60),
           [
             '1 petiti gatewau pronto',
@@ -79,6 +88,7 @@ void main() {
       RecipeInput(
           'Sexta receita!',
           '3.00',
+          'label2',
           RecipePreparationTimeDetails(
               cooking: 100, preparation: 100, oven: 100, freezer: 100),
           [
@@ -102,6 +112,40 @@ void main() {
       }
     });
 
+    clearSearch() async {
+      await driver.tap(recipesListSort);
+
+      await driver.tap(chooseRecipeSortDialogClear);
+
+      await driver.tap(recipesListLabelIcon);
+
+      await driver.tap(chooseRecipeLabelDialogClear);
+
+      await driver.tap(recipesListFilter);
+      await driver.enterText('');
+    }
+
+    expectNotifications(bool shouldSortNoficitaionBePresent,
+        bool shouldLabelNoficitaionBePresent) async {
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.recipesListSortNotification), driver),
+          shouldSortNoficitaionBePresent);
+
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.recipesListLabelNotification), driver),
+          shouldLabelNoficitaionBePresent);
+    }
+
+    Future<void> checkItemName(int listIndex, int inputIndex) async {
+      final itemFinder =
+          find.byValueKey(Keys.recipeListRowTitleText + listIndex.toString());
+      await driver.scrollUntilVisible(recipesList, itemFinder,
+          dyScroll: -300.0);
+      expect(await driver.getText(itemFinder), recipeInputs[inputIndex].name);
+    }
+
     test('recipes initial screen', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
@@ -117,7 +161,7 @@ void main() {
 
       for (int i = 0; i < recipeInputs.length; i++) {
         RecipeInput input = recipeInputs[i];
-        await Helper.addRecipe(driver, input.name, input.portion,
+        await Helper.addRecipe(driver, input.name, input.portion, input.label,
             input.preparationTime, null, input.ingredients, input.instructions);
       }
     });
@@ -144,10 +188,7 @@ void main() {
         expect(await driver.getText(itemFinder), input.name);
       }
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
 
     test('oldest recipes sorting', () async {
@@ -172,19 +213,8 @@ void main() {
         expect(await driver.getText(itemFinder), input.name);
       }
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
-
-    Future<void> checkItemName(int listIndex, int inputIndex) async {
-      final itemFinder =
-          find.byValueKey(Keys.recipeListRowTitleText + listIndex.toString());
-      await driver.scrollUntilVisible(recipesList, itemFinder,
-          dyScroll: -300.0);
-      expect(await driver.getText(itemFinder), recipeInputs[inputIndex].name);
-    }
 
     test('faster recipes sorting', () async {
       await driver.tap(homeBottomBarRecipesIcon);
@@ -206,10 +236,7 @@ void main() {
       await checkItemName(4, 4);
       await checkItemName(5, 5);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
 
     test('slower recipes sorting', () async {
@@ -232,10 +259,7 @@ void main() {
       await checkItemName(4, 1);
       await checkItemName(5, 3);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
 
     test('titleAz recipes sorting', () async {
@@ -258,10 +282,7 @@ void main() {
       await checkItemName(4, 5);
       await checkItemName(5, 2);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
 
     test('titleZa recipes sorting', () async {
@@ -284,18 +305,13 @@ void main() {
       await checkItemName(4, 1);
       await checkItemName(5, 0);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          true);
+      await expectNotifications(true, false);
     });
 
     test('filter recipe name', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
-
-      await driver.tap(chooseRecipeSortDialogClear);
+      await clearSearch();
 
       await driver.tap(recipesListFilter);
       await driver.enterText('lol');
@@ -309,18 +325,13 @@ void main() {
       await checkItemName(0, 3);
       await checkItemName(1, 4);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          false);
+      await expectNotifications(false, false);
     });
 
     test('filter ingredient name', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
-
-      await driver.tap(chooseRecipeSortDialogClear);
+      await clearSearch();
 
       await driver.tap(recipesListFilter);
       await driver.enterText('açucar demerara');
@@ -333,18 +344,13 @@ void main() {
 
       await checkItemName(0, 1);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          false);
+      await expectNotifications(false, false);
     });
 
     test('filter instructions name', () async {
       await driver.tap(homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
-
-      await driver.tap(chooseRecipeSortDialogClear);
+      await clearSearch();
 
       await driver.tap(recipesListFilter);
       await driver.enterText('nao acredito');
@@ -357,10 +363,53 @@ void main() {
 
       await checkItemName(0, 5);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
-          false);
+      await expectNotifications(false, false);
+    });
+
+    test('filter by label', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await clearSearch();
+
+      await driver.tap(recipesListLabelIcon);
+
+      await driver
+          .tap(find.byValueKey('${Keys.chooseRecipeLabelDialogOption}-1'));
+
+      await driver.scrollUntilVisible(
+        recipesList,
+        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        dyScroll: 300.0,
+      );
+
+      await checkItemName(0, 5);
+      await checkItemName(1, 2);
+
+      await expectNotifications(false, true);
+    });
+
+    test('filter by label and recipe name', () async {
+      await driver.tap(homeBottomBarRecipesIcon);
+
+      await clearSearch();
+
+      await driver.tap(recipesListLabelIcon);
+
+      await driver
+          .tap(find.byValueKey('${Keys.chooseRecipeLabelDialogOption}-2'));
+
+      await driver.tap(recipesListFilter);
+      await driver.enterText('lol');
+
+      await driver.scrollUntilVisible(
+        recipesList,
+        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        dyScroll: 300.0,
+      );
+
+      await checkItemName(0, 4);
+
+      await expectNotifications(false, true);
     });
   });
 }

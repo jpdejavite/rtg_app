@@ -18,6 +18,7 @@ void main() {
 
     final String recipeName2 = 'Minha segunda receita';
     final String portion2 = '3,00';
+    final String label2 = 'carne';
     final String ingredient20 = '1 beterraba';
     final String ingredient21 = '1 colher de chá de sal';
     final String ingredient22 = '1 1/2 colher de chá de açucar';
@@ -25,6 +26,7 @@ void main() {
 
     final String recipeName3 = 'Minha terceira receita';
     final String portion3 = '4,00';
+    final String label3 = 'frango';
     final Map<int, String> labels3 = const {
       0: 'molho',
       3: 'macarrao',
@@ -107,6 +109,7 @@ void main() {
           driver,
           recipeName1,
           portion1,
+          null,
           preparationTimeDetails1,
           null,
           [ingredient10, ingredient11],
@@ -134,7 +137,7 @@ void main() {
     });
 
     test('insert second recipe', () async {
-      await Helper.addRecipe(driver, recipeName2, portion2, null, null,
+      await Helper.addRecipe(driver, recipeName2, portion2, label2, null, null,
           [ingredient20, ingredient21, ingredient22], instructions2);
 
       expect(
@@ -151,6 +154,7 @@ void main() {
           driver,
           recipeName3,
           portion3,
+          label3,
           null,
           labels3,
           [
@@ -371,6 +375,28 @@ void main() {
 
       expect(await driver.getText(Constants.viewRecipeTitle),
           recipeName1 + " editado");
+
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+    });
+
+    test('edit label recipe with auto complete', () async {
+      await driver.tap(Constants.homeBottomBarRecipesIcon);
+
+      await driver.tap(Constants.recipeListRowTitleText0);
+
+      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+
+      await driver.tap(Constants.saveRecipeLabelField);
+      await driver.enterText(label2.substring(0, 3));
+      await driver.tap(find.text(label2));
+
+      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+
+      expect(
+          (await driver.getText(Constants.viewRecipeLabelLabelText))
+              .contains(label2),
+          true);
 
       await driver.waitFor(Constants.backButtonFinder);
       await driver.tap(Constants.backButtonFinder);

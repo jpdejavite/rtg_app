@@ -32,21 +32,36 @@ class RecipesDao {
 
     Filter filter;
     if (searchParams != null) {
-      if (searchParams.filter != null && searchParams.filter != "") {
-        filter = Filter.or([
-          Filter.matchesRegExp(
-              'title', RegExp(searchParams.filter, caseSensitive: false)),
-          Filter.matchesRegExp('instructions',
-              RegExp(searchParams.filter, caseSensitive: false)),
-          getFilterContainingProducts(
-              RegExp(searchParams.filter, caseSensitive: false)),
-        ]);
-      } else if (searchParams.ids != null && searchParams.ids.length > 0) {
+      if (searchParams.ids != null && searchParams.ids.length > 0) {
         List<Filter> filters = [];
         searchParams.ids.forEach((id) {
           filters.add(Filter.byKey(int.parse(id)));
         });
         filter = Filter.or(filters);
+      } else {
+        Filter textFilter;
+        Filter labelFilter;
+        if (searchParams.filter != null && searchParams.filter != "") {
+          textFilter = Filter.or([
+            Filter.matchesRegExp(
+                'title', RegExp(searchParams.filter, caseSensitive: false)),
+            Filter.matchesRegExp('instructions',
+                RegExp(searchParams.filter, caseSensitive: false)),
+            getFilterContainingProducts(
+                RegExp(searchParams.filter, caseSensitive: false)),
+          ]);
+        }
+        if (searchParams.label != null) {
+          labelFilter = Filter.equals('label', searchParams.label.title);
+        }
+
+        if (textFilter != null && labelFilter != null) {
+          filter = Filter.and([textFilter, labelFilter]);
+        } else if (textFilter != null) {
+          filter = textFilter;
+        } else if (labelFilter != null) {
+          filter = labelFilter;
+        }
       }
     }
 

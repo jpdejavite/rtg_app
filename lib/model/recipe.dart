@@ -13,6 +13,7 @@ class Recipe {
     this.updatedAt,
     this.lastUsed,
     this.title,
+    this.label,
     this.source,
     this.portions,
     this.totalPreparationTime,
@@ -26,6 +27,7 @@ class Recipe {
   int updatedAt;
   int lastUsed;
   String title;
+  String label;
   String source;
   double portions;
   int totalPreparationTime;
@@ -44,6 +46,7 @@ class Recipe {
       updatedAt: record['updatedAt'],
       lastUsed: record['lastUsed'],
       title: record['title'],
+      label: record['label'],
       source: record['source'],
       portions: record['portions'],
       totalPreparationTime: record['totalPreparationTime'],
@@ -58,6 +61,7 @@ class Recipe {
   Object toRecord() {
     return {
       'title': this.title,
+      'label': this.label,
       'createdAt': this.createdAt,
       'updatedAt': this.updatedAt,
       'lastUsed': this.lastUsed,

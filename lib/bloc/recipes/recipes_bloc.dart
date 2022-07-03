@@ -6,20 +6,28 @@ import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/bloc/recipes/events.dart';
 import 'package:rtg_app/bloc/recipes/states.dart';
 
+import '../../repository/recipe_label_repository.dart';
+
 class RecipesBloc
     extends AddRecipeToGroceryListBloc<RecipesEvents, RecipesState> {
   RecipesCollection _recipesCollection = RecipesCollection(recipes: []);
+  RecipeLabelRepository recipeLabelRepository;
   RecipesBloc(
       {GroceryListsRepository groceryListsRepository,
-      RecipesRepository recipesRepository})
-      : super(groceryListsRepository, recipesRepository, RecipesInitState());
+      RecipesRepository recipesRepository,
+      RecipeLabelRepository recipeLabelRepository})
+      : recipeLabelRepository = recipeLabelRepository,
+        super(groceryListsRepository, recipesRepository, RecipesInitState());
+
   @override
   Stream<RecipesState> mapEventToState(RecipesEvents event) async* {
     if (event is StartFetchRecipesEvent) {
       _recipesCollection =
           await recipesRepository.search(searchParams: event.searchParams);
       _recipesCollection.recipes.forEach((element) {});
-      yield RecipesLoaded(recipesCollection: _recipesCollection);
+      yield RecipesLoaded(
+          recipesCollection: _recipesCollection,
+          labels: await recipeLabelRepository.getAll());
     } else if (event is FetchRecipesEvent) {
       RecipesCollection recipesCollection =
           await recipesRepository.search(searchParams: event.searchParams);
@@ -28,9 +36,10 @@ class RecipesBloc
       _recipesCollection.total = recipesCollection.total;
       yield RecipesLoaded(
           recipesCollection: RecipesCollection(
-        recipes: _recipesCollection.recipes,
-        total: _recipesCollection.total,
-      ));
+            recipes: _recipesCollection.recipes,
+            total: _recipesCollection.total,
+          ),
+          labels: await recipeLabelRepository.getAll());
     } else if (event is AddRecipeToGroceryListEvent) {
       SaveGroceryListResponse response = await addRecipeToGroceryList(
         event.groceryList,

@@ -19,6 +19,7 @@ import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
+import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
 
@@ -34,6 +35,8 @@ class MockUserDataRepository extends Mock implements UserDataRepository {}
 class MockMenuPlanningRepository extends Mock
     implements MenuPlanningRepository {}
 
+class MockRecipeLabelRepository extends Mock implements RecipeLabelRepository {}
+
 void main() {
   HomeBloc homeBloc;
   MockBackupRepository backupRepository;
@@ -41,6 +44,7 @@ void main() {
   MockGroceryListsRepository groceryListsRepository;
   UserDataRepository userDataRepository;
   MockMenuPlanningRepository menuPlanningRepository;
+  MockRecipeLabelRepository recipeLabelRepository;
   DateTime customTime = DateTime.parse("2000-07-20 20:18:04");
 
   setUp(() {
@@ -49,6 +53,7 @@ void main() {
     groceryListsRepository = MockGroceryListsRepository();
     userDataRepository = MockUserDataRepository();
     menuPlanningRepository = MockMenuPlanningRepository();
+    recipeLabelRepository = MockRecipeLabelRepository();
     CustomDateTime.customTime = customTime;
     homeBloc = HomeBloc(
       backupRepository: backupRepository,
@@ -56,6 +61,7 @@ void main() {
       groceryListsRepository: groceryListsRepository,
       userDataRepository: userDataRepository,
       menuPlanningRepository: menuPlanningRepository,
+      recipeLabelRepository: recipeLabelRepository,
     );
   });
 
@@ -410,6 +416,8 @@ void main() {
     when(groceryListsRepository.deleteAll())
         .thenAnswer((_) => Future.value(null));
     when(userDataRepository.deleteAll()).thenAnswer((_) => Future.value(null));
+    when(recipeLabelRepository.deleteAll())
+        .thenAnswer((_) => Future.value(null));
 
     expectLater(
       homeBloc,

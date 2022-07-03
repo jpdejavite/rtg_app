@@ -201,6 +201,14 @@ class _ViewRecipeState extends State<ViewRecipeScreen> {
       ));
     }
 
+    if (recipe.label != null) {
+      children.add(ViewRecipeLabelText(
+        keyString: Keys.viewRecipeLabelLabelText,
+        label: AppLocalizations.of(context).label,
+        text: recipe.label,
+      ));
+    }
+
     children.add(ViewRecipeLabelText(
       keyString: Keys.viewRecipePortionsLabelText,
       label: AppLocalizations.of(context).serves,

@@ -4,6 +4,8 @@ import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 
+import '../../model/recipe_label.dart';
+
 abstract class RecipesState extends Equatable {
   @override
   List<Object> get props => [];
@@ -13,9 +15,10 @@ class RecipesInitState extends RecipesState {}
 
 class RecipesLoaded extends RecipesState {
   final RecipesCollection recipesCollection;
-  RecipesLoaded({this.recipesCollection});
+  final List<RecipeLabel> labels;
+  RecipesLoaded({this.recipesCollection, this.labels});
   @override
-  List<Object> get props => [recipesCollection];
+  List<Object> get props => [recipesCollection, labels];
 }
 
 class RecipesListError extends RecipesState {

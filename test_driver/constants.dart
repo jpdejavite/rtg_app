@@ -30,6 +30,8 @@ class Constants {
   static final homeActionSettingsIcon =
       find.byValueKey(Keys.homeActionSettingsIcon);
   static final saveRecipeNameField = find.byValueKey(Keys.saveRecipeNameField);
+  static final saveRecipeLabelField =
+      find.byValueKey(Keys.saveRecipeLabelField);
   static final saveRecipeLabelField0 =
       find.byValueKey(Keys.saveRecipeLabelField + "0");
   static final saveRecipeLabelRemoveIcon1 =
@@ -47,6 +49,8 @@ class Constants {
   static final recipeListRowTitleText2 =
       find.byValueKey(Keys.recipeListRowTitleText + "2");
   static final viewRecipeTitle = find.byValueKey(Keys.viewRecipeTitle);
+  static final viewRecipeLabelLabelText =
+      find.byValueKey(Keys.viewRecipeLabelLabelText);
   static final viewRecipePreparationTimeDetailsText =
       find.byValueKey(Keys.viewRecipePreparationTimeDetailsText);
   static final viewRecipeIngredientText0 =

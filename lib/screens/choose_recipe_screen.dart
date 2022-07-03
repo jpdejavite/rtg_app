@@ -17,6 +17,8 @@ import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 
+import '../repository/recipe_label_repository.dart';
+
 class ChooseRecipeScreen extends StatefulWidget {
   static String id = 'choose_recipe_screen';
   final List<Recipe> lastUsedRecipes;
@@ -28,6 +30,7 @@ class ChooseRecipeScreen extends StatefulWidget {
       create: (context) => RecipesBloc(
         recipesRepository: RecipesRepository(),
         groceryListsRepository: GroceryListsRepository(),
+        recipeLabelRepository: RecipeLabelRepository(),
       ),
       child: ChooseRecipeScreen(args),
     );

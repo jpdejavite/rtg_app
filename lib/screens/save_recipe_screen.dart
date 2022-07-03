@@ -13,11 +13,13 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
 import 'package:rtg_app/model/recipe_preparation_time_details.dart';
+import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/preparation_time_label_text.dart';
 import 'package:rtg_app/widgets/text_form_list_field.dart';
 import 'package:rtg_app/widgets/text_form_section_label.dart';
+import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
 
 import 'edit_recipe_preparation_time_details_screen.dart';
 
@@ -29,7 +31,9 @@ class SaveRecipeScreen extends StatefulWidget {
 
   static newSaveRecipeBloc(args) {
     return BlocProvider(
-      create: (context) => SaveRecipeBloc(recipesRepo: RecipesRepository()),
+      create: (context) => SaveRecipeBloc(
+          recipesRepo: RecipesRepository(),
+          recipeLabelRepo: RecipeLabelRepository()),
       child: SaveRecipeScreen(args),
     );
   }
@@ -42,6 +46,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _nameController;
   TextEditingController _sourceController;
+  TextEditingController _labelController;
   TextEditingController _instructionsController;
   TextEditingController _portionsController;
   List<TextFormFieldInfo> ingredientsFields;
@@ -50,6 +55,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
   FocusNode textFieldToFocus;
   int selectAllInputFromLabel;
   RecipePreparationTimeDetails preparationTimeDetails;
+  List<String> recipeLabels = [];
 
   @override
   void initState() {
@@ -61,6 +67,8 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
         text: widget.editRecipe != null ? widget.editRecipe.instructions : '');
     _sourceController = TextEditingController(
         text: widget.editRecipe != null ? widget.editRecipe.source : '');
+    _labelController = TextEditingController(
+        text: widget.editRecipe != null ? widget.editRecipe.label : '');
     _portionsController = TextEditingController(
         text: widget.editRecipe != null
             ? widget.editRecipe.portions == null
@@ -93,6 +101,8 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
       preparationTimeDetails = widget.editRecipe.preparationTimeDetails;
     }
     textFieldToFocus = null;
+
+    context.read<SaveRecipeBloc>().add(LoadRecipeLabelsEvent());
   }
 
   @override
@@ -100,6 +110,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     _nameController.dispose();
     _instructionsController.dispose();
     _sourceController.dispose();
+    _labelController.dispose();
     _portionsController.dispose();
     ingredientsFields.forEach((field) {
       field.focusNode.dispose();
@@ -206,6 +217,9 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
           WidgetsBinding.instance.addPostFrameCallback(
               (_) => Navigator.pop(context, state.response.recipe));
         }
+      } else if (state is RecipeLabelsLoaded) {
+        recipeLabels =
+            state.labels.map<String>((label) => label.title).toList();
       }
 
       return buildForm(context);
@@ -248,6 +262,25 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
           }
           return null;
         },
+      ),
+      SimpleAutocompleteFormField<String>(
+        key: Key(Keys.saveRecipeLabelField),
+        controller: _labelController,
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context).recipe_label,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          labelText: AppLocalizations.of(context).label,
+        ),
+        maxSuggestions: 3,
+        itemBuilder: (context, item) => Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(item),
+        ),
+        onSearch: (String search) async => search.isEmpty
+            ? []
+            : recipeLabels
+                .where((label) => label.toLowerCase().contains(search))
+                .toList(),
       ),
       TextFormField(
         controller: _sourceController,
@@ -476,6 +509,7 @@ class _SaveRecipeState extends State<SaveRecipeScreen> {
     return Recipe(
       id: widget.editRecipe != null ? widget.editRecipe.id : null,
       title: _nameController.text,
+      label: _labelController.text == "" ? null : _labelController.text,
       createdAt: widget.editRecipe != null
           ? widget.editRecipe.createdAt
           : CustomDateTime.current.millisecondsSinceEpoch,

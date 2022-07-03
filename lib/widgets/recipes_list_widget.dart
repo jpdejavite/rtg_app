@@ -12,6 +12,7 @@ import 'package:rtg_app/model/recipe_sort.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/widgets/choose_recipe_sort_dialog.dart';
 import 'package:rtg_app/widgets/error.dart';
@@ -22,8 +23,10 @@ import 'package:rtg_app/widgets/loading_row.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../model/recipe_label.dart';
 import 'choose_grocery_list_to_recipe_dialog.dart';
 import 'add_recipe_to_grocery_list_dialog.dart';
+import 'choose_recipe_label_dialog.dart';
 import 'custom_toast.dart';
 
 class RecipesList extends StatefulWidget {
@@ -39,7 +42,8 @@ class RecipesList extends StatefulWidget {
     return BlocProvider(
       create: (context) => RecipesBloc(
           recipesRepository: RecipesRepository(),
-          groceryListsRepository: GroceryListsRepository()),
+          groceryListsRepository: GroceryListsRepository(),
+          recipeLabelRepository: RecipeLabelRepository()),
       child: RecipesList(
         key: key,
         onTapRecipe: onTapRecipe,
@@ -54,7 +58,9 @@ class RecipesList extends StatefulWidget {
 class RecipesListState extends State<RecipesList> {
   TextEditingController _filterController;
   RecipeSort sort;
+  RecipeLabel label;
   bool hasShowChooseGroceryListToRecipeDialog = false;
+  List<RecipeLabel> labels = [];
   @override
   void initState() {
     super.initState();
@@ -71,8 +77,8 @@ class RecipesListState extends State<RecipesList> {
   loadRecipes() async {
     context.read<RecipesBloc>().add(
           StartFetchRecipesEvent(
-            searchParams:
-                SearchRecipesParams(filter: _filterController.text, sort: sort),
+            searchParams: SearchRecipesParams(
+                filter: _filterController.text, sort: sort, label: label),
           ),
         );
   }
@@ -137,6 +143,9 @@ class RecipesListState extends State<RecipesList> {
       RecipesCollection recipesCollection;
       if (state is RecipesLoaded) {
         recipesCollection = state.recipesCollection;
+        if (state.labels != null) {
+          labels = state.labels;
+        }
       }
 
       return Column(
@@ -172,10 +181,7 @@ class RecipesListState extends State<RecipesList> {
                       FocusScope.of(context).unfocus();
                     }
                     _filterController.text = '';
-                    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
-                          searchParams: SearchRecipesParams(
-                              filter: _filterController.text, sort: sort),
-                        ));
+                    loadRecipes();
                   },
                   icon: Icon(
                     Icons.clear,
@@ -186,17 +192,38 @@ class RecipesListState extends State<RecipesList> {
                 ),
               ),
               onChanged: (String newValue) {
-                context.read<RecipesBloc>().add(StartFetchRecipesEvent(
-                      searchParams: SearchRecipesParams(
-                          filter: _filterController.text, sort: sort),
-                    ));
+                loadRecipes();
               },
             ),
           ),
           ElevatedButton(
             child: NamedIcon(
+              key: Key(Keys.recipesListLabelIcon),
+              tooltip: AppLocalizations.of(context).filter_by_label,
+              iconData: Icons.label,
+              showNotification: label != null,
+              notificationKey: Keys.recipesListLabelNotification,
+            ),
+            onPressed: () {
+              ChooseRecipeLabelDialog.showChooseRecipeSortDialog(
+                  context: context,
+                  current: label,
+                  labels: labels,
+                  onSelectSort: (RecipeLabel selected) {
+                    setState(() {
+                      label = selected;
+                    });
+                    loadRecipes();
+                  });
+            },
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          ElevatedButton(
+            child: NamedIcon(
               key: Key(Keys.recipesListSort),
-              tooltip: AppLocalizations.of(context).open_settings,
+              tooltip: AppLocalizations.of(context).order_recipes,
               iconData: Icons.sort,
               showNotification: sort != null,
               notificationKey: Keys.recipesListSortNotification,
@@ -209,10 +236,7 @@ class RecipesListState extends State<RecipesList> {
                     setState(() {
                       sort = selected;
                     });
-                    context.read<RecipesBloc>().add(StartFetchRecipesEvent(
-                          searchParams: SearchRecipesParams(
-                              filter: _filterController.text, sort: sort),
-                        ));
+                    loadRecipes();
                   });
             },
           ),
@@ -248,6 +272,7 @@ class RecipesListState extends State<RecipesList> {
             context.read<RecipesBloc>().add(FetchRecipesEvent(
                 searchParams: SearchRecipesParams(
                     filter: _filterController.text,
+                    label: label,
                     sort: sort,
                     offset: recipesCollection.recipes.length)));
             return LoadingRow();

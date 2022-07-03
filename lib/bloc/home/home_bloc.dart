@@ -17,6 +17,7 @@ import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
+import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
 
@@ -29,12 +30,14 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   final GroceryListsRepository groceryListsRepository;
   final UserDataRepository userDataRepository;
   final MenuPlanningRepository menuPlanningRepository;
+  final RecipeLabelRepository recipeLabelRepository;
   HomeBloc({
     @required this.backupRepository,
     @required this.recipesRepository,
     @required this.groceryListsRepository,
     @required this.userDataRepository,
     @required this.menuPlanningRepository,
+    @required this.recipeLabelRepository,
   }) : super(HomeInitState());
   @override
   Stream<HomeState> mapEventToState(HomeEvents event) async* {
@@ -55,6 +58,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       await groceryListsRepository.deleteAll();
       await userDataRepository.deleteAll();
       await menuPlanningRepository.deleteAll();
+      await recipeLabelRepository.deleteAll();
       yield AllDataDeleted();
     } else if (event is SaveNewGroceryList) {
       SaveGroceryListResponse response = await groceryListsRepository

@@ -48,8 +48,12 @@ class Keys {
   static const String recipesListEmptyText = 'recipes-list-empy-text';
   static const String recipesListFilter = 'recipes-list-filter';
   static const String recipesListSort = 'recipes-list-sort';
+  static const String recipesListLabelIcon = 'recipes-list-label-icon';
   static const String recipesListSortNotification =
       'recipes-list-sort-notification';
+  static const String recipesListLabelNotification =
+      'recipes-list-label-notification';
+
   // menu planning history
   static const String menuPlanningHistoryListEmptyText =
       'menu-planning-history-list-empy-text';
@@ -73,6 +77,12 @@ class Keys {
       'choose-recipe-sort-dialog-titleZa-radio';
   static const String chooseRecipeSortDialogClear =
       'choose-recipe-sort-dialog-titleZa-clear';
+
+  // choose recipe label dialog
+  static const String chooseRecipeLabelDialogOption =
+      'choose-recipe-label-dialog-option';
+  static const String chooseRecipeLabelDialogClear =
+      'choose-recipe-label-dialog-title-clear';
 
   // grocery lists
   static const String groceryListsEmptyText = 'grocery-lists-empy-text';
@@ -189,6 +199,7 @@ class Keys {
 
   // view recipe
   static const String viewRecipeTitle = 'view-recipe-title';
+  static const String viewRecipeLabelLabelText = 'view-recipe-label-label-text';
   static const String viewRecipePortionsLabelText =
       'view-recipe-portions-label-text';
   static const String viewRecipePreparationTimeDetailsText =

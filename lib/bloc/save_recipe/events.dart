@@ -10,3 +10,5 @@ class SaveRecipeEvent extends SaveRecipeEvents {
   final Recipe recipe;
   SaveRecipeEvent({this.recipe});
 }
+
+class LoadRecipeLabelsEvent extends SaveRecipeEvents {}

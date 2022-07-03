@@ -80,10 +80,29 @@ class RecipeListRow extends StatelessWidget {
       ]);
     }
 
-    bottomRowItems.addAll([
-      Expanded(
-        child: SizedBox(),
-      ),
+    if (recipe.label != null) {
+      bottomRowItems.addAll([
+        SizedBox(width: 8),
+        Icon(
+          Icons.label,
+          size: 16,
+          color: CustomColors.detailsIconColor,
+        ),
+        SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            recipe.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ),
+      ]);
+    } else {
+      bottomRowItems.add(Expanded(child: SizedBox()));
+    }
+
+    bottomRowItems.add(
       IconButton(
         key: Key(Keys.viewRecipeAddToGroceryListAction + index.toString()),
         icon: Icon(Icons.playlist_add),
@@ -92,7 +111,7 @@ class RecipeListRow extends StatelessWidget {
           onAddToGroceryList();
         },
       ),
-    ]);
+    );
     return InkWell(
         onTap: () {
           onTap();

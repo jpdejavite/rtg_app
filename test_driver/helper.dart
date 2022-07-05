@@ -74,44 +74,45 @@ class Helper {
       await driver.tap(saveRecipePreparationTimeAction);
 
       if (preparationTimeDetails.preparation != null) {
-        await driver
-            .scrollIntoView(editRecipePreparationTimeDetailsPreparationField);
-        await driver.tap(editRecipePreparationTimeDetailsPreparationField);
-        await driver.enterText(preparationTimeDetails.preparation.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsPreparationField,
+            preparationTimeDetails.preparation);
       }
 
       if (preparationTimeDetails.cooking != null) {
-        await driver
-            .scrollIntoView(editRecipePreparationTimeDetailsCookingField);
-        await driver.tap(editRecipePreparationTimeDetailsCookingField);
-        await driver.enterText(preparationTimeDetails.cooking.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsCookingField,
+            preparationTimeDetails.cooking);
       }
 
       if (preparationTimeDetails.oven != null) {
-        await driver.scrollIntoView(editRecipePreparationTimeDetailsOvenField);
-        await driver.tap(editRecipePreparationTimeDetailsOvenField);
-        await driver.enterText(preparationTimeDetails.oven.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsOvenField,
+            preparationTimeDetails.oven);
       }
 
       if (preparationTimeDetails.marinate != null) {
-        await driver
-            .scrollIntoView(editRecipePreparationTimeDetailsMarinateField);
-        await driver.tap(editRecipePreparationTimeDetailsMarinateField);
-        await driver.enterText(preparationTimeDetails.marinate.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsMarinateField,
+            preparationTimeDetails.marinate);
       }
 
       if (preparationTimeDetails.fridge != null) {
-        await driver
-            .scrollIntoView(editRecipePreparationTimeDetailsFridgeField);
-        await driver.tap(editRecipePreparationTimeDetailsFridgeField);
-        await driver.enterText(preparationTimeDetails.fridge.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsFridgeField,
+            preparationTimeDetails.fridge);
       }
 
       if (preparationTimeDetails.freezer != null) {
-        await driver
-            .scrollIntoView(editRecipePreparationTimeDetailsFreezerField);
-        await driver.tap(editRecipePreparationTimeDetailsFreezerField);
-        await driver.enterText(preparationTimeDetails.freezer.toString());
+        await fillPreparationTime(
+            driver,
+            editRecipePreparationTimeDetailsFreezerField,
+            preparationTimeDetails.freezer);
       }
       await driver.tap(editRecipePreparationTimeDetailsSaveButton);
     }
@@ -144,5 +145,28 @@ class Helper {
     await driver.enterText(instructions);
 
     await driver.tap(saveRecipeFloatingActionSaveButton);
+  }
+
+  static fillPreparationTime(
+      FlutterDriver driver, SerializableFinder field, int value) async {
+    final durationDropdown =
+        find.byValueKey(Keys.editRecipePreparationTimeDetailsDurationDropdown);
+    if (value > 60) {
+      await driver.scrollIntoView(durationDropdown);
+      await driver.tap(durationDropdown);
+      await driver.tap(find.text('horas'));
+
+      await driver.scrollIntoView(field);
+      await driver.tap(field);
+      await driver.enterText((value / Duration.minutesPerHour).toString());
+
+      await driver.scrollIntoView(durationDropdown);
+      await driver.tap(durationDropdown);
+      await driver.tap(find.text('minutos'));
+    } else {
+      await driver.scrollIntoView(field);
+      await driver.tap(field);
+      await driver.enterText(value.toString());
+    }
   }
 }

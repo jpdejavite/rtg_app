@@ -159,6 +159,8 @@ class Keys {
       'menu-planning-day-write-details-text-field';
 
   // edit recipe preparation time details
+  static const String editRecipePreparationTimeDetailsDurationDropdown =
+      'edit-recipe-preparation-time-details-duration-dropdown';
   static const String editRecipePreparationTimeDetailsPreparationField =
       'edit-recipe-preparation-time-details-preparation-field';
   static const String editRecipePreparationTimeDetailsCookingField =

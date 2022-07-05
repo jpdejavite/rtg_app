@@ -45,6 +45,7 @@ class _ChooseRecipeLabelDialogState extends State<ChooseRecipeLabelDialog> {
 
   Widget buildLabelOption(RecipeLabel label, int index) {
     return ListTile(
+      onTap: () => {selectOption(label)},
       title: Text(label.title),
       leading: Radio<RecipeLabel>(
         key: Key('${Keys.chooseRecipeLabelDialogOption}-$index'),
@@ -61,14 +62,13 @@ class _ChooseRecipeLabelDialogState extends State<ChooseRecipeLabelDialog> {
       title: Text(AppLocalizations.of(context).filter_by_label),
       content: SingleChildScrollView(
         child: ListBody(
-          children:
-              widget.labels
-                  .asMap()
-                  .entries
-                  .map<Widget>(
-                    (entry) => buildLabelOption(entry.value, entry.key),
-                  )
-                  .toList(),
+          children: widget.labels
+              .asMap()
+              .entries
+              .map<Widget>(
+                (entry) => buildLabelOption(entry.value, entry.key),
+              )
+              .toList(),
         ),
       ),
       actions: <Widget>[

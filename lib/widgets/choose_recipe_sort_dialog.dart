@@ -40,6 +40,7 @@ class _ChooseRecipeSortDialogState extends State<ChooseRecipeSortDialog> {
 
   Widget buildSortOption(RecipeSort sort, String radioKey) {
     return ListTile(
+      onTap: () => {selectOption(sort)},
       title: Text(sort.description(context)),
       leading: Radio<RecipeSort>(
         key: Key(radioKey),

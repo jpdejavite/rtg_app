@@ -74,4 +74,8 @@ class BackupDao {
         await file.copy(await dbProvider.getDatabaseBackupFilePath());
     return copiedFile.path;
   }
+
+  Future<String> getDbFilePath() async {
+    return await dbProvider.getDatabaseFilePath();
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +15,10 @@ import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../errors/errors.dart';
 import '../helper/env_helper.dart';
+import '../theme/custom_colors.dart';
+import '../widgets/custom_toast.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'settings_screen';
@@ -74,6 +78,30 @@ class _SettingsState extends State<SettingsScreen> {
     return null;
   }
 
+  void processErrorFromState(SettingsState state) {
+    if (state is ImportBackupDone) {
+      Error error = state.error;
+      if (error != null) {
+        CustomToast.showToast(
+          text: (error is InvalidBackupFile)
+              ? AppLocalizations.of(context).wrong_file_extension_for_backup
+              : AppLocalizations.of(context).error_to_import_file,
+          context: context,
+          time: CustomToast.timeShort,
+        );
+      } else {
+        CustomToast.showToast(
+          text: 
+              AppLocalizations.of(context).file_successfully_imported
+              ,
+          context: context,
+          time: CustomToast.timeShort,
+        );
+      }
+    }
+    return null;
+  }
+
   List<Widget> buildBackupSection(BuildContext context, SettingsState state) {
     buildBackupDetailsMap();
 
@@ -93,6 +121,7 @@ class _SettingsState extends State<SettingsScreen> {
     } else {
       children.addAll(buildConfigureBackupFields());
     }
+    processErrorFromState(state);
 
     return children;
   }
@@ -166,6 +195,29 @@ class _SettingsState extends State<SettingsScreen> {
         context.read<SettingsBloc>().add(DoLocalBackupEvent());
       },
     ));
+    children.add(ElevatedButton(
+      key: Key(Keys.settingsDoBackupButton),
+      child: Text(AppLocalizations.of(context).import_local_file),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(CustomColors.ligthGrey),
+      ),
+      onPressed: () async {
+        FilePickerResult result = await FilePicker.platform.pickFiles();
+
+        if (result == null) {
+          CustomToast.showToast(
+            text: AppLocalizations.of(context).not_possible_to_read_file,
+            context: context,
+            time: CustomToast.timeShort,
+          );
+          return;
+        }
+        context
+            .read<SettingsBloc>()
+            .add(ImportLocalBackupEvent(result.files.single.path));
+      },
+    ));
+
     return children;
   }
 

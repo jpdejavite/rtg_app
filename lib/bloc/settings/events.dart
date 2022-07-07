@@ -10,3 +10,9 @@ class GetBackupEvent extends SettingsEvents {}
 class ConfigureLocalBackupEvent extends SettingsEvents {}
 
 class DoLocalBackupEvent extends SettingsEvents {}
+
+class ImportLocalBackupEvent extends SettingsEvents {
+  final String filePath;
+
+  ImportLocalBackupEvent(this.filePath);
+}

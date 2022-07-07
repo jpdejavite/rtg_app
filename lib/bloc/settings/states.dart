@@ -19,3 +19,8 @@ class LocalBackupDone extends BackupLoaded {
   final String filePath;
   LocalBackupDone({this.filePath, backup}) : super(backup: backup);
 }
+
+class ImportBackupDone extends BackupLoaded {
+  final Error error;
+  ImportBackupDone({this.error, backup}) : super(backup: backup);
+}

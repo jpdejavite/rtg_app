@@ -38,3 +38,10 @@ class RecipeAlreadyAddedToGroceryList extends RtgError {
     return "recipe_already_added_to_grocery_list";
   }
 }
+
+class InvalidBackupFile extends RtgError {
+  @override
+  String toString() {
+    return "invalid_backup_file";
+  }
+}

@@ -176,8 +176,12 @@ class Constants {
       find.byValueKey(Keys.menuPlanningDaysMealTextButton + "-1-0");
   static final homeCardSeeMenuPlanning =
       find.byValueKey(Keys.homeCardSeeMenuPlanning);
+  static final homeCardEditNote = find.byValueKey(Keys.homeCardEditNote);
+  static final homeCardEditNoteIcon =
+      find.byValueKey(Keys.homeCardEditNoteIcon);
   static final viewMenuPlanningFloatingActionEditButton =
       find.byValueKey(Keys.viewMenuPlanningFloatingActionEditButton);
   static final saveMenuPlanningStartAtIcon =
       find.byValueKey(Keys.saveMenuPlanningStartAtIcon);
+  static final saveNoteField = find.byValueKey(Keys.saveNoteField);
 }

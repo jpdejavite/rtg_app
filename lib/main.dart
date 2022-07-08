@@ -6,6 +6,7 @@ import 'package:rtg_app/screens/home_screen.dart';
 import 'package:rtg_app/screens/menu_planning_history_screen.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/save_menu_planning_screen.dart';
+import 'package:rtg_app/screens/save_note_screen.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
@@ -76,6 +77,9 @@ class RtgApp extends StatelessWidget {
         },
         SettingsScreen.id: (context) {
           return SettingsScreen.newSettingsBloc();
+        },
+        SaveNoteScreen.id: (context) {
+          return SaveNoteScreen.newSaveNoteBloc();
         },
         TutorialScreen.id: (context) {
           var args = ModalRoute.of(context).settings.arguments;

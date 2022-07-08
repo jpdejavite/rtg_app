@@ -786,6 +786,36 @@ void main() {
           "almoço: cozinhar");
       await driver.tap(Constants.menuPlanningDaysMealTextButton10);
       expect(await driver.getText(Constants.viewRecipeTitle), recipeName2);
+
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+    });
+
+    test('make a note', () async {
+      String note = "minha primeira anotação editado";
+
+      await driver.tap(Constants.homeBottomBarHomeIcon);
+
+      expect(
+          await Helper.isPresent(
+              find.byValueKey(Keys.homeCardEditNote), driver),
+          true);
+
+      await driver.tap(Constants.homeCardEditNoteIcon);
+
+      await driver.tap(Constants.saveNoteField);
+      await driver.enterText(note);
+
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+
+      await driver.tap(Constants.homeCardEditNoteIcon);
+
+      expect(await driver.getText(Constants.saveNoteField), note);
+
       await driver.waitFor(Constants.backButtonFinder);
       await driver.tap(Constants.backButtonFinder);
     });

@@ -15,6 +15,7 @@ import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/save_menu_planning_screen.dart';
+import 'package:rtg_app/screens/save_note_screen.dart';
 import 'package:rtg_app/screens/settings_screen.dart';
 import 'package:rtg_app/screens/tutorial_screen.dart';
 import 'package:rtg_app/screens/view_menu_planning_screen.dart';
@@ -249,9 +250,14 @@ class _HomeScreenState extends State<HomeScreen> {
         showHomeInfo.currentMenuPlanning != null ||
         showHomeInfo.futureMenuPlanning != null) {
       cards.add(HomeCard(
-        cardKey: Key('a'),
-        title: "Anotações",
+        cardKey: Key(Keys.homeCardEditNote),
+        title: AppLocalizations.of(context).notes,
         titleIcon: Icons.edit_note,
+        titleIconKey: Key(Keys.homeCardEditNoteIcon),
+        titleTooltip: AppLocalizations.of(context).make_notes,
+        onTitleIconPressed: () {
+          Navigator.pushNamed(context, SaveNoteScreen.id);
+        },
       ));
     }
 

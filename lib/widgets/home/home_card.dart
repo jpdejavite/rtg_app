@@ -12,6 +12,9 @@ class HomeCard extends StatelessWidget {
   final Color iconColor;
   final String title;
   final IconData titleIcon;
+  final Key titleIconKey;
+  final String titleTooltip;
+  final void Function() onTitleIconPressed;
   final String subtitle;
   final String action;
   final String secundaryAction;
@@ -28,6 +31,9 @@ class HomeCard extends StatelessWidget {
     this.iconColor,
     this.title,
     this.titleIcon,
+    this.titleIconKey,
+    this.titleTooltip,
+    this.onTitleIconPressed,
     this.subtitle,
     this.onDismiss,
     this.action,
@@ -84,9 +90,10 @@ class HomeCard extends StatelessWidget {
                     child: Text(title,
                         style: Theme.of(context).textTheme.headline5)),
                 IconButton(
-                  onPressed: () => {},
+                  key: titleIconKey,
+                  onPressed: this.onTitleIconPressed,
                   icon: Icon(this.titleIcon),
-                  tooltip: "fazer anotações",
+                  tooltip: this.titleTooltip,
                   color: CustomColors.primaryColor,
                 )
               ]),

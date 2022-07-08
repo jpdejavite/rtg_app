@@ -1,4 +1,4 @@
-import 'package:rtg_app/bloc/add_recipe_to_grocery_list.dart/add_recipe_to_grocery_list.dart';
+import 'package:rtg_app/bloc/add_recipe_to_grocery_list/add_recipe_to_grocery_list.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';

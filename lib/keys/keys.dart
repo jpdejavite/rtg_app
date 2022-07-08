@@ -35,6 +35,8 @@ class Keys {
   static const String homeCardNewMenuPlanning =
       'home-card-new-menu-planning-action';
   static const String homeCardShowMenuPlanning = 'home-card-show-menu-planning';
+  static const String homeCardEditNote = 'home-card-edit-note';
+  static const String homeCardEditNoteIcon = 'home-card-edit-note-icon';
   static const String homeCardSeeMenuPlanning = 'home-card-see-menu-planning';
   static const String homeCardOldMenuPlanning = 'home-card-old-menu-planning';
   static const String homeCardMenuPlanningHistory =
@@ -231,7 +233,8 @@ class Keys {
   // settings screen
   static const String settingsConfiguredAtText = 'settings-configured-at-text';
   static const String settingsDoBackupButton = 'settings-do-backup-button';
-  static const String settingsImportBackupButton = 'settings-import-backup-button';
+  static const String settingsImportBackupButton =
+      'settings-import-backup-button';
   static const String settingsGoogleDriveButtton =
       'settings-google-drive-button';
   static const String settingsLocalButtton = 'settings-local-button';
@@ -262,4 +265,7 @@ class Keys {
 
   // generic
   static const String wholeScreenLoading = 'whole-screen-loading';
+
+  // save note
+  static const String saveNoteField = 'save-note-field';
 }

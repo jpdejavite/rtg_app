@@ -138,6 +138,7 @@ class GroceryListItem {
       Recipe recipe, List<GroceryListItem> items, double portions) {
     portions = portions / recipe.portions;
     JaroWinkler jw = JaroWinkler();
+    List<GroceryListItem> itemsToAdd = [];
     recipe.ingredients.asMap().forEach((index, ingredient) {
       String ingredientName =
           Diacritics.removeDiacritics(ingredient.name).toLowerCase();
@@ -172,7 +173,7 @@ class GroceryListItem {
           return;
         }
       }
-      items.add(GroceryListItem(
+      itemsToAdd.add(GroceryListItem(
         id: IdGenerator.id(),
         quantity: ingredient.quantity * portions,
         checked: false,
@@ -181,6 +182,10 @@ class GroceryListItem {
         ingredientName: ingredient.name,
       ));
     });
+
+    if (itemsToAdd.length > 0) {
+      items.insertAll(0, itemsToAdd);
+    }
 
     return items;
   }

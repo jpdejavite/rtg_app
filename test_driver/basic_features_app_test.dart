@@ -488,16 +488,16 @@ void main() {
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
-      expect(await driver.getText(Constants.groceryItemTextField0), "2 chuchu");
+      expect(
+          await driver.getText(Constants.groceryItemTextField0), "3 beterraba");
 
       expect(await driver.getText(Constants.groceryItemTextField1),
-          "5 colheres de chá sal");
+          "4 1/2 colheres de chá açucar");
 
-      expect(
-          await driver.getText(Constants.groceryItemTextField2), "3 beterraba");
+      expect(await driver.getText(Constants.groceryItemTextField2), "2 chuchu");
 
       expect(await driver.getText(Constants.groceryItemTextField3),
-          "4 1/2 colheres de chá açucar");
+          "5 colheres de chá sal");
 
       await driver.waitFor(Constants.backButtonFinder);
       await driver.tap(Constants.backButtonFinder);

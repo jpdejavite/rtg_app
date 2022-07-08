@@ -120,33 +120,33 @@ void main() {
     List<GroceryListItem> groceries =
         GroceryListItem.addRecipeToItems(recipe, items, portions);
 
-    expect(groceries[0].id, item1.id);
-    expect(groceries[0].quantity, item1.quantity);
-    expect(groceries[0].checked, item1.checked);
-    expect(groceries[0].recipeIngredients, item1.recipeIngredients);
-    expect(groceries[0].measureId, item1.measureId);
-    expect(groceries[0].ingredientName, item1.ingredientName);
+    expect(groceries[0].id, 'id-3');
+    expect(groceries[0].quantity, 3.0);
+    expect(groceries[0].checked, false);
+    expect(groceries[0].recipeIngredients, {recipeId: 0});
+    expect(groceries[0].measureId, IngredientMeasureId.unit);
+    expect(groceries[0].ingredientName, 'tomate');
 
-    expect(groceries[1].id, item2.id);
-    expect(groceries[1].quantity, item2.quantity);
-    expect(groceries[1].checked, item2.checked);
-    expect(groceries[1].recipeIngredients, item2.recipeIngredients);
-    expect(groceries[1].measureId, item2.measureId);
-    expect(groceries[1].ingredientName, item2.ingredientName);
+    expect(groceries[1].id, 'id-4');
+    expect(groceries[1].quantity, 9.99);
+    expect(groceries[1].checked, false);
+    expect(groceries[1].recipeIngredients, {recipeId: 1});
+    expect(groceries[1].measureId, IngredientMeasureId.milliliters);
+    expect(groceries[1].ingredientName, 'água');
 
-    expect(groceries[2].id, 'id-3');
-    expect(groceries[2].quantity, 3.0);
-    expect(groceries[2].checked, false);
-    expect(groceries[2].recipeIngredients, {recipeId: 0});
-    expect(groceries[2].measureId, IngredientMeasureId.unit);
-    expect(groceries[2].ingredientName, 'tomate');
+    expect(groceries[2].id, item1.id);
+    expect(groceries[2].quantity, item1.quantity);
+    expect(groceries[2].checked, item1.checked);
+    expect(groceries[2].recipeIngredients, item1.recipeIngredients);
+    expect(groceries[2].measureId, item1.measureId);
+    expect(groceries[2].ingredientName, item1.ingredientName);
 
-    expect(groceries[3].id, 'id-4');
-    expect(groceries[3].quantity, 9.99);
-    expect(groceries[3].checked, false);
-    expect(groceries[3].recipeIngredients, {recipeId: 1});
-    expect(groceries[3].measureId, IngredientMeasureId.milliliters);
-    expect(groceries[3].ingredientName, 'água');
+    expect(groceries[3].id, item2.id);
+    expect(groceries[3].quantity, item2.quantity);
+    expect(groceries[3].checked, item2.checked);
+    expect(groceries[3].recipeIngredients, item2.recipeIngredients);
+    expect(groceries[3].measureId, item2.measureId);
+    expect(groceries[3].ingredientName, item2.ingredientName);
   });
 
   test('add recipe to list item with no conversion', () {
@@ -183,33 +183,33 @@ void main() {
     List<GroceryListItem> groceries =
         GroceryListItem.addRecipeToItems(recipe, items, portions);
 
-    expect(groceries[0].id, item1.id);
-    expect(groceries[0].quantity, item1.quantity);
-    expect(groceries[0].checked, item1.checked);
-    expect(groceries[0].recipeIngredients, item1.recipeIngredients);
-    expect(groceries[0].measureId, item1.measureId);
-    expect(groceries[0].ingredientName, item1.ingredientName);
+    expect(groceries[0].id, 'id-3');
+    expect(groceries[0].quantity, 3.0);
+    expect(groceries[0].checked, false);
+    expect(groceries[0].recipeIngredients, {recipeId: 0});
+    expect(groceries[0].measureId, IngredientMeasureId.unit);
+    expect(groceries[0].ingredientName, 'tomate italian');
 
-    expect(groceries[1].id, item2.id);
-    expect(groceries[1].quantity, item2.quantity);
-    expect(groceries[1].checked, item2.checked);
-    expect(groceries[1].recipeIngredients, item2.recipeIngredients);
-    expect(groceries[1].measureId, item2.measureId);
-    expect(groceries[1].ingredientName, item2.ingredientName);
+    expect(groceries[1].id, 'id-4');
+    expect(groceries[1].quantity, 9.99);
+    expect(groceries[1].checked, false);
+    expect(groceries[1].recipeIngredients, {recipeId: 1});
+    expect(groceries[1].measureId, IngredientMeasureId.milliliters);
+    expect(groceries[1].ingredientName, 'água');
 
-    expect(groceries[2].id, 'id-3');
-    expect(groceries[2].quantity, 3.0);
-    expect(groceries[2].checked, false);
-    expect(groceries[2].recipeIngredients, {recipeId: 0});
-    expect(groceries[2].measureId, IngredientMeasureId.unit);
-    expect(groceries[2].ingredientName, 'tomate italian');
+    expect(groceries[2].id, item1.id);
+    expect(groceries[2].quantity, item1.quantity);
+    expect(groceries[2].checked, item1.checked);
+    expect(groceries[2].recipeIngredients, item1.recipeIngredients);
+    expect(groceries[2].measureId, item1.measureId);
+    expect(groceries[2].ingredientName, item1.ingredientName);
 
-    expect(groceries[3].id, 'id-4');
-    expect(groceries[3].quantity, 9.99);
-    expect(groceries[3].checked, false);
-    expect(groceries[3].recipeIngredients, {recipeId: 1});
-    expect(groceries[3].measureId, IngredientMeasureId.milliliters);
-    expect(groceries[3].ingredientName, 'água');
+    expect(groceries[3].id, item2.id);
+    expect(groceries[3].quantity, item2.quantity);
+    expect(groceries[3].checked, item2.checked);
+    expect(groceries[3].recipeIngredients, item2.recipeIngredients);
+    expect(groceries[3].measureId, item2.measureId);
+    expect(groceries[3].ingredientName, item2.ingredientName);
   });
 
   test('add recipe to list item with conversions', () {
@@ -247,26 +247,26 @@ void main() {
     List<GroceryListItem> groceries =
         GroceryListItem.addRecipeToItems(recipe, items, portions);
 
-    expect(groceries[0].id, item1.id);
-    expect(groceries[0].quantity, 3.1);
-    expect(groceries[0].checked, item1.checked);
-    expect(groceries[0].recipeIngredients, {'recipe-id-2': 0, recipeId: 0});
-    expect(groceries[0].measureId, item1.measureId);
-    expect(groceries[0].ingredientName, 'tomate italian');
+    expect(groceries[0].id, 'id-3');
+    expect(groceries[0].quantity, 4.0);
+    expect(groceries[0].checked, false);
+    expect(groceries[0].recipeIngredients, {recipeId: 2});
+    expect(groceries[0].measureId, IngredientMeasureId.tableSpoon);
+    expect(groceries[0].ingredientName, 'oleo');
 
-    expect(groceries[1].id, item2.id);
-    expect(groceries[1].quantity, 2.5);
-    expect(groceries[1].checked, item2.checked);
-    expect(groceries[1].recipeIngredients, {'recipe-id-2': 1, recipeId: 1});
-    expect(groceries[1].measureId, IngredientMeasureId.liter);
-    expect(groceries[1].ingredientName, 'água de coco');
+    expect(groceries[1].id, item1.id);
+    expect(groceries[1].quantity, 3.1);
+    expect(groceries[1].checked, item1.checked);
+    expect(groceries[1].recipeIngredients, {'recipe-id-2': 0, recipeId: 0});
+    expect(groceries[1].measureId, item1.measureId);
+    expect(groceries[1].ingredientName, 'tomate italian');
 
-    expect(groceries[2].id, 'id-3');
-    expect(groceries[2].quantity, 4.0);
-    expect(groceries[2].checked, false);
-    expect(groceries[2].recipeIngredients, {recipeId: 2});
-    expect(groceries[2].measureId, IngredientMeasureId.tableSpoon);
-    expect(groceries[2].ingredientName, 'oleo');
+    expect(groceries[2].id, item2.id);
+    expect(groceries[2].quantity, 2.5);
+    expect(groceries[2].checked, item2.checked);
+    expect(groceries[2].recipeIngredients, {'recipe-id-2': 1, recipeId: 1});
+    expect(groceries[2].measureId, IngredientMeasureId.liter);
+    expect(groceries[2].ingredientName, 'água de coco');
   });
 
   test('get name null ingredient name', () {

@@ -311,7 +311,6 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
             ],
           ),
         ));
-    ;
   }
 
   Widget buildTitleField() {

@@ -72,6 +72,11 @@ class _GroceryItemState extends State<GroceryItem> {
             );
           });
     }
+    if (widget.groceryListItem.checked ?? false) {
+      return SizedBox(
+        width: 1,
+      );
+    }
     return Icon(
       Icons.drag_indicator,
       key: Key(Keys.groceryItemActionIcon + widget.index.toString()),
@@ -85,6 +90,16 @@ class _GroceryItemState extends State<GroceryItem> {
       widget.nameController.text = initialText;
     });
 
+    return widget.groceryListItem.checked ?? false
+        ? GestureDetector(
+            onLongPress: () {},
+            key: Key(Keys.groceryItemRow),
+            child: buildRow(),
+          )
+        : buildRow();
+  }
+
+  Widget buildRow() {
     return Row(
       children: [
         SizedBox(

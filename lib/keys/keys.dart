@@ -195,11 +195,16 @@ class Keys {
       'save-grocery-list-archive-cancel';
   static const String saveGroceryListBottomActionIcon =
       'save-grocery-list-bottom-action-icon';
+  static const String saveGroceryListBottomActionShowRecipes =
+      'save-grocery-list-bottom-action-show-recipes';
+  static const String saveGroceryListBottomActionDragItems =
+      'save-grocery-list-bottom-action-drag-items';
 
   // grocery item
   static const String groceryItemActionIcon = 'grocery-item-action-icon';
   static const String groceryItemCheckBox = 'grocery-item-check-box';
   static const String groceryItemTextField = 'grocery-item-text-field';
+  static const String groceryItemRow = 'grocery-item-row';
 
   // view recipe
   static const String viewRecipeTitle = 'view-recipe-title';

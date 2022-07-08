@@ -289,24 +289,29 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
     String checkItemsText = checkedChildrenLength > 1
         ? AppLocalizations.of(context).checked_items
         : AppLocalizations.of(context).checked_item;
-    return TextButton(
-      key: Key(Keys.saveGroceryListShowChecked),
-      onPressed: () {
-        setState(() {
-          showChecked = !showChecked;
-        });
-      },
-      child: Row(
-        children: [
-          Icon(showChecked
-              ? Icons.keyboard_arrow_up
-              : Icons.keyboard_arrow_down),
-          Text(
-            '$checkedChildrenLength $checkItemsText',
-          )
-        ],
-      ),
-    );
+    // wrap on gesture detector to prevent reordering
+    return GestureDetector(
+        onLongPress: () {},
+        key: Key('${Keys.saveGroceryListShowChecked}-wrapper'),
+        child: TextButton(
+          key: Key(Keys.saveGroceryListShowChecked),
+          onPressed: () {
+            setState(() {
+              showChecked = !showChecked;
+            });
+          },
+          child: Row(
+            children: [
+              Icon(showChecked
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down),
+              Text(
+                '$checkedChildrenLength $checkItemsText',
+              )
+            ],
+          ),
+        ));
+    ;
   }
 
   Widget buildTitleField() {
@@ -351,23 +356,36 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
           DateFormatter.formatDateInMili(editGroceryList.updatedAt,
               AppLocalizations.of(context).updated_at_format)
         ])),
-        IconButton(
-            key: Key(Keys.saveGroceryListBottomActionIcon),
-            icon: Icon(
-                showRecipeSource ? Icons.drag_indicator : Icons.library_books),
-            onPressed: () {
-              setState(() {
-                showRecipeSource = !showRecipeSource;
-              });
-            }),
+        PopupMenuButton<int>(
+          key: Key(Keys.saveGroceryListBottomActionIcon),
+          itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+            new PopupMenuItem<int>(
+                key: Key(Keys.saveGroceryListBottomActionShowRecipes),
+                value: 1,
+                child:
+                    new Text(AppLocalizations.of(context).show_items_recipes)),
+            new PopupMenuItem<int>(
+                key: Key(Keys.saveGroceryListBottomActionDragItems),
+                value: 2,
+                child: new Text(AppLocalizations.of(context).only_drag_items)),
+          ],
+          onSelected: (int value) {
+            setState(() {
+              showRecipeSource = value == 1;
+            });
+          },
+        ),
       ],
     );
   }
 
   void onReorderListItems(oldIndex, newIndex) {
-    if (oldIndex == newIndex ||
-        checkedDividerIndex > oldIndex ||
-        checkedDividerIndex > newIndex) {
+    // no change done
+    if (oldIndex == newIndex) {
+      return;
+    }
+    // cannot change from checked to uncheked
+    if (checkedDividerIndex <= oldIndex || checkedDividerIndex <= newIndex) {
       return;
     }
     if (newIndex > oldIndex) {

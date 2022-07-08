@@ -582,6 +582,8 @@ void main() {
 
       await driver.tap(Constants.saveGroceryListBottomActionIcon);
 
+      await driver.tap(Constants.saveGroceryListBottomActionShowRecipes);
+
       await driver.tap(Constants.groceryItemActionIcon1);
 
       expect(

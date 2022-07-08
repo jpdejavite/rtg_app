@@ -148,6 +148,8 @@
   "archive_grocery_list": "Arquivar Lista de Compras",
   "copy_all_items": "Copiar todos os itens",
   "archive_grocery_list_explanation": "Deseja realmente arquivar essa lista de compras?",
+  "show_items_recipes": "Mostrar receitas dos items",
+  "only_drag_items": "Apenas arrastar items",
   "unit":"unidade",
   "units":"unidades",
   "coffe_spoon":"colher de café",

@@ -126,6 +126,8 @@ class Constants {
       find.byValueKey(Keys.groceryItemActionIcon + "2");
   static final saveGroceryListBottomActionIcon =
       find.byValueKey(Keys.saveGroceryListBottomActionIcon);
+  static final saveGroceryListBottomActionShowRecipes =
+      find.byValueKey(Keys.saveGroceryListBottomActionShowRecipes);
   static final ingredientRecipeSourceDialogRecipe0 =
       find.byValueKey(Keys.ingredientRecipeSourceDialogRecipe + "0");
   static final ingredientRecipeSourceDialogRecipeIngredientQuantity0 =

@@ -22,13 +22,16 @@ import 'package:rtg_app/screens/view_recipe_screen.dart';
 import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/grocery_lists_widget.dart';
-import 'package:rtg_app/widgets/home_card.dart';
+import 'package:rtg_app/widgets/home/home_card.dart';
 import 'package:rtg_app/widgets/named_icon.dart';
 
 import 'package:rtg_app/widgets/recipes_list_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../repository/recipe_label_repository.dart';
+import '../widgets/home/bottom_bar_navgation_option.dart';
+import '../widgets/home/home_grocery_list_card.dart';
+import '../widgets/home/home_menu_planning_card.dart';
 import 'menu_planning_history_screen.dart';
 import 'save_recipe_screen.dart';
 
@@ -107,7 +110,16 @@ class _HomeScreenState extends State<HomeScreen> {
         showHomeInfo = state;
       }
 
-      buildWidgetList();
+      _widgetOptions = BottomBarNavigationOption.buildBottomBarNavigationOption(
+        context,
+        buildHomeBody(),
+        _recipeKeyListkey,
+        onTapRecipe,
+        onRecipesFloatingActionButtonPressed,
+        _groceryListsKeyListkey,
+        onTapGroceryList,
+        onGroceryListFloatingActionButtonPressed,
+      );
       return Scaffold(
         appBar: AppBar(
           title: Text(_widgetOptions.elementAt(_selectedIndex).title),
@@ -122,7 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton:
             _widgetOptions.elementAt(_selectedIndex).floatingActionButton,
-        bottomNavigationBar: getBottomNavigationBar(),
+        bottomNavigationBar: BottomBarNavigationOption.buildBottomNavigationBar(
+            context, _selectedIndex, _onItemTapped),
       );
     });
   }
@@ -156,81 +169,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return actions;
   }
 
-  BottomNavigationBar getBottomNavigationBar() {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home,
-            key: Key(Keys.homeBottomBarHomeIcon),
-          ),
-          label: AppLocalizations.of(context).home,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.library_books,
-            key: Key(Keys.homeBottomBarRecipesIcon),
-          ),
-          label: AppLocalizations.of(context).recipes,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.list,
-            key: Key(Keys.homeBottomBarListsIcon),
-          ),
-          label: AppLocalizations.of(context).lists,
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-    );
+  void onRecipesFloatingActionButtonPressed() async {
+    final result = await Navigator.pushNamed(context, SaveRecipeScreen.id);
+    if (result != null && result is Recipe) {
+      CustomToast.showToast(
+        text: AppLocalizations.of(context).saved_recipe,
+        context: context,
+        time: CustomToast.timeShort,
+      );
+    }
+    refreshData();
   }
 
-  void buildWidgetList() {
-    _widgetOptions = [
-      BottomBarNavigationOption(
-        title: AppLocalizations.of(context).home,
-        body: buildHomeWidget(),
-      ),
-      BottomBarNavigationOption(
-        title: AppLocalizations.of(context).recipes,
-        floatingActionButton: FloatingActionButton(
-          key: Key(Keys.homeFloatingActionNewRecipeButton),
-          onPressed: () async {
-            final result =
-                await Navigator.pushNamed(context, SaveRecipeScreen.id);
-            if (result != null && result is Recipe) {
-              CustomToast.showToast(
-                text: AppLocalizations.of(context).saved_recipe,
-                context: context,
-                time: CustomToast.timeShort,
-              );
-            }
-            refreshData();
-          },
-          child: Icon(Icons.add),
-        ),
-        body: RecipesList.newRecipeListBloc(
-          key: _recipeKeyListkey,
-          onTapRecipe: onTapRecipe,
-        ),
-      ),
-      BottomBarNavigationOption(
-        title: AppLocalizations.of(context).lists,
-        body: GroceryLists.newGroceryListsBloc(
-          key: _groceryListsKeyListkey,
-          onTapGroceryList: onTapGroceryList,
-        ),
-        floatingActionButton: FloatingActionButton(
-          key: Key(Keys.homeFloatingActionNewGroceryListButton),
-          onPressed: () {
-            context.read<HomeBloc>().add(SaveNewGroceryList(
-                GroceryList.getGroceryListDefaultTitle(context)));
-          },
-          child: Icon(Icons.add),
-        ),
-      ),
-    ];
+  void onGroceryListFloatingActionButtonPressed() {
+    context.read<HomeBloc>().add(
+        SaveNewGroceryList(GroceryList.getGroceryListDefaultTitle(context)));
   }
 
   void onTapGroceryList(GroceryList groceryList) async {
@@ -251,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     refreshData();
   }
 
-  Widget buildHomeWidget() {
+  Widget buildHomeBody() {
     List<Widget> cards = [];
 
     if (showHomeInfo.backupNotConfigured) {
@@ -292,8 +245,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
     }
 
-    if (showHomeInfo.currentMenuPlanning != null) {
+    if (showHomeInfo.oldMenuPlanning != null ||
+        showHomeInfo.currentMenuPlanning != null ||
+        showHomeInfo.futureMenuPlanning != null) {
       cards.add(HomeCard(
+        cardKey: Key('a'),
+        title: "Anotações",
+        titleIcon: Icons.edit_note,
+      ));
+    }
+
+    if (showHomeInfo.currentMenuPlanning != null) {
+      cards.add(HomeMenuPlanningCard(
         cardKey: Key(Keys.homeCardShowMenuPlanning),
         actionKey: Key(Keys.homeCardSeeMenuPlanning),
         title: AppLocalizations.of(context).current_menu_planning,
@@ -320,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (showHomeInfo.currentMenuPlanning == null &&
         showHomeInfo.futureMenuPlanning != null) {
-      cards.add(HomeCard(
+      cards.add(HomeMenuPlanningCard(
         cardKey: Key(Keys.homeCardShowMenuPlanning),
         actionKey: Key(Keys.homeCardSeeMenuPlanning),
         title: AppLocalizations.of(context).next_menu_planning,
@@ -356,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ));
       }
-      cards.add(HomeCard(
+      cards.add(HomeGroceryListCard(
         cardKey: Key(Keys.homeCardLastGroceryListUsed),
         actionKey: Key(Keys.homeCardLastGroceryListUsedAction),
         title: AppLocalizations.of(context).last_grocery_list_used,
@@ -401,11 +364,4 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
     );
   }
-}
-
-class BottomBarNavigationOption {
-  final String title;
-  final Widget body;
-  final FloatingActionButton floatingActionButton;
-  BottomBarNavigationOption({this.body, this.title, this.floatingActionButton});
 }

@@ -231,6 +231,7 @@ class Keys {
   // settings screen
   static const String settingsConfiguredAtText = 'settings-configured-at-text';
   static const String settingsDoBackupButton = 'settings-do-backup-button';
+  static const String settingsImportBackupButton = 'settings-import-backup-button';
   static const String settingsGoogleDriveButtton =
       'settings-google-drive-button';
   static const String settingsLocalButtton = 'settings-local-button';

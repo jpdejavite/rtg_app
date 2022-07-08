@@ -91,9 +91,7 @@ class _SettingsState extends State<SettingsScreen> {
         );
       } else {
         CustomToast.showToast(
-          text: 
-              AppLocalizations.of(context).file_successfully_imported
-              ,
+          text: AppLocalizations.of(context).file_successfully_imported,
           context: context,
           time: CustomToast.timeShort,
         );
@@ -196,7 +194,7 @@ class _SettingsState extends State<SettingsScreen> {
       },
     ));
     children.add(ElevatedButton(
-      key: Key(Keys.settingsDoBackupButton),
+      key: Key(Keys.settingsImportBackupButton),
       child: Text(AppLocalizations.of(context).import_local_file),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(CustomColors.ligthGrey),

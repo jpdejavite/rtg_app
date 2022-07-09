@@ -4,6 +4,7 @@ import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
 import 'constants.dart';
+import 'driver_helper.dart';
 import 'helper.dart';
 
 void main() {
@@ -40,68 +41,49 @@ void main() {
     final String ingredient35 = 'algumas folhas de manjericão';
     final String instructions3 = 'Vamos preparar minha terceira receita\n\\o/';
 
-    FlutterDriver driver;
+    DriverHelper driver;
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
-      driver = await FlutterDriver.connect();
-      await driver.tap(Constants.actionDeleteAllIcon);
+      driver = new DriverHelper(await FlutterDriver.connect());
+      await driver.tap(Keys.actionDeleteAllIcon);
     });
 
     // Close the connection to the driver after the tests have completed.
     tearDownAll(() async {
-      if (driver != null) {
-        driver.close();
-      }
+      await driver.close();
     });
 
     test('home inital screen', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeCardRecipeTutorial), driver),
-          true);
+      expect(await driver.isPresent(Keys.homeCardRecipeTutorial), true);
 
-      expect(await Helper.isPresent(Constants.homeActionSettingsIcon, driver),
-          true);
+      expect(await driver.isPresent(Keys.homeActionSettingsIcon), true);
       expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeActionSettingsNotification), driver),
-          false);
+          await driver.isPresent(Keys.homeActionSettingsNotification), false);
     });
 
     test('recipes initial screen', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListEmptyText), driver,
-              timeout: Duration(seconds: 10)),
-          true);
+      expect(await driver.isPresent(Keys.recipesListEmptyText), true);
     });
 
     test('lists initial screen', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.groceryListsEmptyText), driver),
-          true);
+      expect(await driver.isPresent(Keys.groceryListsEmptyText), true);
     });
 
     test('dimiss recipe tutorial', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Constants.homeCardRecipeTutorialDismiss);
+      await driver.tap(Keys.homeCardRecipeTutorialDismiss);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeBottomBarHomeText), driver),
-          true);
+      expect(await driver.isPresent(Keys.homeBottomBarHomeText), true);
 
-      expect(await Helper.isPresent(Constants.homeActionSettingsIcon, driver),
-          true);
+      expect(await driver.isPresent(Keys.homeActionSettingsIcon), true);
     });
 
     test('insert first recipe', () async {
@@ -118,22 +100,17 @@ void main() {
       expect(
           await driver.getText(Constants.recipeListRowTitleText0), recipeName1);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeActionSettingsNotification), driver),
-          true);
+      expect(await driver.isPresent(Keys.homeActionSettingsNotification), true);
     });
 
     test('check configure backup home action', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      expect(await Helper.isPresent(Constants.homeCardConfigureBackup, driver),
-          true);
+      expect(await driver.isPresent(Keys.homeCardConfigureBackup), true);
 
-      await driver.tap(Constants.homeCardConfigureBackupAction);
+      await driver.tap(Keys.homeCardConfigureBackupAction);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('insert second recipe', () async {
@@ -143,10 +120,7 @@ void main() {
       expect(
           await driver.getText(Constants.recipeListRowTitleText1), recipeName2);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeActionSettingsNotification), driver),
-          true);
+      expect(await driver.isPresent(Keys.homeActionSettingsNotification), true);
     });
 
     test('insert third recipe', () async {
@@ -172,11 +146,11 @@ void main() {
     });
 
     test('view third recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText2);
 
-      expect(await driver.getText(Constants.viewRecipeTitle), recipeName3);
+      expect(await driver.getText(Keys.viewRecipeTitle), recipeName3);
       expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0]);
       expect(await driver.getText(Constants.viewRecipeIngredientText0),
@@ -196,26 +170,25 @@ void main() {
       expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      expect(await driver.getText(Constants.viewRecipeInstructionText),
-          instructions3);
+      expect(
+          await driver.getText(Keys.viewRecipeInstructionText), instructions3);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('remove label third recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
       await driver.scrollIntoView(Constants.saveRecipeLabelRemoveIcon1);
 
       await driver.tap(Constants.saveRecipeLabelRemoveIcon1);
       await Future.delayed(Duration(seconds: 1));
 
-      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+      await driver.tap(Keys.saveRecipeFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0]);
@@ -234,16 +207,15 @@ void main() {
       expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit label third recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
       await driver.scrollIntoView(Constants.saveRecipeLabelField0);
 
@@ -269,23 +241,22 @@ void main() {
       expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit ingredient third recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
       await driver.scrollIntoView(Constants.saveRecipeIngredientField2);
 
       await driver.tap(Constants.saveRecipeIngredientField2);
       await driver.enterText(ingredient32 + " editado");
 
-      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+      await driver.tap(Keys.saveRecipeFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0] + " editado");
@@ -304,22 +275,21 @@ void main() {
       expect(await driver.getText(Constants.viewRecipeIngredientText5),
           "    • " + ingredient35);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('remove ingredient third recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText2);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
       await driver.scrollIntoView(Constants.saveRecipeIngredientRemoveIcon3);
 
       await driver.tap(Constants.saveRecipeIngredientRemoveIcon3);
 
-      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+      await driver.tap(Keys.saveRecipeFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.viewRecipeIngredientLabelText0),
           labels3[0] + " editado");
@@ -336,112 +306,104 @@ void main() {
       expect(await driver.getText(Constants.viewRecipeIngredientText4),
           "    • " + ingredient35);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('view recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      expect(await driver.getText(Constants.viewRecipeTitle), recipeName1);
+      expect(await driver.getText(Keys.viewRecipeTitle), recipeName1);
       expect(await driver.getText(Constants.viewRecipeIngredientText0),
           "• " + ingredient10);
       expect(await driver.getText(Constants.viewRecipeIngredientText1),
           "• " + ingredient11);
-      expect(
-          await driver.getText(Constants.viewRecipePreparationTimeDetailsText),
+      expect(await driver.getText(Keys.viewRecipePreparationTimeDetailsText),
           '10 m preparo + 2 h cozimento');
 
-      expect(await driver.getText(Constants.viewRecipeInstructionText),
-          instructions1);
+      expect(
+          await driver.getText(Keys.viewRecipeInstructionText), instructions1);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
-      await driver.tap(Constants.saveRecipeNameField);
+      await driver.tap(Keys.saveRecipeNameField);
       await driver.enterText(recipeName1 + " editado");
 
-      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+      await driver.tap(Keys.saveRecipeFloatingActionSaveButton);
 
-      expect(await driver.getText(Constants.viewRecipeTitle),
-          recipeName1 + " editado");
+      expect(
+          await driver.getText(Keys.viewRecipeTitle), recipeName1 + " editado");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit label recipe with auto complete', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(Constants.viewRecipeFloatingActionEditButton);
+      await driver.tap(Keys.viewRecipeFloatingActionEditButton);
 
-      await driver.tap(Constants.saveRecipeLabelField);
+      await driver.tap(Keys.saveRecipeLabelField);
       await driver.enterText(label2.substring(0, 3));
-      await driver.tap(find.text(label2));
+      await driver.tapInText(label2);
 
-      await driver.tap(Constants.saveRecipeFloatingActionSaveButton);
+      await driver.tap(Keys.saveRecipeFloatingActionSaveButton);
 
       expect(
-          (await driver.getText(Constants.viewRecipeLabelLabelText))
+          (await driver.getText(Keys.viewRecipeLabelLabelText))
               .contains(label2),
           true);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('share recipe', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(Constants.viewRecipeShareRecipeAction);
+      await driver.tap(Keys.viewRecipeShareRecipeAction);
 
-      await driver.tap(Constants.viewRecipeCopyContentToClipboardAction);
+      await driver.tap(Keys.viewRecipeCopyContentToClipboardAction);
 
-      await driver.tap(Constants.viewRecipeShareRecipeAction);
+      await driver.tap(Keys.viewRecipeShareRecipeAction);
 
-      await driver.tap(Constants.viewRecipeShareAsImagesAction);
+      await driver.tap(Keys.viewRecipeShareAsImagesAction);
 
-      await driver.tap(Constants.viewRecipeShareRecipeAction);
+      await driver.tap(Keys.viewRecipeShareRecipeAction);
 
-      await driver.tap(Constants.viewRecipeShareAsPdfAction);
+      await driver.tap(Keys.viewRecipeShareAsPdfAction);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('add first recipe to new grocery list', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(Constants.viewRecipeAddToGroceryListAction);
+      await driver.tap(Keys.viewRecipeAddToGroceryListAction);
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Keys.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("2");
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Keys.addRecipeToGroceryListDialogConfirmButton);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
-      expect(await Helper.isPresent(Constants.groceryListRowTitleText0, driver),
-          true);
+      expect(await driver.isPresent(Constants.groceryListRowTitleText0), true);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
@@ -450,41 +412,36 @@ void main() {
       expect(await driver.getText(Constants.groceryItemTextField1),
           "2 colheres de chá sal");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('check last used recipe on home', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      expect(
-          await Helper.isPresent(Constants.homeCardLastGroceryListUsed, driver),
-          true);
+      expect(await driver.isPresent(Keys.homeCardLastGroceryListUsed), true);
 
-      await driver.tap(Constants.homeCardLastGroceryListUsedAction);
+      await driver.tap(Keys.homeCardLastGroceryListUsedAction);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
       await driver.tap(Constants.homeCardRecipeButton0);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('add second recipe to same grocery list', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.viewRecipeAddToGroceryListAction1);
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Keys.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("9");
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Keys.addRecipeToGroceryListDialogConfirmButton);
 
       await driver.tap(Constants.viewRecipeGroceryListToSelect0);
 
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
@@ -499,55 +456,50 @@ void main() {
       expect(await driver.getText(Constants.groceryItemTextField3),
           "5 colheres de chá sal");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('add second recipe to new grocery list', () async {
-      await driver.tap(Constants.homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await driver.tap(Constants.recipeListRowTitleText1);
 
-      await driver.tap(Constants.viewRecipeAddToGroceryListAction);
+      await driver.tap(Keys.viewRecipeAddToGroceryListAction);
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogPortionTextField);
+      await driver.tap(Keys.addRecipeToGroceryListDialogPortionTextField);
       await driver.enterText("2");
 
-      await driver.tap(Constants.addRecipeToGroceryListDialogConfirmButton);
+      await driver.tap(Keys.addRecipeToGroceryListDialogConfirmButton);
 
-      await driver.tap(Constants.viewRecipeCreateNewGroceryListAction);
+      await driver.tap(Keys.viewRecipeCreateNewGroceryListAction);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
-      expect(await Helper.isPresent(Constants.groceryListRowTitleText1, driver),
-          true);
+      expect(await driver.isPresent(Constants.groceryListRowTitleText1), true);
     });
 
     test('edit grocery list item name', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
       await driver.tap(Constants.groceryItemTextField0);
       await driver.enterText("1 chuchu grande");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
       expect(await driver.getText(Constants.groceryItemTextField0),
           "1 chuchu grande");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit grocery list drag item', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
@@ -556,33 +508,29 @@ void main() {
 
       await Future.delayed(Duration(seconds: 2));
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit grocery list check item', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
       await driver.tap(Constants.groceryItemCheckBox1);
 
-      expect(
-          await Helper.isPresent(Constants.saveGroceryListShowChecked, driver),
-          true);
+      expect(await driver.isPresent(Keys.saveGroceryListShowChecked), true);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit grocery list show recipes', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(Constants.saveGroceryListBottomActionIcon);
+      await driver.tap(Keys.saveGroceryListBottomActionIcon);
 
-      await driver.tap(Constants.saveGroceryListBottomActionShowRecipes);
+      await driver.tap(Keys.saveGroceryListBottomActionShowRecipes);
 
       await driver.tap(Constants.groceryItemActionIcon1);
 
@@ -594,30 +542,27 @@ void main() {
               Constants.ingredientRecipeSourceDialogRecipeIngredientQuantity0),
           "1 1/2 colheres de chá");
 
-      await driver.tap(Constants.ingredientRecipeSourceDialogCloseButton);
+      await driver.tap(Keys.ingredientRecipeSourceDialogCloseButton);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('edit grocery list archive recipes', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
-      await driver.tap(Constants.saveGroceryListArchiveAction);
+      await driver.tap(Keys.saveGroceryListArchiveAction);
 
-      await driver.tap(Constants.saveGroceryListArchiveConfirm);
+      await driver.tap(Keys.saveGroceryListArchiveConfirm);
 
-      expect(await Helper.isPresent(Constants.groceryListRowTitleText0, driver),
-          true);
+      expect(await driver.isPresent(Constants.groceryListRowTitleText0), true);
 
-      expect(await Helper.isPresent(Constants.groceryListRowTitleText1, driver),
-          false);
+      expect(await driver.isPresent(Constants.groceryListRowTitleText1), false);
     });
 
     test('show grocery list recipes', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowShowRecipes0);
 
@@ -627,20 +572,19 @@ void main() {
       expect(await driver.getText(Constants.groceryListRecipesDialogRecipe1),
           recipeName2);
 
-      await driver.tap(Constants.groceryListRecipesDialogCloseButton);
+      await driver.tap(Keys.groceryListRecipesDialogCloseButton);
     });
 
     test('new grocery list', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
-      await driver.tap(Constants.homeFloatingActionNewGroceryListButton);
+      await driver.tap(Keys.homeFloatingActionNewGroceryListButton);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('add items to new grocery list', () async {
-      await driver.tap(Constants.homeBottomBarListsIcon);
+      await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
@@ -658,8 +602,7 @@ void main() {
       await driver.tap(Constants.groceryItemTextField2);
       await driver.enterText(groceryItem2);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
@@ -670,51 +613,47 @@ void main() {
       expect(
           await driver.getText(Constants.groceryItemTextField2), groceryItem2);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('configure local backup', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      expect(await Helper.isPresent(Constants.homeCardConfigureBackup, driver),
-          true);
+      expect(await driver.isPresent(Keys.homeCardConfigureBackup), true);
 
-      await driver.tap(Constants.homeCardConfigureBackupAction);
+      await driver.tap(Keys.homeCardConfigureBackupAction);
 
-      await driver.tap(Constants.settingsLocalButtton);
+      await driver.tap(Keys.settingsLocalButtton);
 
-      expect(await driver.getText(Constants.settingsConfiguredAtText),
+      expect(await driver.getText(Keys.settingsConfiguredAtText),
           'Configurado em: Local');
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('do local backup again', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Constants.homeActionSettingsIcon);
+      await driver.tap(Keys.homeActionSettingsIcon);
 
-      await driver.tap(Constants.settingsDoBackupButton);
+      await driver.tap(Keys.settingsDoBackupButton);
 
-      expect(await driver.getText(Constants.settingsConfiguredAtText),
+      expect(await driver.getText(Keys.settingsConfiguredAtText),
           'Configurado em: Local');
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('do first menu planning', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Constants.homeCardDoMenuPlanning);
+      await driver.tap(Keys.homeCardDoMenuPlanning);
 
       await driver.tap(Constants.menuPlanningDayAddMealButton0);
 
       await driver.tap(Constants.menuPlanningDayPickRecipeTextButton00);
 
-      await driver.tap(Constants.recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText(recipeName1);
 
       await driver.tap(Constants.recipeListRowTitleText0);
@@ -730,20 +669,19 @@ void main() {
 
       await driver.tap(Constants.menuPlanningDayPickRecipeTextButton10);
 
-      await driver.tap(Constants.recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText(recipeName2);
 
       await driver.tap(Constants.recipeListRowTitleText0);
 
-      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+      await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.menuPlanningDaysMealText00),
           "almoço: cozinhar");
       await driver.tap(Constants.menuPlanningDaysMealTextButton00);
-      expect(await driver.getText(Constants.viewRecipeTitle),
-          recipeName1 + " editado");
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      expect(
+          await driver.getText(Keys.viewRecipeTitle), recipeName1 + " editado");
+      await driver.tapBackButton();
 
       expect(await driver.getText(Constants.menuPlanningDaysMealText01),
           "jantar: cozinhar");
@@ -754,17 +692,16 @@ void main() {
       expect(await driver.getText(Constants.menuPlanningDaysMealText10),
           "almoço: cozinhar");
       await driver.tap(Constants.menuPlanningDaysMealTextButton10);
-      expect(await driver.getText(Constants.viewRecipeTitle), recipeName2);
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      expect(await driver.getText(Keys.viewRecipeTitle), recipeName2);
+      await driver.tapBackButton();
     });
 
     test('edit menu planning', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Constants.homeCardSeeMenuPlanning);
+      await driver.tap(Keys.homeCardSeeMenuPlanning);
 
-      await driver.tap(Constants.viewMenuPlanningFloatingActionEditButton);
+      await driver.tap(Keys.viewMenuPlanningFloatingActionEditButton);
 
       await driver.tap(Constants.menuPlanningWriteDetailsTextField01);
       await driver.enterText("segredo editado");
@@ -773,12 +710,12 @@ void main() {
 
       await driver.tap(Constants.menuPlanningDayMenuRemoveMeal00);
 
-      await driver.tap(Constants.saveMenuPlanningStartAtIcon);
+      await driver.tap(Keys.saveMenuPlanningStartAtIcon);
 
-      await driver.tap(find.text(DateTime.now().day.toString()));
-      await driver.tap(find.text('OK'));
+      await driver.tapInText(DateTime.now().day.toString());
+      await driver.tapInText('OK');
 
-      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+      await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.menuPlanningDaysMealText00),
           "jantar: cozinhar");
@@ -789,21 +726,19 @@ void main() {
       expect(await driver.getText(Constants.menuPlanningDaysMealText10),
           "almoço: cozinhar");
       await driver.tap(Constants.menuPlanningDaysMealTextButton10);
-      expect(await driver.getText(Constants.viewRecipeTitle), recipeName2);
+      expect(await driver.getText(Keys.viewRecipeTitle), recipeName2);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('remove, duplicate and move menu planning meals', () async {
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Constants.homeCardSeeMenuPlanning);
+      await driver.tap(Keys.homeCardSeeMenuPlanning);
 
-      await driver.tap(Constants.viewMenuPlanningFloatingActionEditButton);
+      await driver.tap(Keys.viewMenuPlanningFloatingActionEditButton);
 
       await driver.scrollIntoView(Constants.menuPlanningDayShowMenuIcon00);
       await driver.tap(Constants.menuPlanningDayShowMenuIcon00);
@@ -822,7 +757,7 @@ void main() {
 
       await driver.tap(Constants.menuPlanningDayMenuRemoveMeal30);
 
-      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+      await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
       expect(await driver.getText(Constants.menuPlanningDaysMealText10),
           "almoço: cozinhar");
@@ -836,34 +771,28 @@ void main() {
           await driver.getText(Constants.menuPlanningDaysMealDescriptionText20),
           "segredo editado");
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
 
     test('make a note', () async {
       String note = "minha primeira anotação editado";
 
-      await driver.tap(Constants.homeBottomBarHomeIcon);
+      await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.homeCardEditNote), driver),
-          true);
+      expect(await driver.isPresent(Keys.homeCardEditNote), true);
 
-      await driver.tap(Constants.homeCardEditNoteIcon);
+      await driver.tap(Keys.homeCardEditNoteIcon);
 
-      await driver.tap(Constants.saveNoteField);
+      await driver.tap(Keys.saveNoteField);
       await driver.enterText(note);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
 
-      await driver.tap(Constants.homeCardEditNoteIcon);
+      await driver.tap(Keys.homeCardEditNoteIcon);
 
-      expect(await driver.getText(Constants.saveNoteField), note);
+      expect(await driver.getText(Keys.saveNoteField), note);
 
-      await driver.waitFor(Constants.backButtonFinder);
-      await driver.tap(Constants.backButtonFinder);
+      await driver.tapBackButton();
     });
   });
 }

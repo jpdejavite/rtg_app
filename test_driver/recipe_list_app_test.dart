@@ -3,6 +3,7 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
+import 'driver_helper.dart';
 import 'helper.dart';
 
 class RecipeInput {
@@ -19,30 +20,6 @@ class RecipeInput {
 
 void main() {
   group('recipe list app test', () {
-    final homeBottomBarRecipesIcon =
-        find.byValueKey(Keys.homeBottomBarRecipesIcon);
-    final recipesList = find.byValueKey(Keys.recipesList);
-    final actionDeleteAllIcon = find.byValueKey(Keys.actionDeleteAllIcon);
-    final recipesListFilter = find.byValueKey(Keys.recipesListFilter);
-    final recipesListSort = find.byValueKey(Keys.recipesListSort);
-    final recipesListLabelIcon = find.byValueKey(Keys.recipesListLabelIcon);
-    final chooseRecipeSortDialogNewestRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogNewestRadio);
-    final chooseRecipeSortDialogOldesRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogOldesRadio);
-    final chooseRecipeSortDialogFasterRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogFasterRadio);
-    final chooseRecipeSortDialogSlowerRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogSlowerRadio);
-    final chooseRecipeSortDialogTitleAzRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogTitleAzRadio);
-    final chooseRecipeSortDialogTitleZaRadio =
-        find.byValueKey(Keys.chooseRecipeSortDialogTitleZaRadio);
-    final chooseRecipeSortDialogClear =
-        find.byValueKey(Keys.chooseRecipeSortDialogClear);
-    final chooseRecipeLabelDialogClear =
-        find.byValueKey(Keys.chooseRecipeLabelDialogClear);
-
     final List<RecipeInput> recipeInputs = [
       RecipeInput(
           'Minha primeira receita!',
@@ -97,135 +74,136 @@ void main() {
           'Vamos preparar minha sexta receita, eu nao acredito\n\\o/'),
     ];
 
-    FlutterDriver driver;
+    DriverHelper driver;
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
-      driver = await FlutterDriver.connect();
-      await driver.tap(actionDeleteAllIcon);
+      driver = new DriverHelper(await FlutterDriver.connect());
+      await driver.tap(Keys.actionDeleteAllIcon);
     });
 
     // Close the connection to the driver after the tests have completed.
     tearDownAll(() async {
-      if (driver != null) {
-        driver.close();
-      }
+      await driver.close();
     });
 
     clearSearch() async {
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogClear);
+      await driver.tap(Keys.chooseRecipeSortDialogClear);
 
-      await driver.tap(recipesListLabelIcon);
+      await driver.tap(Keys.recipesListLabelIcon);
 
-      await driver.tap(chooseRecipeLabelDialogClear);
+      await driver.tap(Keys.chooseRecipeLabelDialogClear);
 
-      await driver.tap(recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText('');
     }
 
     expectNotifications(bool shouldSortNoficitaionBePresent,
         bool shouldLabelNoficitaionBePresent) async {
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListSortNotification), driver),
+      expect(await driver.isPresent(Keys.recipesListSortNotification),
           shouldSortNoficitaionBePresent);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListLabelNotification), driver),
+      expect(await driver.isPresent(Keys.recipesListLabelNotification),
           shouldLabelNoficitaionBePresent);
     }
 
     Future<void> checkItemName(int listIndex, int inputIndex) async {
-      final itemFinder =
-          find.byValueKey(Keys.recipeListRowTitleText + listIndex.toString());
-      await driver.scrollUntilVisible(recipesList, itemFinder,
+      await driver.scrollUntilVisible(
+          Keys.recipesList, Keys.recipeListRowTitleText + listIndex.toString(),
           dyScroll: -300.0);
-      expect(await driver.getText(itemFinder), recipeInputs[inputIndex].name);
+      expect(
+          await driver
+              .getText(Keys.recipeListRowTitleText + listIndex.toString()),
+          recipeInputs[inputIndex].name);
     }
 
     test('recipes initial screen', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      expect(
-          await Helper.isPresent(
-              find.byValueKey(Keys.recipesListEmptyText), driver,
-              timeout: Duration(seconds: 10)),
-          true);
+      expect(await driver.isPresent(Keys.recipesListEmptyText), true);
     });
 
-    test('insert recipes', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+    test(
+      'insert recipes',
+      () async {
+        await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      for (int i = 0; i < recipeInputs.length; i++) {
-        RecipeInput input = recipeInputs[i];
-        await Helper.addRecipe(driver, input.name, input.portion, input.label,
-            input.preparationTime, null, input.ingredients, input.instructions);
-      }
-    });
+        for (int i = 0; i < recipeInputs.length; i++) {
+          RecipeInput input = recipeInputs[i];
+          await Helper.addRecipe(
+              driver,
+              input.name,
+              input.portion,
+              input.label,
+              input.preparationTime,
+              null,
+              input.ingredients,
+              input.instructions);
+        }
+      },
+      timeout: Timeout(Duration(minutes: 1)),
+    );
 
     test('newest recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogNewestRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogNewestRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
       for (int i = 0; i < recipeInputs.length; i++) {
-        final itemFinder =
-            find.byValueKey(Keys.recipeListRowTitleText + i.toString());
+        final itemKey = Keys.recipeListRowTitleText + i.toString();
         RecipeInput input = recipeInputs[recipeInputs.length - i - 1];
-        await driver.scrollUntilVisible(recipesList, itemFinder,
+        await driver.scrollUntilVisible(Keys.recipesList, itemKey,
             dyScroll: -300.0);
-        expect(await driver.getText(itemFinder), input.name);
+        expect(await driver.getText(itemKey), input.name);
       }
 
       await expectNotifications(true, false);
     });
 
     test('oldest recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogOldesRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogOldesRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
       for (int i = 0; i < recipeInputs.length; i++) {
-        final itemFinder =
-            find.byValueKey(Keys.recipeListRowTitleText + i.toString());
+        final itemKey = Keys.recipeListRowTitleText + i.toString();
         RecipeInput input = recipeInputs[i];
-        await driver.scrollUntilVisible(recipesList, itemFinder,
+        await driver.scrollUntilVisible(Keys.recipesList, itemKey,
             dyScroll: -300.0);
-        expect(await driver.getText(itemFinder), input.name);
+        expect(await driver.getText(itemKey), input.name);
       }
 
       await expectNotifications(true, false);
     });
 
     test('faster recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogFasterRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogFasterRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -240,15 +218,15 @@ void main() {
     });
 
     test('slower recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogSlowerRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogSlowerRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -263,15 +241,15 @@ void main() {
     });
 
     test('titleAz recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogTitleAzRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogTitleAzRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -286,15 +264,15 @@ void main() {
     });
 
     test('titleZa recipes sorting', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
-      await driver.tap(recipesListSort);
+      await driver.tap(Keys.recipesListSort);
 
-      await driver.tap(chooseRecipeSortDialogTitleZaRadio);
+      await driver.tap(Keys.chooseRecipeSortDialogTitleZaRadio);
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -309,16 +287,16 @@ void main() {
     });
 
     test('filter recipe name', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await clearSearch();
 
-      await driver.tap(recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText('lol');
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -329,16 +307,16 @@ void main() {
     });
 
     test('filter ingredient name', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await clearSearch();
 
-      await driver.tap(recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText('açucar demerara');
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -348,16 +326,16 @@ void main() {
     });
 
     test('filter instructions name', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await clearSearch();
 
-      await driver.tap(recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText('nao acredito');
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -367,18 +345,17 @@ void main() {
     });
 
     test('filter by label', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await clearSearch();
 
-      await driver.tap(recipesListLabelIcon);
+      await driver.tap(Keys.recipesListLabelIcon);
 
-      await driver
-          .tap(find.byValueKey('${Keys.chooseRecipeLabelDialogOption}-1'));
+      await driver.tap('${Keys.chooseRecipeLabelDialogOption}-1');
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 
@@ -389,21 +366,20 @@ void main() {
     });
 
     test('filter by label and recipe name', () async {
-      await driver.tap(homeBottomBarRecipesIcon);
+      await driver.tap(Keys.homeBottomBarRecipesIcon);
 
       await clearSearch();
 
-      await driver.tap(recipesListLabelIcon);
+      await driver.tap(Keys.recipesListLabelIcon);
 
-      await driver
-          .tap(find.byValueKey('${Keys.chooseRecipeLabelDialogOption}-2'));
+      await driver.tap('${Keys.chooseRecipeLabelDialogOption}-2');
 
-      await driver.tap(recipesListFilter);
+      await driver.tap(Keys.recipesListFilter);
       await driver.enterText('lol');
 
       await driver.scrollUntilVisible(
-        recipesList,
-        find.byValueKey(Keys.recipeListRowTitleText + '0'),
+        Keys.recipesList,
+        Keys.recipeListRowTitleText + '0',
         dyScroll: 300.0,
       );
 

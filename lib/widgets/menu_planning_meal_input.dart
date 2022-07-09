@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rtg_app/model/menu_planning_meal.dart';
+import 'package:rtg_app/model/menu_planning_meal_input_action.dart';
 import 'package:rtg_app/model/menu_planning_meal_type.dart';
 import 'package:rtg_app/model/menu_planning_meal_type_preparation.dart';
 import 'package:rtg_app/model/recipe.dart';
@@ -10,14 +11,14 @@ import 'package:rtg_app/screens/choose_recipe_screen.dart';
 class MenuPlanningMealInput extends StatefulWidget {
   final MenuPlanningMeal meal;
   final String uniqueIndex;
-  final void Function() onRemove;
+  final void Function(MenuPlanningMealInputAction action) onActionPressed;
   final void Function(MenuPlanningMeal newMeal) onUpdate;
   final List<Recipe> lastUsedGroceryListRecipes;
   final List<Recipe> menuPlanningRecipes;
   MenuPlanningMealInput({
     this.meal,
     this.uniqueIndex,
-    this.onRemove,
+    this.onActionPressed,
     this.onUpdate,
     this.lastUsedGroceryListRecipes,
     this.menuPlanningRecipes,
@@ -227,11 +228,29 @@ class _MenuPlanningMealInputState extends State<MenuPlanningMealInput> {
             ),
           ),
         ),
-        IconButton(
-          icon: Icon(Icons.close),
-          key:
-              Key('${Keys.menuPlanningDayAddMealButton}-${widget.uniqueIndex}'),
-          onPressed: widget.onRemove,
+        PopupMenuButton<int>(
+          key: Key('${Keys.menuPlanningDayShowMenuIcon}-${widget.uniqueIndex}'),
+          itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+            new PopupMenuItem<int>(
+                key: Key(
+                    '${Keys.menuPlanningDayMenuRemoveMeal}-${widget.uniqueIndex}'),
+                value: 1,
+                child: new Text(AppLocalizations.of(context).remove)),
+            new PopupMenuItem<int>(
+                key: Key(
+                    '${Keys.menuPlanningDayMenuDuplicateMeal}-${widget.uniqueIndex}'),
+                value: 2,
+                child: new Text(AppLocalizations.of(context).duplicate)),
+            new PopupMenuItem<int>(
+                key: Key(
+                    '${Keys.menuPlanningDayMenuMoveMeal}-${widget.uniqueIndex}'),
+                value: 3,
+                child: new Text(AppLocalizations.of(context).move)),
+          ],
+          onSelected: (int value) {
+            widget
+                .onActionPressed(MenuPlanningMealInputAction.values[value - 1]);
+          },
         ),
       ],
     );

@@ -151,14 +151,32 @@ class Constants {
       find.byValueKey(Keys.menuPlanningDayAddMealButton + "-1");
   static final menuPlanningDayPickRecipeTextButton00 =
       find.byValueKey(Keys.menuPlanningDayPickRecipeTextButton + "-0-0");
-  static final menuPlanningDayPickRecipeTextButton10 =
-      find.byValueKey(Keys.menuPlanningDayPickRecipeTextButton + "-1-0");
+  static final menuPlanningDayShowMenuIcon00 =
+      find.byValueKey(Keys.menuPlanningDayShowMenuIcon + "-0-0");
+  static final menuPlanningDayMenuRemoveMeal00 =
+      find.byValueKey(Keys.menuPlanningDayMenuRemoveMeal + "-0-0");
+  static final menuPlanningDayMenuMoveMeal00 =
+      find.byValueKey(Keys.menuPlanningDayMenuMoveMeal + "-0-0");
   static final menuPlanningWriteDetailsTextButton01 =
       find.byValueKey(Keys.menuPlanningWriteDetailsTextButton + "-0-1");
   static final menuPlanningWriteDetailsTextField01 =
       find.byValueKey(Keys.menuPlanningWriteDetailsTextField + "-0-1");
+  static final menuPlanningDayShowMenuIcon01 =
+      find.byValueKey(Keys.menuPlanningDayShowMenuIcon + "-0-1");
+  static final menuPlanningDayMenuMoveMeal01 =
+      find.byValueKey(Keys.menuPlanningDayMenuMoveMeal + "-0-1");
   static final menuPlanningDayAddMealButton00 =
       find.byValueKey(Keys.menuPlanningDayAddMealButton + "-0-0");
+  static final menuPlanningDayPickRecipeTextButton10 =
+      find.byValueKey(Keys.menuPlanningDayPickRecipeTextButton + "-1-0");
+  static final menuPlanningDayShowMenuIcon20 =
+      find.byValueKey(Keys.menuPlanningDayShowMenuIcon + "-2-0");
+  static final menuPlanningDayMenuDuplicateMeal20 =
+      find.byValueKey(Keys.menuPlanningDayMenuDuplicateMeal + "-2-0");
+  static final menuPlanningDayShowMenuIcon30 =
+      find.byValueKey(Keys.menuPlanningDayShowMenuIcon + "-3-0");
+  static final menuPlanningDayMenuRemoveMeal30 =
+      find.byValueKey(Keys.menuPlanningDayMenuRemoveMeal + "-3-0");
   static final recipesListFilter = find.byValueKey(Keys.recipesListFilter);
   static final saveMenuPlanningFloatingActionSaveButton =
       find.byValueKey(Keys.saveMenuPlanningFloatingActionSaveButton);
@@ -168,6 +186,8 @@ class Constants {
       find.byValueKey(Keys.menuPlanningDaysMealText + "-0-1");
   static final menuPlanningDaysMealText10 =
       find.byValueKey(Keys.menuPlanningDaysMealText + "-1-0");
+  static final menuPlanningDaysMealDescriptionText10 =
+      find.byValueKey(Keys.menuPlanningDaysMealDescriptionText + "-1-0");
   static final menuPlanningDaysMealTextButton00 =
       find.byValueKey(Keys.menuPlanningDaysMealTextButton + "-0-0");
   static final menuPlanningDaysMealDescriptionText00 =
@@ -176,6 +196,10 @@ class Constants {
       find.byValueKey(Keys.menuPlanningDaysMealDescriptionText + "-0-1");
   static final menuPlanningDaysMealTextButton10 =
       find.byValueKey(Keys.menuPlanningDaysMealTextButton + "-1-0");
+  static final menuPlanningDaysMealText20 =
+      find.byValueKey(Keys.menuPlanningDaysMealText + "-2-0");
+  static final menuPlanningDaysMealDescriptionText20 =
+      find.byValueKey(Keys.menuPlanningDaysMealDescriptionText + "-2-0");
   static final homeCardSeeMenuPlanning =
       find.byValueKey(Keys.homeCardSeeMenuPlanning);
   static final homeCardEditNote = find.byValueKey(Keys.homeCardEditNote);
@@ -186,4 +210,8 @@ class Constants {
   static final saveMenuPlanningStartAtIcon =
       find.byValueKey(Keys.saveMenuPlanningStartAtIcon);
   static final saveNoteField = find.byValueKey(Keys.saveNoteField);
+  static final chooseMenuPlanningDayDialogOption2 =
+      find.byValueKey(Keys.chooseMenuPlanningDayDialogOption + "-2");
+  static final chooseMenuPlanningDayDialogOption3 =
+      find.byValueKey(Keys.chooseMenuPlanningDayDialogOption + "-3");
 }

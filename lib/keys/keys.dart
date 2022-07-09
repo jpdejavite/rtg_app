@@ -86,6 +86,12 @@ class Keys {
   static const String chooseRecipeLabelDialogClear =
       'choose-recipe-label-dialog-title-clear';
 
+  // choose menu planning day dialog
+  static const String chooseMenuPlanningDayDialogOption =
+      'choose-menu-planning-day-dialog-option';
+  static const String chooseMenuPlanningDayDialogCancel =
+      'choose-menu-planning-day-dialog-cancel';
+
   // grocery lists
   static const String groceryListsEmptyText = 'grocery-lists-empy-text';
 
@@ -159,6 +165,14 @@ class Keys {
       'menu-planning-day-write-details-text-button';
   static const String menuPlanningWriteDetailsTextField =
       'menu-planning-day-write-details-text-field';
+  static const String menuPlanningDayShowMenuIcon =
+      'menu-planning-day-show-menu-icon';
+  static const String menuPlanningDayMenuRemoveMeal =
+      'menu-planning-day-menu-remove-meal';
+  static const String menuPlanningDayMenuDuplicateMeal =
+      'menu-planning-day-menu-duplicate-meal';
+  static const String menuPlanningDayMenuMoveMeal =
+      'menu-planning-day-menu-move-meal';
 
   // edit recipe preparation time details
   static const String editRecipePreparationTimeDetailsDurationDropdown =

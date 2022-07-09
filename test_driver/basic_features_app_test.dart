@@ -769,7 +769,9 @@ void main() {
       await driver.tap(Constants.menuPlanningWriteDetailsTextField01);
       await driver.enterText("segredo editado");
 
-      await driver.tap(Constants.menuPlanningDayAddMealButton00);
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon00);
+
+      await driver.tap(Constants.menuPlanningDayMenuRemoveMeal00);
 
       await driver.tap(Constants.saveMenuPlanningStartAtIcon);
 
@@ -791,6 +793,48 @@ void main() {
 
       await driver.waitFor(Constants.backButtonFinder);
       await driver.tap(Constants.backButtonFinder);
+
+      await driver.waitFor(Constants.backButtonFinder);
+      await driver.tap(Constants.backButtonFinder);
+    });
+
+    test('remove, duplicate and move menu planning meals', () async {
+      await driver.tap(Constants.homeBottomBarHomeIcon);
+
+      await driver.tap(Constants.homeCardSeeMenuPlanning);
+
+      await driver.tap(Constants.viewMenuPlanningFloatingActionEditButton);
+
+      await driver.scrollIntoView(Constants.menuPlanningDayShowMenuIcon00);
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon00);
+
+      await driver.tap(Constants.menuPlanningDayMenuMoveMeal00);
+
+      await driver.tap(Constants.chooseMenuPlanningDayDialogOption2);
+
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon20);
+
+      await driver.tap(Constants.menuPlanningDayMenuDuplicateMeal20);
+
+      await driver.tap(Constants.chooseMenuPlanningDayDialogOption3);
+
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon30);
+
+      await driver.tap(Constants.menuPlanningDayMenuRemoveMeal30);
+
+      await driver.tap(Constants.saveMenuPlanningFloatingActionSaveButton);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
+          "almoço: cozinhar");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealDescriptionText10),
+          recipeName2);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealText20),
+          "jantar: cozinhar");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealDescriptionText20),
+          "segredo editado");
 
       await driver.waitFor(Constants.backButtonFinder);
       await driver.tap(Constants.backButtonFinder);

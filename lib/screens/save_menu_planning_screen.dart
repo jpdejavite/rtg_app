@@ -20,6 +20,9 @@ import 'package:rtg_app/widgets/menu_planning_day.dart';
 import 'package:rtg_app/widgets/menu_planning_meal_input.dart';
 import 'package:rtg_app/widgets/text_form_section_label.dart';
 
+import '../model/menu_planning_meal_input_action.dart';
+import '../widgets/choose_menu_planning_day_dialog.dart';
+
 class SaveMenuPlanningArguments {
   final MenuPlanning editMenuPlanning;
   final List<Recipe> menuPlanningRecipes;
@@ -277,39 +280,75 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
     return fields;
   }
 
+  void removeMeal(int dayIndex, int mealIndex) {
+    setState(() {
+      mealsMap[dayIndex].removeAt(mealIndex);
+    });
+  }
+
+  void duplicateMeal(int mealIndex, MenuPlanningMeal meal) {
+    ChooseMenuPlanningDayDialog.showChooseMenuPlanningDayDialog(
+        title: AppLocalizations.of(context).duplicate_meal,
+        context: context,
+        days: days,
+        onSelectDay: (int index) {
+          setState(() {
+            mealsMap[index].add(meal);
+          });
+        });
+  }
+
+  void moveMeal(int oldDayIndex, int mealIndex, MenuPlanningMeal meal) {
+    ChooseMenuPlanningDayDialog.showChooseMenuPlanningDayDialog(
+        title: AppLocalizations.of(context).move_meal,
+        context: context,
+        days: days,
+        onSelectDay: (int newDayIndex) {
+          setState(() {
+            mealsMap[newDayIndex].add(meal);
+            mealsMap[oldDayIndex].removeAt(mealIndex);
+          });
+        });
+  }
+
   Widget buildForm(BuildContext context) {
     List<Widget> fields = [
       ...buildDateFields(),
       TextFormSectionLabelFields(AppLocalizations.of(context).days_caps),
     ];
 
-    days.asMap().forEach((index, day) {
+    days.asMap().forEach((dayIndex, day) {
       fields.add(
         MenuPlanningDay(
           day: day,
-          index: index,
+          index: dayIndex,
           onAddMeal: () {
             setState(() {
-              mealsMap[index].add(MenuPlanningMeal(
+              mealsMap[dayIndex].add(MenuPlanningMeal(
                   description: "",
                   preparation: MenuPlanningMealPreparation.cook,
-                  type: defaultMenuPlanningMealTypeOption(mealsMap[index])));
+                  type: defaultMenuPlanningMealTypeOption(mealsMap[dayIndex])));
             });
           },
         ),
       );
-      mealsMap[index].asMap().forEach((i, meal) {
+      mealsMap[dayIndex].asMap().forEach((mealIndex, meal) {
         fields.add(
           MenuPlanningMealInput(
             meal: meal,
-            uniqueIndex: '$index-$i',
-            onRemove: () {
-              setState(() {
-                mealsMap[index].removeAt(i);
-              });
+            uniqueIndex: '$dayIndex-$mealIndex',
+            onActionPressed: (MenuPlanningMealInputAction action) {
+              switch (action) {
+                case MenuPlanningMealInputAction.remove:
+                  return removeMeal(dayIndex, mealIndex);
+                case MenuPlanningMealInputAction.duplicate:
+                  return duplicateMeal(mealIndex, meal);
+                case MenuPlanningMealInputAction.move:
+                  return moveMeal(dayIndex, mealIndex, meal);
+              }
             },
             onUpdate: (newMeal) {
-              mealsMap[index][i] = newMeal;
+              mealsMap[dayIndex][mealIndex] = newMeal;
             },
             lastUsedGroceryListRecipes: widget.args.lastUsedGroceryListRecipes,
             menuPlanningRecipes: widget.args.menuPlanningRecipes,
@@ -334,27 +373,4 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
       ),
     );
   }
-}
-
-class TextFormFieldInfo {
-  FocusNode focusNode;
-  String text;
-  TextEditingController textEditingController;
-
-  TextFormFieldInfo(this.text, this.focusNode, this.textEditingController);
-
-  @override
-  bool operator ==(other) {
-    if (other == null) {
-      return false;
-    }
-    if (!(other is TextFormFieldInfo)) {
-      return false;
-    }
-
-    return text == other.text;
-  }
-
-  @override
-  int get hashCode => toString().hashCode;
 }

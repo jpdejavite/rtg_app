@@ -4,6 +4,7 @@ import 'package:rtg_app/helper/diacritics.dart';
 import 'package:rtg_app/helper/id_generator.dart';
 import 'package:rtg_app/helper/ingredient_measure_converter.dart';
 import 'package:rtg_app/helper/ingredient_parser.dart';
+import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:edit_distance/edit_distance.dart';
 import 'ingredient_measure.dart';
@@ -16,6 +17,7 @@ class GroceryListItem {
   Map<String, int> recipeIngredients;
   IngredientMeasureId measureId;
   String ingredientName;
+  String marketSectionId;
 
   GroceryListItem({
     this.id,
@@ -24,6 +26,7 @@ class GroceryListItem {
     this.recipeIngredients,
     this.measureId,
     this.ingredientName,
+    this.marketSectionId,
   });
 
   static newEmptyGroceryListItem() {
@@ -111,6 +114,7 @@ class GroceryListItem {
           ? null
           : IngredientMeasureId.values[record["measureId"] as int],
       ingredientName: record['ingredientName'],
+      marketSectionId: record['marketSectionId'],
     );
   }
 
@@ -128,6 +132,7 @@ class GroceryListItem {
         'recipeIngredients': i.recipeIngredients,
         'measureId': i.measureId == null ? null : i.measureId.index,
         'ingredientName': i.ingredientName,
+        'marketSectionId': i.marketSectionId,
       });
     });
 
@@ -188,6 +193,35 @@ class GroceryListItem {
     }
 
     return items;
+  }
+
+  static List<GroceryListItem> orderItemsByMarketSection(
+      List<GroceryListItem> items, List<MarketSection> marketSections) {
+    Map<String, int> marketSectionOrderMap = Map();
+    marketSections.forEach((marketSection) {
+      marketSectionOrderMap[marketSection.id] = marketSection.groceryListOrder;
+    });
+
+    List<GroceryListItem> uncheckedItems =
+        items.where((item) => item.checked == null || !item.checked).toList();
+    List<GroceryListItem> checkedItems =
+        items.where((item) => item.checked != null && item.checked).toList();
+
+    List<GroceryListItem> sortedItems = [...uncheckedItems];
+    sortedItems.sort((item1, item2) {
+      final int maxInt = 4294967296;
+      int orderItem1 = maxInt;
+      if (item1.marketSectionId != null) {
+        orderItem1 = marketSectionOrderMap[item1.marketSectionId];
+      }
+      int orderItem2 = maxInt;
+      if (item2.marketSectionId != null) {
+        orderItem2 = marketSectionOrderMap[item2.marketSectionId];
+      }
+
+      return Comparable.compare(orderItem1, orderItem2);
+    });
+    return [...sortedItems, ...checkedItems];
   }
 
   static GroceryListItem fromInput(String originalText) {

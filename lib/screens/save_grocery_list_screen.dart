@@ -10,8 +10,10 @@ import 'package:rtg_app/helper/date_formatter.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
+import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/theme/custom_colors.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
@@ -29,6 +31,7 @@ class SaveGroceryListScreen extends StatefulWidget {
       create: (context) => SaveGroceryListBloc(
         groceryListsRepo: GroceryListsRepository(),
         recipesRepository: RecipesRepository(),
+        marketSectionRepository: MarketSectionRepository(),
       ),
       child: SaveGroceryListScreen(args),
     );
@@ -45,8 +48,10 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
   bool isLoading;
   bool showChecked;
   bool showRecipeSource;
+  bool showGroceryItemLabel;
   bool hasKeyboardOpenOnce;
   List<Recipe> recipes;
+  List<MarketSection> marketSections;
   Map<GroceryListItem, FocusNode> focusNodes;
   Map<GroceryListItem, TextEditingController> textEditingControllers;
 
@@ -59,6 +64,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
     isLoading = false;
     showChecked = false;
     showRecipeSource = false;
+    showGroceryItemLabel = false;
     _titleController =
         TextEditingController(text: widget.editGroceryList.title);
     context
@@ -218,8 +224,9 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
           WidgetsBinding.instance
               .addPostFrameCallback((_) => Navigator.of(context).pop());
         }
-      } else if (state is GroceryListRecipesLoaded) {
+      } else if (state is InitalDataLoaded) {
         recipes = state.recipes;
+        marketSections = state.marketSections;
       }
 
       checkKeyboardVisibility();
@@ -232,10 +239,12 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
       key: Key('${Keys.saveGroceryListGroceryItem}-$index'),
       groceryListItem: item,
       recipes: recipes,
+      marketSections: marketSections,
       index: index,
       focusNode: focusNodes[item],
       nameController: textEditingControllers[item],
       showRecipeSource: showRecipeSource,
+      showGroceryItemLabel: showGroceryItemLabel,
       onCheck: (bool checked, GroceryListItem groceryListItem, int i) {
         setState(() {
           editGroceryList.groceries[i] = groceryListItem;
@@ -249,7 +258,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
               .add(SaveGroceryListEvent(editGroceryList));
         });
       },
-      onEditName: (GroceryListItem groceryListItem, int i) {
+      onEdit: (GroceryListItem groceryListItem, int i) {
         editGroceryList.groceries[i] = groceryListItem;
         context
             .read<SaveGroceryListBloc>()
@@ -367,15 +376,38 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
                 key: Key(Keys.saveGroceryListBottomActionDragItems),
                 value: 2,
                 child: new Text(AppLocalizations.of(context).only_drag_items)),
+            new PopupMenuItem<int>(
+                key: Key(Keys.saveGroceryListBottomActionEditMarketSections),
+                value: 3,
+                child:
+                    new Text(AppLocalizations.of(context).edit_items_section)),
+            new PopupMenuItem<int>(
+                key: Key(Keys.saveGroceryListBottomActionOrderByMarketSections),
+                value: 4,
+                child: new Text(
+                    AppLocalizations.of(context).order_items_by_section)),
           ],
-          onSelected: (int value) {
+          onSelected: (int value) async {
             setState(() {
               showRecipeSource = value == 1;
+              showGroceryItemLabel = value == 3;
+              if (value == 4) {
+                orderItemsByMarketSection();
+              }
             });
           },
         ),
       ],
     );
+  }
+
+  void orderItemsByMarketSection() {
+    editGroceryList.groceries = GroceryListItem.orderItemsByMarketSection(
+        editGroceryList.groceries, marketSections);
+    isLoading = true;
+    context
+        .read<SaveGroceryListBloc>()
+        .add(SaveGroceryListEvent(editGroceryList));
   }
 
   void onReorderListItems(oldIndex, newIndex) {
@@ -438,6 +470,7 @@ class _SaveGroceryListState extends State<SaveGroceryListScreen> {
         buildTitleField(),
         Flexible(
           child: ReorderableListView(
+            key: Key(Keys.saveGroceryListList),
             onReorder: onReorderListItems,
             children: children,
           ),

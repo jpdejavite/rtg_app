@@ -6,22 +6,22 @@ import 'package:rtg_app/model/recipe_label.dart';
 class ChooseRecipeLabelDialog extends StatefulWidget {
   final RecipeLabel current;
   final List<RecipeLabel> labels;
-  final void Function(RecipeLabel selected) onSelectSort;
+  final void Function(RecipeLabel selected) onSelectLabel;
 
   ChooseRecipeLabelDialog({
     this.current,
     this.labels,
-    this.onSelectSort,
+    this.onSelectLabel,
   });
   @override
   _ChooseRecipeLabelDialogState createState() =>
       _ChooseRecipeLabelDialogState();
 
-  static Future<void> showChooseRecipeSortDialog({
+  static Future<void> showChooseRecipeLabelDialog({
     BuildContext context,
     RecipeLabel current,
     List<RecipeLabel> labels,
-    Function(RecipeLabel selected) onSelectSort,
+    Function(RecipeLabel selected) onSelectLabel,
   }) {
     return showDialog<void>(
       context: context,
@@ -30,7 +30,7 @@ class ChooseRecipeLabelDialog extends StatefulWidget {
         return ChooseRecipeLabelDialog(
           current: current,
           labels: labels,
-          onSelectSort: onSelectSort,
+          onSelectLabel: onSelectLabel,
         );
       },
     );
@@ -40,7 +40,7 @@ class ChooseRecipeLabelDialog extends StatefulWidget {
 class _ChooseRecipeLabelDialogState extends State<ChooseRecipeLabelDialog> {
   void selectOption(RecipeLabel selected) {
     Navigator.of(context).pop();
-    widget.onSelectSort(selected);
+    widget.onSelectLabel(selected);
   }
 
   Widget buildLabelOption(RecipeLabel label, int index) {

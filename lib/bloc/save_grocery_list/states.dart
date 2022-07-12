@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 
@@ -16,9 +17,10 @@ class GroceryListSaved extends SaveGroceryListState {
   List<Object> get props => [response];
 }
 
-class GroceryListRecipesLoaded extends SaveGroceryListState {
+class InitalDataLoaded extends SaveGroceryListState {
   final List<Recipe> recipes;
-  GroceryListRecipesLoaded(this.recipes);
+  final List<MarketSection> marketSections;
+  InitalDataLoaded(this.recipes, this.marketSections);
   @override
-  List<Object> get props => [recipes];
+  List<Object> get props => [recipes, marketSections];
 }

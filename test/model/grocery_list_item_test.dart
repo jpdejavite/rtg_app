@@ -3,6 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:rtg_app/helper/id_generator.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/ingredient_measure.dart';
+import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_ingredient.dart';
 
@@ -348,5 +349,104 @@ void main() {
           quantity: 2.5,
           measureId: IngredientMeasureId.coffeSpoon,
         ));
+  });
+
+  test('order items by market section, all items have null section', () {
+    List<MarketSection> marketSections = [
+      MarketSection(id: 'market-1', groceryListOrder: 0),
+      MarketSection(id: 'market-2', groceryListOrder: 1)
+    ];
+
+    GroceryListItem item1 = GroceryListItem(id: 'id-1');
+    GroceryListItem item2 = GroceryListItem(id: 'id-2');
+    GroceryListItem item3 = GroceryListItem(id: 'id-3');
+    List<GroceryListItem> items = [item1, item2, item3];
+
+    List<GroceryListItem> orderedItems =
+        GroceryListItem.orderItemsByMarketSection(items, marketSections);
+
+    expect(items[0], orderedItems[0]);
+    expect(items[1], orderedItems[1]);
+    expect(items[2], orderedItems[2]);
+  });
+
+  test('order items by market section, all items already sorted', () {
+    List<MarketSection> marketSections = [
+      MarketSection(id: 'market-1', groceryListOrder: 0),
+      MarketSection(id: 'market-2', groceryListOrder: 1),
+      MarketSection(id: 'market-3', groceryListOrder: 2)
+    ];
+
+    GroceryListItem item1 =
+        GroceryListItem(id: 'id-1', marketSectionId: 'market-1');
+    GroceryListItem item2 =
+        GroceryListItem(id: 'id-2', marketSectionId: 'market-2');
+    GroceryListItem item3 =
+        GroceryListItem(id: 'id-3', marketSectionId: 'market-3');
+    List<GroceryListItem> items = [item1, item2, item3];
+
+    List<GroceryListItem> orderedItems =
+        GroceryListItem.orderItemsByMarketSection(items, marketSections);
+
+    expect(items[0], orderedItems[0]);
+    expect(items[1], orderedItems[1]);
+    expect(items[2], orderedItems[2]);
+  });
+
+  test('order items by market section, all items have sections', () {
+    List<MarketSection> marketSections = [
+      MarketSection(id: 'market-1', groceryListOrder: 0),
+      MarketSection(id: 'market-2', groceryListOrder: 1),
+      MarketSection(id: 'market-3', groceryListOrder: 2)
+    ];
+
+    GroceryListItem item1 =
+        GroceryListItem(id: 'id-1', marketSectionId: 'market-3');
+    GroceryListItem item2 =
+        GroceryListItem(id: 'id-2', marketSectionId: 'market-2');
+    GroceryListItem item3 =
+        GroceryListItem(id: 'id-3', marketSectionId: 'market-2');
+    GroceryListItem item4 =
+        GroceryListItem(id: 'id-4', marketSectionId: 'market-1');
+    List<GroceryListItem> items = [item1, item2, item3, item4];
+
+    List<GroceryListItem> orderedItems =
+        GroceryListItem.orderItemsByMarketSection(items, marketSections);
+
+    expect(items[0], orderedItems[3]);
+    expect(items[1], orderedItems[1]);
+    expect(items[2], orderedItems[2]);
+    expect(items[3], orderedItems[0]);
+  });
+
+  test('order items by market section, have check items', () {
+    List<MarketSection> marketSections = [
+      MarketSection(id: 'market-1', groceryListOrder: 0),
+      MarketSection(id: 'market-2', groceryListOrder: 1),
+      MarketSection(id: 'market-3', groceryListOrder: 2)
+    ];
+
+    GroceryListItem item1 =
+        GroceryListItem(id: 'id-1', marketSectionId: 'market-3');
+    GroceryListItem item2 =
+        GroceryListItem(id: 'id-2', marketSectionId: 'market-2');
+    GroceryListItem item3 =
+        GroceryListItem(id: 'id-3', marketSectionId: 'market-2');
+    GroceryListItem item4 =
+        GroceryListItem(id: 'id-4', marketSectionId: 'market-1');
+    GroceryListItem item5 = GroceryListItem(id: 'id-5');
+    GroceryListItem item6 =
+        GroceryListItem(id: 'id-6', marketSectionId: 'market-1', checked: true);
+    List<GroceryListItem> items = [item1, item2, item3, item4, item5, item6];
+
+    List<GroceryListItem> orderedItems =
+        GroceryListItem.orderItemsByMarketSection(items, marketSections);
+
+    expect(items[0], orderedItems[3]);
+    expect(items[1], orderedItems[1]);
+    expect(items[2], orderedItems[2]);
+    expect(items[3], orderedItems[0]);
+    expect(items[4], orderedItems[4]);
+    expect(items[5], orderedItems[5]);
   });
 }

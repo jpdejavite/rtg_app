@@ -205,11 +205,11 @@ class RecipesListState extends State<RecipesList> {
               notificationKey: Keys.recipesListLabelNotification,
             ),
             onPressed: () {
-              ChooseRecipeLabelDialog.showChooseRecipeSortDialog(
+              ChooseRecipeLabelDialog.showChooseRecipeLabelDialog(
                   context: context,
                   current: label,
                   labels: labels,
-                  onSelectSort: (RecipeLabel selected) {
+                  onSelectLabel: (RecipeLabel selected) {
                     setState(() {
                       label = selected;
                     });

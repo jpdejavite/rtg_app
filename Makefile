@@ -6,9 +6,7 @@ tests-with-coverage:
 	flutter test --coverage
 
 integration-tests:
-	flutter drive \
-	--driver=test_driver/app.dart \
-	--target=test_driver/*_test.dart
+	flutter drive --target=test_driver/app.dart
 
 build-android-release-bundle:
 	mv android/app/google-services.json google-services.json && \

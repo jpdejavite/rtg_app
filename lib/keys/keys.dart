@@ -86,6 +86,12 @@ class Keys {
   static const String chooseRecipeLabelDialogClear =
       'choose-recipe-label-dialog-title-clear';
 
+  // choose market section dialog
+  static const String chooseMarketSectionDialogOption =
+      'choose-market-section-dialog-option';
+  static const String chooseMarketSectionDialogClear =
+      'choose-market-section-dialog-title-clear';
+
   // choose menu planning day dialog
   static const String chooseMenuPlanningDayDialogOption =
       'choose-menu-planning-day-dialog-option';
@@ -193,6 +199,7 @@ class Keys {
       'edit-recipe-preparation-time-details-save-button';
 
   // save grocery list
+  static const String saveGroceryListList = 'save-grocery-list-list';
   static const String saveGroceryListGroceryItem =
       'save-grocery-list-grocery-item';
   static const String saveGroceryListShowChecked =
@@ -213,12 +220,22 @@ class Keys {
       'save-grocery-list-bottom-action-show-recipes';
   static const String saveGroceryListBottomActionDragItems =
       'save-grocery-list-bottom-action-drag-items';
+  static const String saveGroceryListBottomActionEditMarketSections =
+      'save-grocery-list-bottom-action-edit-market-sections';
+  static const String saveGroceryListBottomActionOrderByMarketSections =
+      'save-grocery-list-bottom-action-order-by-market-sections';
 
   // grocery item
   static const String groceryItemActionIcon = 'grocery-item-action-icon';
   static const String groceryItemCheckBox = 'grocery-item-check-box';
   static const String groceryItemTextField = 'grocery-item-text-field';
   static const String groceryItemRow = 'grocery-item-row';
+  static const String groceryItemMarketSectionText =
+      'grocery-item-market-section-text';
+  static const String groceryItemAddMarketSectionIcon =
+      'grocery-item-add-market-section-icon';
+  static const String groceryItemEditMarketSectionIcon =
+      'grocery-item-edit-market-section-icon';
 
   // view recipe
   static const String viewRecipeTitle = 'view-recipe-title';

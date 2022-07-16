@@ -14,7 +14,16 @@ class GroceryListItemInput {
 
 void main() {
   group('market section app test', () {
-    final List<GroceryListItemInput> inputs = [
+    final List<GroceryListItemInput> inputsGrocery1 = [
+      GroceryListItemInput('item 1', 'Cervejas'),
+      GroceryListItemInput('item 2', 'Congelados'),
+      GroceryListItemInput('item 3', 'Congelados'),
+      GroceryListItemInput('item 4', 'Açougue'),
+      GroceryListItemInput('item 5', null),
+      GroceryListItemInput('item 6', 'Açougue'),
+    ];
+
+    final List<GroceryListItemInput> inputsGrocery2 = [
       GroceryListItemInput('item 1', 'Cervejas'),
       GroceryListItemInput('item 2', 'Congelados'),
       GroceryListItemInput('item 3', 'Congelados'),
@@ -43,33 +52,33 @@ void main() {
       expect(await driver.getText(itemKey), name);
     }
 
-    test('new grocery list', () async {
+    test('add grocery list 1', () async {
       await driver.tap(Keys.homeBottomBarListsIcon);
 
       await driver.tap(Keys.homeFloatingActionNewGroceryListButton);
 
-      for (int i = 0; i < inputs.length; i++) {
+      for (int i = 0; i < inputsGrocery1.length; i++) {
         final itemKey = Keys.groceryItemTextField + i.toString();
-        GroceryListItemInput input = inputs[i];
+        GroceryListItemInput input = inputsGrocery1[i];
         await driver.scrollUntilVisible(Keys.saveGroceryListList, itemKey,
             dyScroll: -300.0);
         await driver.tap(itemKey);
         await driver.enterText(input.name);
         await Future.delayed(Duration(milliseconds: 500));
-        await driver
-            .enterText(i == inputs.length - 1 ? input.name : input.name + "\n");
+        await driver.enterText(
+            i == inputsGrocery1.length - 1 ? input.name : input.name + "\n");
       }
 
       await driver.tapBackButton();
 
       await driver.tap(Constants.groceryListRowTitleText0);
 
-      await checkItem(0, inputs[0].name);
-      await checkItem(1, inputs[1].name);
-      await checkItem(2, inputs[2].name);
-      await checkItem(3, inputs[3].name);
-      await checkItem(4, inputs[4].name);
-      await checkItem(5, inputs[5].name);
+      await checkItem(0, inputsGrocery1[0].name);
+      await checkItem(1, inputsGrocery1[1].name);
+      await checkItem(2, inputsGrocery1[2].name);
+      await checkItem(3, inputsGrocery1[3].name);
+      await checkItem(4, inputsGrocery1[4].name);
+      await checkItem(5, inputsGrocery1[5].name);
 
       await driver.tapBackButton();
     });
@@ -83,9 +92,9 @@ void main() {
 
       await driver.tap(Keys.saveGroceryListBottomActionEditMarketSections);
 
-      for (int i = 0; i < inputs.length; i++) {
+      for (int i = 0; i < inputsGrocery1.length; i++) {
         final itemKey = Keys.groceryItemAddMarketSectionIcon + i.toString();
-        GroceryListItemInput input = inputs[i];
+        GroceryListItemInput input = inputsGrocery1[i];
         if (input.marketSection == null) {
           continue;
         }
@@ -126,12 +135,67 @@ void main() {
           dyScroll: -300.0);
       await driver.tap(Keys.saveGroceryListShowChecked);
 
-      await checkItem(0, inputs[3].name);
-      await checkItem(1, inputs[1].name);
-      await checkItem(2, inputs[2].name);
-      await checkItem(3, inputs[0].name);
-      await checkItem(4, inputs[4].name);
-      await checkItem(5, inputs[5].name);
+      await checkItem(0, inputsGrocery1[3].name);
+      await checkItem(1, inputsGrocery1[1].name);
+      await checkItem(2, inputsGrocery1[2].name);
+      await checkItem(3, inputsGrocery1[0].name);
+      await checkItem(4, inputsGrocery1[4].name);
+      await checkItem(5, inputsGrocery1[5].name);
+
+      await driver.tapBackButton();
+    });
+
+    test('add grocery list 2', () async {
+      await driver.tap(Keys.homeBottomBarListsIcon);
+
+      await driver.tap(Keys.homeFloatingActionNewGroceryListButton);
+
+      for (int i = 0; i < inputsGrocery2.length; i++) {
+        final itemKey = Keys.groceryItemTextField + i.toString();
+        GroceryListItemInput input = inputsGrocery1[i];
+        await driver.scrollUntilVisible(Keys.saveGroceryListList, itemKey,
+            dyScroll: -300.0);
+        await driver.tap(itemKey);
+        await driver.enterText(input.name);
+        await Future.delayed(Duration(milliseconds: 500));
+        await driver.enterText(
+            i == inputsGrocery1.length - 1 ? input.name : input.name + "\n");
+      }
+
+      await driver.tapBackButton();
+
+      await driver.tap(Constants.groceryListRowTitleText0);
+
+      await checkItem(0, inputsGrocery2[0].name);
+      await checkItem(1, inputsGrocery2[1].name);
+      await checkItem(2, inputsGrocery2[2].name);
+      await checkItem(3, inputsGrocery2[3].name);
+      await checkItem(4, inputsGrocery2[4].name);
+      await checkItem(5, inputsGrocery2[5].name);
+
+      await driver.tapBackButton();
+    });
+
+    test('check grocery list items market section', () async {
+      await driver.tap(Keys.homeBottomBarListsIcon);
+
+      await driver.tap(Constants.groceryListRowTitleText0);
+
+      await driver.tap(Keys.saveGroceryListBottomActionIcon);
+
+      await driver.tap(Keys.saveGroceryListBottomActionEditMarketSections);
+
+      for (int i = 0; i < inputsGrocery2.length; i++) {
+        final itemKey = Keys.groceryItemMarketSectionText + i.toString();
+        GroceryListItemInput input = inputsGrocery1[i];
+        if (input.marketSection == null) {
+          continue;
+        }
+        await driver.scrollUntilVisible(Keys.saveGroceryListList, itemKey,
+            dyScroll: -300.0);
+
+        expect(await driver.getText(itemKey), input.marketSection);
+      }
 
       await driver.tapBackButton();
     });

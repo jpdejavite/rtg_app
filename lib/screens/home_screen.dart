@@ -9,7 +9,9 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
@@ -48,6 +50,9 @@ class HomeScreen extends StatefulWidget {
         userDataRepository: UserDataRepository(),
         menuPlanningRepository: MenuPlanningRepository(),
         recipeLabelRepository: RecipeLabelRepository(),
+        marketSectionRepository: MarketSectionRepository(),
+        groceryListItemMarketSectionRepository:
+            GroceryListItemMarketSectionRepository(),
       ),
       child: HomeScreen(),
     );

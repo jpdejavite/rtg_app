@@ -6,6 +6,7 @@ import 'package:rtg_app/bloc/recipes/states.dart';
 import 'package:rtg_app/model/recipe_sort.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/widgets/error.dart';
 import 'package:rtg_app/widgets/loading.dart';
 import 'package:rtg_app/widgets/loading_row.dart';
@@ -31,6 +32,8 @@ class ChooseRecipeScreen extends StatefulWidget {
         recipesRepository: RecipesRepository(),
         groceryListsRepository: GroceryListsRepository(),
         recipeLabelRepository: RecipeLabelRepository(),
+        groceryListItemMarketSectionRepository:
+            GroceryListItemMarketSectionRepository(),
       ),
       child: ChooseRecipeScreen(args),
     );

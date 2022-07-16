@@ -227,6 +227,7 @@ class _GroceryItemState extends State<GroceryItem> {
     } else {
       widget.groceryListItem.marketSectionId = selected.id;
     }
+    widget.groceryListItem.selectedMarketSection = true;
     setState(() {
       widget.onEdit(widget.groceryListItem, widget.index);
     });

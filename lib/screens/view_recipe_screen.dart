@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rtg_app/helper/pdf_localization_map.dart';
 import 'package:rtg_app/model/grocery_list.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/widgets/choose_grocery_list_to_recipe_dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wakelock/wakelock.dart';
@@ -37,6 +38,8 @@ class ViewRecipeScreen extends StatefulWidget {
       create: (context) => ViewRecipeBloc(
         groceryListsRepository: GroceryListsRepository(),
         recipesRepository: RecipesRepository(),
+        groceryListItemMarketSectionRepository:
+            GroceryListItemMarketSectionRepository(),
       ),
       child: ViewRecipeScreen(),
     );

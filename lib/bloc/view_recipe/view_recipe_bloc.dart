@@ -1,5 +1,6 @@
 import 'package:rtg_app/bloc/add_recipe_to_grocery_list/add_recipe_to_grocery_list.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 
@@ -10,8 +11,11 @@ class ViewRecipeBloc
     extends AddRecipeToGroceryListBloc<ViewRecipeEvents, ViewRecipeState> {
   ViewRecipeBloc(
       {GroceryListsRepository groceryListsRepository,
-      RecipesRepository recipesRepository})
-      : super(groceryListsRepository, recipesRepository, ViewRecipeInitState());
+      RecipesRepository recipesRepository,
+      GroceryListItemMarketSectionRepository
+          groceryListItemMarketSectionRepository})
+      : super(groceryListsRepository, recipesRepository,
+            groceryListItemMarketSectionRepository, ViewRecipeInitState());
   @override
   Stream<ViewRecipeState> mapEventToState(ViewRecipeEvents event) async* {
     if (event is AddRecipeToGroceryListEvent) {

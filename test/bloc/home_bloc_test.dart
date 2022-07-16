@@ -17,7 +17,9 @@ import 'package:rtg_app/model/search_menu_plannings_params.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -37,6 +39,12 @@ class MockMenuPlanningRepository extends Mock
 
 class MockRecipeLabelRepository extends Mock implements RecipeLabelRepository {}
 
+class MockMarketSectionRepository extends Mock
+    implements MarketSectionRepository {}
+
+class MockGroceryListItemMarketSectionRepository extends Mock
+    implements GroceryListItemMarketSectionRepository {}
+
 void main() {
   HomeBloc homeBloc;
   MockBackupRepository backupRepository;
@@ -45,6 +53,9 @@ void main() {
   UserDataRepository userDataRepository;
   MockMenuPlanningRepository menuPlanningRepository;
   MockRecipeLabelRepository recipeLabelRepository;
+  MockMarketSectionRepository marketSectionRepository;
+  MockGroceryListItemMarketSectionRepository
+      groceryListItemMarketSectionRepository;
   DateTime customTime = DateTime.parse("2000-07-20 20:18:04");
 
   setUp(() {
@@ -54,6 +65,9 @@ void main() {
     userDataRepository = MockUserDataRepository();
     menuPlanningRepository = MockMenuPlanningRepository();
     recipeLabelRepository = MockRecipeLabelRepository();
+    marketSectionRepository = MockMarketSectionRepository();
+    groceryListItemMarketSectionRepository =
+        MockGroceryListItemMarketSectionRepository();
     CustomDateTime.customTime = customTime;
     homeBloc = HomeBloc(
       backupRepository: backupRepository,
@@ -62,6 +76,9 @@ void main() {
       userDataRepository: userDataRepository,
       menuPlanningRepository: menuPlanningRepository,
       recipeLabelRepository: recipeLabelRepository,
+      marketSectionRepository: marketSectionRepository,
+      groceryListItemMarketSectionRepository:
+          groceryListItemMarketSectionRepository,
     );
   });
 
@@ -417,6 +434,10 @@ void main() {
         .thenAnswer((_) => Future.value(null));
     when(userDataRepository.deleteAll()).thenAnswer((_) => Future.value(null));
     when(recipeLabelRepository.deleteAll())
+        .thenAnswer((_) => Future.value(null));
+    when(marketSectionRepository.deleteAll())
+        .thenAnswer((_) => Future.value(null));
+    when(groceryListItemMarketSectionRepository.deleteAll())
         .thenAnswer((_) => Future.value(null));
 
     expectLater(

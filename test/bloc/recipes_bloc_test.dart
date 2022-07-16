@@ -16,6 +16,7 @@ import 'package:rtg_app/model/recipe_label.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -30,17 +31,23 @@ class MockUuid extends Mock implements Uuid {}
 
 class MockRecipeLabelRepository extends Mock implements RecipeLabelRepository {}
 
+class MockGroceryListItemMarketSectionRepository extends Mock
+    implements GroceryListItemMarketSectionRepository {}
+
 void main() {
   RecipesBloc recipeBloc;
   MockGroceryListsRepository groceryListsRepository;
   MockRecipesRepo recipesRepository;
   MockRecipeLabelRepository recipeLabelRepository;
+  GroceryListItemMarketSectionRepository groceryListItemMarketSectionRepository;
   DateTime customTime = DateTime.parse("1969-07-20 20:18:04");
 
   setUp(() {
     recipesRepository = MockRecipesRepo();
     groceryListsRepository = MockGroceryListsRepository();
     recipeLabelRepository = MockRecipeLabelRepository();
+    groceryListItemMarketSectionRepository =
+        MockGroceryListItemMarketSectionRepository();
     CustomDateTime.customTime = customTime;
     IdGenerator.mock = MockUuid();
 
@@ -48,6 +55,8 @@ void main() {
       recipesRepository: recipesRepository,
       groceryListsRepository: groceryListsRepository,
       recipeLabelRepository: recipeLabelRepository,
+      groceryListItemMarketSectionRepository:
+          groceryListItemMarketSectionRepository,
     );
   });
 

@@ -3,9 +3,11 @@ import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
+import 'package:rtg_app/model/grocery_list_item_market_section.dart';
 import 'package:rtg_app/model/grocery_lists_collection.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 
@@ -15,9 +17,14 @@ abstract class AddRecipeToGroceryListBloc<Event, State>
     extends Bloc<Event, State> {
   final GroceryListsRepository groceryListsRepository;
   final RecipesRepository recipesRepository;
+  final GroceryListItemMarketSectionRepository
+      groceryListItemMarketSectionRepository;
 
   AddRecipeToGroceryListBloc(
-      this.groceryListsRepository, this.recipesRepository, State initialState)
+      this.groceryListsRepository,
+      this.recipesRepository,
+      this.groceryListItemMarketSectionRepository,
+      State initialState)
       : super(initialState);
 
   Future<SaveGroceryListResponse> addRecipeToGroceryList(
@@ -45,6 +52,7 @@ abstract class AddRecipeToGroceryListBloc<Event, State>
       }
       groceryList.groceries = GroceryListItem.addRecipeToItems(
           recipe, groceryList.groceries, portions);
+      updateMarketSections(groceryList);
 
       return await groceryListsRepository.save(groceryList);
     }
@@ -72,6 +80,26 @@ abstract class AddRecipeToGroceryListBloc<Event, State>
     }
 
     return TryToAddRecipeToGroceryListResponse(false, collection, null);
+  }
+
+  Future<void> updateMarketSections(GroceryList groceryList) async {
+    for (int i = 0; i < (groceryList.groceries ?? []).length; i++) {
+      final GroceryListItem item = groceryList.groceries[i];
+      if (item.hasSelectedMarketSection()) {
+        await groceryListItemMarketSectionRepository
+            .save(GroceryListItemMarketSection(
+          groceryListItemName: item.ingredientName,
+          marketSectionId: item.marketSectionId,
+        ));
+      } else {
+        GroceryListItemMarketSection savedMarketSection =
+            await groceryListItemMarketSectionRepository
+                .get(item.ingredientName);
+        if (savedMarketSection != null) {
+          item.marketSectionId = savedMarketSection.marketSectionId;
+        }
+      }
+    }
   }
 }
 

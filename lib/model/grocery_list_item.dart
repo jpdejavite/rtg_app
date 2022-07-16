@@ -18,6 +18,7 @@ class GroceryListItem {
   IngredientMeasureId measureId;
   String ingredientName;
   String marketSectionId;
+  bool selectedMarketSection;
 
   GroceryListItem({
     this.id,
@@ -27,6 +28,7 @@ class GroceryListItem {
     this.measureId,
     this.ingredientName,
     this.marketSectionId,
+    this.selectedMarketSection,
   });
 
   static newEmptyGroceryListItem() {
@@ -41,6 +43,10 @@ class GroceryListItem {
   @override
   String toString() {
     return '$id $quantity $checked $recipeIngredients $measureId $ingredientName';
+  }
+
+  bool hasSelectedMarketSection() {
+    return this.selectedMarketSection != null && this.selectedMarketSection;
   }
 
   String getName(BuildContext context) {
@@ -115,6 +121,7 @@ class GroceryListItem {
           : IngredientMeasureId.values[record["measureId"] as int],
       ingredientName: record['ingredientName'],
       marketSectionId: record['marketSectionId'],
+      selectedMarketSection: record['selectedMarketSection'],
     );
   }
 
@@ -133,6 +140,7 @@ class GroceryListItem {
         'measureId': i.measureId == null ? null : i.measureId.index,
         'ingredientName': i.ingredientName,
         'marketSectionId': i.marketSectionId,
+        'selectedMarketSection': i.selectedMarketSection,
       });
     });
 

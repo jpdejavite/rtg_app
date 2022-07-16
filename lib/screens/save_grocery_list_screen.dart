@@ -12,6 +12,7 @@ import 'package:rtg_app/model/grocery_list.dart';
 import 'package:rtg_app/model/grocery_list_item.dart';
 import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -32,6 +33,8 @@ class SaveGroceryListScreen extends StatefulWidget {
         groceryListsRepo: GroceryListsRepository(),
         recipesRepository: RecipesRepository(),
         marketSectionRepository: MarketSectionRepository(),
+        groceryListItemMarketSectionRepository:
+            GroceryListItemMarketSectionRepository(),
       ),
       child: SaveGroceryListScreen(args),
     );

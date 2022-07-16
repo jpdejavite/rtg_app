@@ -7,11 +7,14 @@ import 'package:rtg_app/bloc/save_grocery_list/states.dart';
 import 'package:rtg_app/errors/errors.dart';
 import 'package:rtg_app/helper/custom_date_time.dart';
 import 'package:rtg_app/model/grocery_list.dart';
+import 'package:rtg_app/model/grocery_list_item.dart';
+import 'package:rtg_app/model/grocery_list_item_market_section.dart';
 import 'package:rtg_app/model/market_section.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/save_grocery_list_response.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -23,23 +26,31 @@ class MockRecipesRepository extends Mock implements RecipesRepository {}
 class MockMarketSectionRepository extends Mock
     implements MarketSectionRepository {}
 
+class MockGroceryListItemMarketSectionRepository extends Mock
+    implements GroceryListItemMarketSectionRepository {}
+
 void main() {
   SaveGroceryListBloc saveGroceryListBloc;
   GroceryListsRepository groceryListsRepository;
   RecipesRepository recipesRepository;
   MarketSectionRepository marketSectionRepository;
+  GroceryListItemMarketSectionRepository groceryListItemMarketSectionRepository;
   DateTime customTime = DateTime.parse("1969-07-20 20:18:04");
 
   setUp(() {
     groceryListsRepository = MockGroceryListsRepo();
     recipesRepository = MockRecipesRepository();
     marketSectionRepository = MockMarketSectionRepository();
+    groceryListItemMarketSectionRepository =
+        MockGroceryListItemMarketSectionRepository();
     CustomDateTime.customTime = customTime;
 
     saveGroceryListBloc = SaveGroceryListBloc(
       groceryListsRepo: groceryListsRepository,
       recipesRepository: recipesRepository,
       marketSectionRepository: marketSectionRepository,
+      groceryListItemMarketSectionRepository:
+          groceryListItemMarketSectionRepository,
     );
   });
 
@@ -80,15 +91,45 @@ void main() {
   });
 
   test('save grocery list silenttly no error', () {
-    GroceryList groceryList =
-        GroceryList(title: "teste 1", status: GroceryListStatus.active);
+    String name1 = 'name-1';
+    String name2 = 'name-2';
+    String name3 = 'name-3';
+    String marketSectionId = 'market-section-id';
+    GroceryListItemMarketSection groceryListItemMarketSection =
+        GroceryListItemMarketSection(
+            groceryListItemName: name2, marketSectionId: marketSectionId);
+    GroceryList groceryList = GroceryList(
+        title: "teste 1",
+        status: GroceryListStatus.active,
+        groceries: [
+          GroceryListItem(ingredientName: name1),
+          GroceryListItem(ingredientName: name2),
+          GroceryListItem(
+              ingredientName: name3,
+              marketSectionId: marketSectionId,
+              selectedMarketSection: true),
+        ]);
     SaveGroceryListResponse response =
         SaveGroceryListResponse(groceryList: groceryList);
 
     final expectedResponse = [];
 
-    when(groceryListsRepository.save(groceryList))
-        .thenAnswer((_) => Future.value(response));
+    when(groceryListsRepository.save(groceryList)).thenAnswer((arg) {
+      GroceryList editedGroceryList = arg.positionalArguments[0];
+      expect(editedGroceryList.groceries[0].marketSectionId, null);
+      expect(editedGroceryList.groceries[1].marketSectionId, marketSectionId);
+      expect(editedGroceryList.groceries[2].marketSectionId, marketSectionId);
+      return Future.value(response);
+    });
+    when(groceryListItemMarketSectionRepository.get(name1))
+        .thenAnswer((_) => Future.value(null));
+    when(groceryListItemMarketSectionRepository.get(name2))
+        .thenAnswer((_) => Future.value(groceryListItemMarketSection));
+    when(groceryListItemMarketSectionRepository
+        .save(GroceryListItemMarketSection(
+      groceryListItemName: name3,
+      marketSectionId: marketSectionId,
+    ))).thenAnswer((arg) => Future.value(null));
 
     expectLater(
       saveGroceryListBloc,
@@ -99,8 +140,24 @@ void main() {
   });
 
   test('save grocery list silenttly with error', () {
-    GroceryList groceryList =
-        GroceryList(title: "teste 1", status: GroceryListStatus.active);
+    String name1 = 'name-1';
+    String name2 = 'name-2';
+    String name3 = 'name-3';
+    String marketSectionId = 'market-section-id';
+    GroceryListItemMarketSection groceryListItemMarketSection =
+        GroceryListItemMarketSection(
+            groceryListItemName: name2, marketSectionId: marketSectionId);
+    GroceryList groceryList = GroceryList(
+        title: "teste 1",
+        status: GroceryListStatus.active,
+        groceries: [
+          GroceryListItem(ingredientName: name1),
+          GroceryListItem(ingredientName: name2),
+          GroceryListItem(
+              ingredientName: name3,
+              marketSectionId: marketSectionId,
+              selectedMarketSection: true),
+        ]);
     SaveGroceryListResponse response = SaveGroceryListResponse(
         groceryList: groceryList, error: GenericError("test error"));
 
@@ -108,8 +165,22 @@ void main() {
       GroceryListSaved(response),
     ];
 
-    when(groceryListsRepository.save(groceryList))
-        .thenAnswer((_) => Future.value(response));
+    when(groceryListsRepository.save(groceryList)).thenAnswer((arg) {
+      GroceryList editedGroceryList = arg.positionalArguments[0];
+      expect(editedGroceryList.groceries[0].marketSectionId, null);
+      expect(editedGroceryList.groceries[1].marketSectionId, marketSectionId);
+      expect(editedGroceryList.groceries[2].marketSectionId, marketSectionId);
+      return Future.value(response);
+    });
+    when(groceryListItemMarketSectionRepository.get(name1))
+        .thenAnswer((_) => Future.value(null));
+    when(groceryListItemMarketSectionRepository.get(name2))
+        .thenAnswer((_) => Future.value(groceryListItemMarketSection));
+    when(groceryListItemMarketSectionRepository
+        .save(GroceryListItemMarketSection(
+      groceryListItemName: name3,
+      marketSectionId: marketSectionId,
+    ))).thenAnswer((arg) => Future.value(null));
 
     expectLater(
       saveGroceryListBloc,
@@ -124,8 +195,24 @@ void main() {
   });
 
   test('save grocery list', () {
-    GroceryList groceryList =
-        GroceryList(title: "teste 1", status: GroceryListStatus.active);
+    String name1 = 'name-1';
+    String name2 = 'name-2';
+    String name3 = 'name-3';
+    String marketSectionId = 'market-section-id';
+    GroceryListItemMarketSection groceryListItemMarketSection =
+        GroceryListItemMarketSection(
+            groceryListItemName: name2, marketSectionId: marketSectionId);
+    GroceryList groceryList = GroceryList(
+        title: "teste 1",
+        status: GroceryListStatus.active,
+        groceries: [
+          GroceryListItem(ingredientName: name1),
+          GroceryListItem(ingredientName: name2),
+          GroceryListItem(
+              ingredientName: name3,
+              marketSectionId: marketSectionId,
+              selectedMarketSection: true),
+        ]);
     SaveGroceryListResponse response = SaveGroceryListResponse(
         groceryList: groceryList, error: GenericError("test error"));
 
@@ -134,8 +221,22 @@ void main() {
       GroceryListSaved(response),
     ];
 
-    when(groceryListsRepository.save(groceryList))
-        .thenAnswer((_) => Future.value(response));
+    when(groceryListsRepository.save(groceryList)).thenAnswer((arg) {
+      GroceryList editedGroceryList = arg.positionalArguments[0];
+      expect(editedGroceryList.groceries[0].marketSectionId, null);
+      expect(editedGroceryList.groceries[1].marketSectionId, marketSectionId);
+      expect(editedGroceryList.groceries[2].marketSectionId, marketSectionId);
+      return Future.value(response);
+    });
+    when(groceryListItemMarketSectionRepository.get(name1))
+        .thenAnswer((_) => Future.value(null));
+    when(groceryListItemMarketSectionRepository.get(name2))
+        .thenAnswer((_) => Future.value(groceryListItemMarketSection));
+    when(groceryListItemMarketSectionRepository
+        .save(GroceryListItemMarketSection(
+      groceryListItemName: name3,
+      marketSectionId: marketSectionId,
+    ))).thenAnswer((arg) => Future.value(null));
 
     expectLater(
       saveGroceryListBloc,

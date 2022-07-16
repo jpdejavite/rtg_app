@@ -11,6 +11,7 @@ import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/model/recipe_sort.dart';
 import 'package:rtg_app/model/recipes_collection.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
 import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -43,7 +44,9 @@ class RecipesList extends StatefulWidget {
       create: (context) => RecipesBloc(
           recipesRepository: RecipesRepository(),
           groceryListsRepository: GroceryListsRepository(),
-          recipeLabelRepository: RecipeLabelRepository()),
+          recipeLabelRepository: RecipeLabelRepository(),
+          groceryListItemMarketSectionRepository:
+              GroceryListItemMarketSectionRepository()),
       child: RecipesList(
         key: key,
         onTapRecipe: onTapRecipe,

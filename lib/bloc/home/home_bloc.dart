@@ -15,7 +15,9 @@ import 'package:rtg_app/model/search_menu_plannings_params.dart';
 import 'package:rtg_app/model/search_recipes_params.dart';
 import 'package:rtg_app/model/user_data.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
+import 'package:rtg_app/repository/grocery_list_item_market_section_repository.dart';
 import 'package:rtg_app/repository/grocery_lists_repository.dart';
+import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipe_label_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
@@ -31,6 +33,9 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   final UserDataRepository userDataRepository;
   final MenuPlanningRepository menuPlanningRepository;
   final RecipeLabelRepository recipeLabelRepository;
+  final MarketSectionRepository marketSectionRepository;
+  final GroceryListItemMarketSectionRepository
+      groceryListItemMarketSectionRepository;
   HomeBloc({
     @required this.backupRepository,
     @required this.recipesRepository,
@@ -38,6 +43,8 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     @required this.userDataRepository,
     @required this.menuPlanningRepository,
     @required this.recipeLabelRepository,
+    @required this.marketSectionRepository,
+    @required this.groceryListItemMarketSectionRepository,
   }) : super(HomeInitState());
   @override
   Stream<HomeState> mapEventToState(HomeEvents event) async* {
@@ -59,6 +66,9 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
       await userDataRepository.deleteAll();
       await menuPlanningRepository.deleteAll();
       await recipeLabelRepository.deleteAll();
+      await recipeLabelRepository.deleteAll();
+      await marketSectionRepository.deleteAll();
+      await groceryListItemMarketSectionRepository.deleteAll();
       yield AllDataDeleted();
     } else if (event is SaveNewGroceryList) {
       SaveGroceryListResponse response = await groceryListsRepository

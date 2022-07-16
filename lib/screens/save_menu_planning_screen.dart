@@ -15,6 +15,7 @@ import 'package:rtg_app/model/menu_planning_meal_type.dart';
 import 'package:rtg_app/model/menu_planning_meal_type_preparation.dart';
 import 'package:rtg_app/model/recipe.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
+import 'package:rtg_app/screens/save_note_screen.dart';
 import 'package:rtg_app/widgets/custom_toast.dart';
 import 'package:rtg_app/widgets/menu_planning_day.dart';
 import 'package:rtg_app/widgets/menu_planning_meal_input.dart';
@@ -169,6 +170,15 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
         title: Text(widget.args.editMenuPlanning == null
             ? AppLocalizations.of(context).new_menu_planning
             : AppLocalizations.of(context).edit_menu_planning),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit_note),
+            tooltip: AppLocalizations.of(context).make_notes,
+            onPressed: () async {
+              Navigator.pushNamed(context, SaveNoteScreen.id);
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         key: Key(Keys.saveMenuPlanningFloatingActionSaveButton),

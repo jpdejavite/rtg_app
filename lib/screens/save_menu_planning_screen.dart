@@ -303,7 +303,7 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
         days: days,
         onSelectDay: (int index) {
           setState(() {
-            mealsMap[index].add(meal);
+            mealsMap[index].add(MenuPlanningMeal.fromMeal(meal));
           });
         });
   }

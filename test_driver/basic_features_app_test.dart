@@ -699,7 +699,7 @@ void main() {
     test('edit menu planning', () async {
       await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Keys.homeCardSeeMenuPlanning);
+      await driver.tap(Keys.homeCardSeeFutureMenuPlanning);
 
       await driver.tap(Keys.viewMenuPlanningFloatingActionEditButton);
 
@@ -736,7 +736,7 @@ void main() {
     test('remove, duplicate and move menu planning meals', () async {
       await driver.tap(Keys.homeBottomBarHomeIcon);
 
-      await driver.tap(Keys.homeCardSeeMenuPlanning);
+      await driver.tap(Keys.homeCardSeeCurrentMenuPlanning);
 
       await driver.tap(Keys.viewMenuPlanningFloatingActionEditButton);
 

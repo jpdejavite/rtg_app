@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (showHomeInfo.currentMenuPlanning != null) {
       cards.add(HomeMenuPlanningCard(
         cardKey: Key(Keys.homeCardShowMenuPlanning),
-        actionKey: Key(Keys.homeCardSeeMenuPlanning),
+        actionKey: Key(Keys.homeCardSeeCurrentMenuPlanning),
         title: AppLocalizations.of(context).current_menu_planning,
         currentMenuPlanning: showHomeInfo.currentMenuPlanning,
         currentMenuPlanningRecipes: showHomeInfo.currentMenuPlanningRecipes,
@@ -292,11 +292,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
     }
 
-    if (showHomeInfo.currentMenuPlanning == null &&
-        showHomeInfo.futureMenuPlanning != null) {
+    if (showHomeInfo.futureMenuPlanning != null) {
       cards.add(HomeMenuPlanningCard(
         cardKey: Key(Keys.homeCardShowMenuPlanning),
-        actionKey: Key(Keys.homeCardSeeMenuPlanning),
+        actionKey: Key(Keys.homeCardSeeFutureMenuPlanning),
         title: AppLocalizations.of(context).next_menu_planning,
         currentMenuPlanning: showHomeInfo.futureMenuPlanning,
         currentMenuPlanningRecipes: showHomeInfo.futureMenuPlanningRecipes,
@@ -346,7 +345,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (showHomeInfo.oldMenuPlanning != null) {
       cards.add(HomeCard(
         cardKey: Key(Keys.homeCardOldMenuPlanning),
-        icon: Icons.history,
         actionKey: Key(Keys.homeCardMenuPlanningHistory),
         title: AppLocalizations.of(context).old_menu_plannings,
         subtitle:

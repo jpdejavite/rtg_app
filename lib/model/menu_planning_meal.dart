@@ -8,6 +8,12 @@ class MenuPlanningMeal {
     this.recipeId,
     this.description,
   });
+  MenuPlanningMeal.fromMeal(MenuPlanningMeal meal) {
+    this.type = meal.type;
+    this.preparation = meal.preparation;
+    this.recipeId = meal.recipeId;
+    this.description = meal.description;
+  }
 
   MenuPlanningMealType type;
   MenuPlanningMealPreparation preparation;

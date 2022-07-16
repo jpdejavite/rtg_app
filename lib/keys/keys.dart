@@ -37,7 +37,10 @@ class Keys {
   static const String homeCardShowMenuPlanning = 'home-card-show-menu-planning';
   static const String homeCardEditNote = 'home-card-edit-note';
   static const String homeCardEditNoteIcon = 'home-card-edit-note-icon';
-  static const String homeCardSeeMenuPlanning = 'home-card-see-menu-planning';
+  static const String homeCardSeeCurrentMenuPlanning =
+      'home-card-see-current-menu-planning';
+  static const String homeCardSeeFutureMenuPlanning =
+      'home-card-see-future-menu-planning';
   static const String homeCardOldMenuPlanning = 'home-card-old-menu-planning';
   static const String homeCardMenuPlanningHistory =
       'home-card-menu-planning-history';

@@ -4,6 +4,7 @@ The roma app project.
 
 ## Installation requirements
 
+- flutter 3.0.5
 - gradle 7.1.2
 - kotlyn 1.7.0
 - java 11

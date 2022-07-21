@@ -156,13 +156,18 @@ class Keys {
   // menu plannig days
   static const String menuPlanningDaysDayLabelText =
       'menu-planning-days-day-label-text';
-  static const String menuPlanningDaysMealText = 'menu-planning-days-meal-text';
+  static const String menuPlanningDaysMealList = 'menu-planning-days-meal-list';
+  static const String menuPlanningDaysMealTypeText =
+      'menu-planning-days-meal-type-text';
+  static const String menuPlanningDaysMealPreparationText =
+      'menu-planning-days-meal-preparation-text';
   static const String menuPlanningDaysMealDescriptionText =
       'menu-planning-days-meal-description-text';
-  static const String menuPlanningDaysMealTextButton =
-      'menu-planning-days-meal-text-button';
+  static const String menuPlanningDaysMealCard = 'menu-planning-days-meal-card';
   static const String menuPlanningDaysMealRecipeText =
       'menu-planning-days-meal-recipe-text';
+  static const String menuPlanningDaysMealSideDishText =
+      'menu-planning-days-meal-side-dish-text';
 
   // menu planning day
   static const String menuPlanningDayText = 'menu-planning-day-text';
@@ -182,6 +187,8 @@ class Keys {
       'menu-planning-day-menu-duplicate-meal';
   static const String menuPlanningDayMenuMoveMeal =
       'menu-planning-day-menu-move-meal';
+  static const String menuPlanningDayMenuAddSideDish =
+      'menu-planning-day-menu-add-side-dish';
 
   // edit recipe preparation time details
   static const String editRecipePreparationTimeDetailsDurationDropdown =

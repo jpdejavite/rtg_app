@@ -1,3 +1,5 @@
+import 'package:rtg_app/model/menu_planning_side_dish.dart';
+
 import 'menu_planning_meal_type.dart';
 import 'menu_planning_meal_type_preparation.dart';
 
@@ -7,18 +9,29 @@ class MenuPlanningMeal {
     this.preparation,
     this.recipeId,
     this.description,
+    this.sideDishes,
   });
   MenuPlanningMeal.fromMeal(MenuPlanningMeal meal) {
     this.type = meal.type;
     this.preparation = meal.preparation;
     this.recipeId = meal.recipeId;
     this.description = meal.description;
+    if (meal.sideDishes != null) {
+      this.sideDishes = meal.sideDishes.map<MenuPlanningSideDish>((sideDish) {
+        return MenuPlanningSideDish.fromSideDish(sideDish);
+      }).toList();
+    }
   }
 
   MenuPlanningMealType type;
   MenuPlanningMealPreparation preparation;
   String recipeId;
   String description;
+  List<MenuPlanningSideDish> sideDishes;
+
+  int sideDishesCount() {
+    return this.sideDishes == null ? 0 : this.sideDishes.length;
+  }
 
   static Map<String, List<MenuPlanningMeal>> fromObject(Object object) {
     if (object == null || !(object is Map<String, Object>)) {
@@ -51,6 +64,7 @@ class MenuPlanningMeal {
           MenuPlanningMealPreparation.values[record["preparation"] as int],
       recipeId: record["recipeId"],
       description: record["description"],
+      sideDishes: MenuPlanningSideDish.fromObject(record["sideDishes"]),
     );
   }
 
@@ -68,6 +82,7 @@ class MenuPlanningMeal {
           'preparation': meal.preparation.index,
           'recipeId': meal.recipeId,
           'description': meal.description,
+          'sideDishes': MenuPlanningSideDish.toRecords(meal.sideDishes),
         });
       });
       objects[day] = objs;

@@ -355,6 +355,8 @@ class _SaveMenuPlanningState extends State<SaveMenuPlanningScreen>
                   return duplicateMeal(mealIndex, meal);
                 case MenuPlanningMealInputAction.move:
                   return moveMeal(dayIndex, mealIndex, meal);
+                case MenuPlanningMealInputAction.addSideDish:
+                  return;
               }
             },
             onUpdate: (newMeal) {

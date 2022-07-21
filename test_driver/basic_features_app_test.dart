@@ -676,22 +676,32 @@ void main() {
 
       await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText00),
-          "almoço: cozinhar");
-      await driver.tap(Constants.menuPlanningDaysMealTextButton00);
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText00),
+          "almoço");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText00),
+          "cozinhar");
+      await driver.tap(Constants.menuPlanningDaysMealCard001);
       expect(
           await driver.getText(Keys.viewRecipeTitle), recipeName1 + " editado");
       await driver.tapBackButton();
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText01),
-          "jantar: cozinhar");
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText01),
+          "jantar");
       expect(
-          await driver.getText(Constants.menuPlanningDaysMealDescriptionText01),
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText01),
+          "cozinhar");
+      expect(
+          await driver
+              .getText(Constants.menuPlanningDaysMealDescriptionText011),
           "segredo");
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
-          "almoço: cozinhar");
-      await driver.tap(Constants.menuPlanningDaysMealTextButton10);
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText10),
+          "almoço");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText10),
+          "cozinhar");
+      await driver.tap(Constants.menuPlanningDaysMealCard101);
       expect(await driver.getText(Keys.viewRecipeTitle), recipeName2);
       await driver.tapBackButton();
     });
@@ -717,18 +727,93 @@ void main() {
 
       await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText00),
-          "jantar: cozinhar");
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText00),
+          "jantar");
       expect(
-          await driver.getText(Constants.menuPlanningDaysMealDescriptionText00),
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText00),
+          "cozinhar");
+
+      expect(
+          await driver
+              .getText(Constants.menuPlanningDaysMealDescriptionText001),
           "segredo editado");
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
-          "almoço: cozinhar");
-      await driver.tap(Constants.menuPlanningDaysMealTextButton10);
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText10),
+          "almoço");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText10),
+          "cozinhar");
+
+      await driver.tap(Constants.menuPlanningDaysMealCard101);
       expect(await driver.getText(Keys.viewRecipeTitle), recipeName2);
+      await driver.tapBackButton();
 
       await driver.tapBackButton();
+    });
+
+    test('add side dishes to menu planning meals', () async {
+      await driver.tap(Keys.homeBottomBarHomeIcon);
+
+      await driver.tap(Keys.homeCardSeeCurrentMenuPlanning);
+
+      await driver.tap(Keys.viewMenuPlanningFloatingActionEditButton);
+
+      await driver.scrollIntoView(Constants.menuPlanningDayShowMenuIcon00);
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon00);
+
+      await driver.tap(Constants.menuPlanningDayMenuAddSideDish00);
+
+      await driver.tap(Constants.menuPlanningWriteDetailsTextButton000);
+
+      await driver.tap(Constants.menuPlanningWriteDetailsTextField000);
+      await driver.enterText("side dish");
+
+      await driver.scrollIntoView(Constants.menuPlanningDayShowMenuIcon00);
+      await driver.tap(Constants.menuPlanningDayShowMenuIcon00);
+
+      await driver.tap(Constants.menuPlanningDayMenuAddSideDish00);
+
+      await driver.tap(Constants.menuPlanningDayPickRecipeTextButton001);
+
+      await driver.tap(Keys.recipesListFilter);
+      await driver.enterText(recipeName2);
+
+      await driver.tap(Constants.recipeListRowTitleText0);
+
+      await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText00),
+          "jantar");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText00),
+          "cozinhar");
+
+      expect(
+          await driver
+              .getText(Constants.menuPlanningDaysMealDescriptionText001),
+          "segredo editado");
+
+      await driver.scrollUntilVisible(Constants.menuPlanningDaysMealList00,
+          Constants.menuPlanningDaysMealDescriptionText002,
+          dxScroll: -300.0);
+      expect(
+          await driver
+              .getText(Constants.menuPlanningDaysMealDescriptionText002),
+          "side dish");
+
+      await driver.scrollUntilVisible(Constants.menuPlanningDaysMealList00,
+          Constants.menuPlanningDaysMealCard003,
+          dxScroll: -300.0);
+
+      await driver.tap(Constants.menuPlanningDaysMealCard003);
+      expect(await driver.getText(Keys.viewRecipeTitle), recipeName2);
+      await driver.tapBackButton();
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText10),
+          "almoço");
+      expect(
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText10),
+          "cozinhar");
 
       await driver.tapBackButton();
     });
@@ -759,16 +844,24 @@ void main() {
 
       await driver.tap(Keys.saveMenuPlanningFloatingActionSaveButton);
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText10),
-          "almoço: cozinhar");
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText10),
+          "almoço");
       expect(
-          await driver.getText(Constants.menuPlanningDaysMealDescriptionText10),
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText10),
+          "cozinhar");
+
+      expect(await driver.getText(Constants.menuPlanningDaysMealRecipeText101),
           recipeName2);
 
-      expect(await driver.getText(Constants.menuPlanningDaysMealText20),
-          "jantar: cozinhar");
+      expect(await driver.getText(Constants.menuPlanningDaysMealTypeText20),
+          "jantar");
       expect(
-          await driver.getText(Constants.menuPlanningDaysMealDescriptionText20),
+          await driver.getText(Constants.menuPlanningDaysMealPreparationText20),
+          "cozinhar");
+
+      expect(
+          await driver
+              .getText(Constants.menuPlanningDaysMealDescriptionText201),
           "segredo editado");
 
       await driver.tapBackButton();

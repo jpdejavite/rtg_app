@@ -64,10 +64,16 @@ class Constants {
       Keys.menuPlanningDayMenuRemoveMeal + "-0-0";
   static final menuPlanningDayMenuMoveMeal00 =
       Keys.menuPlanningDayMenuMoveMeal + "-0-0";
+  static final menuPlanningDayMenuAddSideDish00 =
+      Keys.menuPlanningDayMenuAddSideDish + "-0-0";
   static final menuPlanningWriteDetailsTextButton01 =
       Keys.menuPlanningWriteDetailsTextButton + "-0-1";
+  static final menuPlanningWriteDetailsTextButton000 =
+      Keys.menuPlanningWriteDetailsTextButton + "-0-0-0";
   static final menuPlanningWriteDetailsTextField01 =
       Keys.menuPlanningWriteDetailsTextField + "-0-1";
+  static final menuPlanningWriteDetailsTextField000 =
+      Keys.menuPlanningWriteDetailsTextField + "-0-0-0";
   static final menuPlanningDayShowMenuIcon01 =
       Keys.menuPlanningDayShowMenuIcon + "-0-1";
   static final menuPlanningDayMenuMoveMeal01 =
@@ -76,6 +82,8 @@ class Constants {
       Keys.menuPlanningDayAddMealButton + "-0-0";
   static final menuPlanningDayPickRecipeTextButton10 =
       Keys.menuPlanningDayPickRecipeTextButton + "-1-0";
+  static final menuPlanningDayPickRecipeTextButton001 =
+      Keys.menuPlanningDayPickRecipeTextButton + "-0-0-1";
   static final menuPlanningDayShowMenuIcon20 =
       Keys.menuPlanningDayShowMenuIcon + "-2-0";
   static final menuPlanningDayMenuDuplicateMeal20 =
@@ -84,26 +92,40 @@ class Constants {
       Keys.menuPlanningDayShowMenuIcon + "-3-0";
   static final menuPlanningDayMenuRemoveMeal30 =
       Keys.menuPlanningDayMenuRemoveMeal + "-3-0";
-  static final menuPlanningDaysMealText00 =
-      Keys.menuPlanningDaysMealText + "-0-0";
-  static final menuPlanningDaysMealText01 =
-      Keys.menuPlanningDaysMealText + "-0-1";
-  static final menuPlanningDaysMealText10 =
-      Keys.menuPlanningDaysMealText + "-1-0";
-  static final menuPlanningDaysMealDescriptionText10 =
-      Keys.menuPlanningDaysMealDescriptionText + "-1-0";
-  static final menuPlanningDaysMealTextButton00 =
-      Keys.menuPlanningDaysMealTextButton + "-0-0";
-  static final menuPlanningDaysMealDescriptionText00 =
-      Keys.menuPlanningDaysMealDescriptionText + "-0-0";
-  static final menuPlanningDaysMealDescriptionText01 =
-      Keys.menuPlanningDaysMealDescriptionText + "-0-1";
-  static final menuPlanningDaysMealTextButton10 =
-      Keys.menuPlanningDaysMealTextButton + "-1-0";
-  static final menuPlanningDaysMealText20 =
-      Keys.menuPlanningDaysMealText + "-2-0";
-  static final menuPlanningDaysMealDescriptionText20 =
-      Keys.menuPlanningDaysMealDescriptionText + "-2-0";
+  static final menuPlanningDaysMealPreparationText00 =
+      Keys.menuPlanningDaysMealPreparationText + "-0-0";
+  static final menuPlanningDaysMealList00 =
+      Keys.menuPlanningDaysMealList + "-0-0";
+  static final menuPlanningDaysMealTypeText00 =
+      Keys.menuPlanningDaysMealTypeText + "-0-0";
+  static final menuPlanningDaysMealPreparationText01 =
+      Keys.menuPlanningDaysMealPreparationText + "-0-1";
+  static final menuPlanningDaysMealTypeText01 =
+      Keys.menuPlanningDaysMealTypeText + "-0-1";
+  static final menuPlanningDaysMealPreparationText10 =
+      Keys.menuPlanningDaysMealPreparationText + "-1-0";
+  static final menuPlanningDaysMealTypeText10 =
+      Keys.menuPlanningDaysMealTypeText + "-1-0";
+  static final menuPlanningDaysMealPreparationText20 =
+      Keys.menuPlanningDaysMealPreparationText + "-2-0";
+  static final menuPlanningDaysMealTypeText20 =
+      Keys.menuPlanningDaysMealTypeText + "-2-0";
+  static final menuPlanningDaysMealRecipeText101 =
+      Keys.menuPlanningDaysMealRecipeText + "-1-0-1";
+  static final menuPlanningDaysMealCard001 =
+      Keys.menuPlanningDaysMealCard + "-0-0-1";
+  static final menuPlanningDaysMealCard003 =
+      Keys.menuPlanningDaysMealCard + "-0-0-3";
+  static final menuPlanningDaysMealDescriptionText001 =
+      Keys.menuPlanningDaysMealDescriptionText + "-0-0-1";
+  static final menuPlanningDaysMealDescriptionText002 =
+      Keys.menuPlanningDaysMealDescriptionText + "-0-0-2";
+  static final menuPlanningDaysMealDescriptionText011 =
+      Keys.menuPlanningDaysMealDescriptionText + "-0-1-1";
+  static final menuPlanningDaysMealCard101 =
+      Keys.menuPlanningDaysMealCard + "-1-0-1";
+  static final menuPlanningDaysMealDescriptionText201 =
+      Keys.menuPlanningDaysMealDescriptionText + "-2-0-1";
   static final chooseMenuPlanningDayDialogOption2 =
       Keys.chooseMenuPlanningDayDialogOption + "-2";
   static final chooseMenuPlanningDayDialogOption3 =

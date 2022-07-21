@@ -1,3 +1,5 @@
+import 'package:rtg_app/helper/custom_date_time.dart';
+import 'package:rtg_app/helper/id_generator.dart';
 import 'package:sembast/sembast.dart';
 
 List<MarketSection> marketSectionsFromRecords(
@@ -20,7 +22,16 @@ class MarketSection {
   String title;
   int groceryListOrder;
 
-  static MarketSection getFromList(String id, List<MarketSection> marketSections) {
+  static newEmptyMarketSection() {
+    return MarketSection(
+      id: IdGenerator.id(),
+      title: '',
+      createdAt: CustomDateTime.current.millisecondsSinceEpoch,
+    );
+  }
+
+  static MarketSection getFromList(
+      String id, List<MarketSection> marketSections) {
     return marketSections.singleWhere((marketSection) => id == marketSection.id,
         orElse: () => null);
   }

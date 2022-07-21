@@ -3,8 +3,8 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
-import 'driver_helper.dart';
-import 'helper.dart';
+import '../utils/driver_helper.dart';
+import '../utils/helper.dart';
 
 class RecipeInput {
   final String name;

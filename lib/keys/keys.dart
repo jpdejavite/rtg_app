@@ -247,6 +247,19 @@ class Keys {
   static const String groceryItemEditMarketSectionIcon =
       'grocery-item-edit-market-section-icon';
 
+  // market section item
+  static const String marketSectionItemActionIcon =
+      'market-section-item-action-icon';
+  static const String marketSectionItemRow = 'market-section-item-row';
+  static const String marketSectionItemTextField =
+      'market-section-item-text-field';
+
+  // save market sections
+  static const String saveMarketSectionsFloatingActionSaveButton =
+      'save-market-sections-floating-action-save-button';
+  static const String saveMarketSectionsList = 'save-market-sections-list';
+  static const String saveMarketSectionsItem = 'save-market-sections-item';
+
   // view recipe
   static const String viewRecipeTitle = 'view-recipe-title';
   static const String viewRecipeLabelLabelText = 'view-recipe-label-label-text';
@@ -284,6 +297,8 @@ class Keys {
   static const String settingsGoogleDriveButtton =
       'settings-google-drive-button';
   static const String settingsLocalButtton = 'settings-local-button';
+  static const String settingsConfigureMarketSectionButtton =
+      'settings-configure--market-section-button';
 
   // add recipe to grocery list dialog
   static const String addRecipeToGroceryListDialogConfirmButton =

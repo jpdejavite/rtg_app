@@ -11,6 +11,7 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/backup.dart';
 import 'package:rtg_app/repository/backup_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
+import 'package:rtg_app/screens/save_market_sections_screen.dart';
 import 'package:rtg_app/widgets/view_recipe_label_text.dart';
 import 'package:rtg_app/widgets/view_recipe_text.dart';
 import 'package:share_plus/share_plus.dart';
@@ -219,6 +220,33 @@ class _SettingsState extends State<SettingsScreen> {
     return children;
   }
 
+  List<Widget> buildMarketSection(BuildContext context, SettingsState state) {
+    return [
+      Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: Text(
+          AppLocalizations.of(context).market_section,
+          style: Theme.of(context).textTheme.headline5,
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 5),
+        child: Text(
+          AppLocalizations.of(context).market_section_explanation,
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
+      ),
+      ElevatedButton(
+        key: Key(Keys.settingsConfigureMarketSectionButtton),
+        child:
+            Text(AppLocalizations.of(context).configure_market_section_action),
+        onPressed: () {
+          Navigator.pushNamed(context, SaveMarketSectionsScreen.id);
+        },
+      )
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
@@ -232,6 +260,8 @@ class _SettingsState extends State<SettingsScreen> {
           shrinkWrap: true,
           children: [
             ...buildBackupSection(context, state),
+            SizedBox(height: 20),
+            ...buildMarketSection(context, state),
           ],
         ),
       );

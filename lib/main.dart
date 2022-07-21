@@ -5,6 +5,7 @@ import 'package:rtg_app/screens/edit_recipe_preparation_time_details_screen.dart
 import 'package:rtg_app/screens/home_screen.dart';
 import 'package:rtg_app/screens/menu_planning_history_screen.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
+import 'package:rtg_app/screens/save_market_sections_screen.dart';
 import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/save_note_screen.dart';
 import 'package:rtg_app/screens/save_recipe_screen.dart';
@@ -120,6 +121,9 @@ class RtgApp extends StatelessWidget {
         MenuPlanningHistoryScreen.id: (context) {
           return MenuPlanningHistoryScreen.newChooseMenuPlanningBloc();
         },
+        SaveMarketSectionsScreen.id: (context) {
+          return SaveMarketSectionsScreen.newSaveMarketSectionsBloc();
+        }
       },
       builder: EasyLoading.init(),
     );

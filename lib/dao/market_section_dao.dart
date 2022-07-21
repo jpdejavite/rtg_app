@@ -22,7 +22,7 @@ class MarketSectionDao {
     var records = await store.find(db, finder: finder);
 
     if (records.length == 0) {
-      await this.saveAll(marketSections: MarketSectionData.data());
+      await this.saveAll(MarketSectionData.data());
     }
 
     return marketSectionsFromRecords(records);
@@ -34,8 +34,21 @@ class MarketSectionDao {
     await store.delete(db);
   }
 
+  Future deleteSome(List<MarketSection> marketSectionsToDelete) async {
+    var store = intMapStoreFactory.store(storeName);
+    var db = await dbProvider.database;
+
+    for (int i = 0; i < marketSectionsToDelete.length; i++) {
+      final marketSection = marketSectionsToDelete[i];
+      if (marketSection.hasId()) {
+        var record = store.record(int.parse(marketSection.id));
+        await record.delete(db);
+      }
+    }
+  }
+
   Future<List<MarketSection>> saveAll(
-      {List<MarketSection> marketSections}) async {
+      List<MarketSection> marketSections) async {
     List<MarketSection> response = [];
     await Future.forEach(marketSections, (marketSection) async {
       SaveMarketSectionResponse saveResponse =

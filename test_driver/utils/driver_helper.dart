@@ -51,6 +51,29 @@ class DriverHelper {
     }
   }
 
+  scrollUntilTextIsVisible(
+    String scrollableKey,
+    String text, {
+    double alignment = 0.0,
+    double dxScroll = 0.0,
+    double dyScroll = 0.0,
+    Duration timeout,
+  }) async {
+    try {
+      await driver.scrollUntilVisible(
+          find.byValueKey(scrollableKey), find.text(text),
+          alignment: alignment,
+          dxScroll: dxScroll,
+          dyScroll: dyScroll,
+          timeout: timeout == null ? Duration(seconds: 1) : timeout);
+    } catch (e) {
+      final newError = new ErrorWrapper(
+          'error scrollUntilTextIsVisible $scrollableKey $text: $e', e);
+      log(newError.toString());
+      throw newError;
+    }
+  }
+
   scroll(String key, double dx, double dy, Duration duration,
       {Duration timeout}) async {
     try {

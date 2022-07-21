@@ -2,8 +2,8 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:rtg_app/keys/keys.dart';
 import 'package:test/test.dart';
 
-import 'constants.dart';
-import 'driver_helper.dart';
+import '../utils/constants.dart';
+import '../utils/driver_helper.dart';
 
 class GroceryListItemInput {
   final String name;
@@ -196,6 +196,41 @@ void main() {
 
         expect(await driver.getText(itemKey), input.marketSection);
       }
+
+      await driver.tapBackButton();
+    });
+
+    test('edit market sections', () async {
+      await driver.tap(Keys.homeActionSettingsIcon);
+
+      await driver.tap(Keys.settingsConfigureMarketSectionButtton);
+
+      await driver.scrollUntilTextIsVisible(
+          Keys.saveMarketSectionsList, inputsGrocery2[0].marketSection,
+          dyScroll: -300.0, timeout: Duration(minutes: 1));
+
+      await driver.tapInText(inputsGrocery2[0].marketSection);
+
+      await driver.enterText(inputsGrocery2[0].marketSection + " editado");
+
+      await driver.tap(Keys.saveMarketSectionsFloatingActionSaveButton);
+
+      await driver.tapBackButton();
+
+      await driver.tap(Keys.homeBottomBarListsIcon);
+
+      await driver.tap(Constants.groceryListRowTitleText0);
+
+      await driver.tap(Keys.saveGroceryListBottomActionIcon);
+
+      await driver.tap(Keys.saveGroceryListBottomActionEditMarketSections);
+
+      final itemKey = Keys.groceryItemMarketSectionText + '0';
+      await driver.scrollUntilVisible(Keys.saveGroceryListList, itemKey,
+          dyScroll: -300.0);
+
+      expect(await driver.getText(itemKey),
+          inputsGrocery2[0].marketSection + " editado");
 
       await driver.tapBackButton();
     });

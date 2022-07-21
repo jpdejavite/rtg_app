@@ -3,9 +3,9 @@ import 'package:rtg_app/keys/keys.dart';
 import 'package:rtg_app/model/recipe_preparation_time_details.dart';
 import 'package:test/test.dart';
 
-import 'constants.dart';
-import 'driver_helper.dart';
-import 'helper.dart';
+import '../utils/constants.dart';
+import '../utils/driver_helper.dart';
+import '../utils/helper.dart';
 
 void main() {
   group('basic fetures app test', () {

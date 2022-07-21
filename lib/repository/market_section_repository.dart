@@ -13,8 +13,11 @@ class MarketSectionRepository {
   Future<SaveMarketSectionResponse> save({MarketSection marketSection}) =>
       marketSectionDao.save(marketSection: marketSection);
 
-  Future<List<MarketSection>> saveAll({List<MarketSection> marketSections}) =>
-      marketSectionDao.saveAll(marketSections: marketSections);
+  Future<List<MarketSection>> saveAll(List<MarketSection> marketSections) =>
+      marketSectionDao.saveAll(marketSections);
+
+  Future<void> deleteSome(List<MarketSection> marketSectionsToDelete) =>
+      marketSectionDao.deleteSome(marketSectionsToDelete);
 
   Future deleteAll() => marketSectionDao.deleteAll();
 

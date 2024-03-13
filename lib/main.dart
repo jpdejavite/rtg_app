@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:rtg_app/screens/account_screen.dart';
 import 'package:rtg_app/screens/choose_recipe_screen.dart';
 import 'package:rtg_app/screens/edit_recipe_preparation_time_details_screen.dart';
 import 'package:rtg_app/screens/home_screen.dart';
@@ -24,8 +25,14 @@ import 'model/grocery_list.dart';
 import 'model/recipe.dart';
 import 'model/recipe_preparation_time_details.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 void main({String fileName = 'assets/.env'}) async {
   await dotenv.load(fileName: fileName);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(RtgApp());
 }
 
@@ -78,6 +85,9 @@ class RtgApp extends StatelessWidget {
         },
         SettingsScreen.id: (context) {
           return SettingsScreen.newSettingsBloc();
+        },
+        AccountScreen.id: (context) {
+          return AccountScreen.newAccountBloc();
         },
         SaveNoteScreen.id: (context) {
           return SaveNoteScreen.newSaveNoteBloc();

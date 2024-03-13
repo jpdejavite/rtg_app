@@ -96,6 +96,7 @@
   "month":"month",
   "months":"months",
   "open_settings":"Open settings",
+  "manage_account":"Manage account",
   "settings":"Settings",
   "backup":"Backup",
   "configure_backup": "Configure a backup to be able to recover all app data when you need it, choose a option below",

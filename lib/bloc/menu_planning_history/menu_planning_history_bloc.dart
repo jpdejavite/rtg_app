@@ -5,7 +5,6 @@ import 'package:rtg_app/repository/menu_planning_repository.dart';
 
 import 'events.dart';
 
-// TODO unit tests
 class MenuPlanningHistoryBloc
     extends Bloc<MenuPlanningHistoryEvents, MenuPlanningHistoryState> {
   MenuPlanningCollection _collection =

@@ -15,6 +15,7 @@ import 'package:rtg_app/repository/market_section_repository.dart';
 import 'package:rtg_app/repository/menu_planning_repository.dart';
 import 'package:rtg_app/repository/recipes_repository.dart';
 import 'package:rtg_app/repository/user_data_repository.dart';
+import 'package:rtg_app/screens/account_screen.dart';
 import 'package:rtg_app/screens/save_grocery_list_screen.dart';
 import 'package:rtg_app/screens/save_menu_planning_screen.dart';
 import 'package:rtg_app/screens/save_note_screen.dart';
@@ -148,6 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> getAppBarActions(HomeState state) {
     List<Widget> actions = [
+      IconButton(
+        key: Key(Keys.actionAccountIcon),
+        icon: Icon(Icons.account_circle),
+        tooltip: AppLocalizations.of(context).manage_account,
+        onPressed: () async {
+          await Navigator.pushNamed(context, AccountScreen.id);
+          refreshData();
+        },
+      ),
       NamedIcon(
         key: Key(Keys.homeActionSettingsIcon),
         tooltip: AppLocalizations.of(context).open_settings,
